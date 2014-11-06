@@ -6,7 +6,7 @@ node_modules
 .sass-cache
 platforms
 plugins
-www
+www/
 *.swp
 *sublime-*
 www-build
