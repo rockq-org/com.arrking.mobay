@@ -6,3 +6,4 @@ platforms/
 plugins/
 *.swp
 *sublime-*
+www-build
