@@ -1,19 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.comarrkingmobay171558" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.arrking.mobay" version="0.0.1" ios-CFBundleVersion="201411061020" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>moBay</name>
   <description>
-        An Ionic Framework and Cordova project.
-    </description>
-  <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
-    </author>
+      Project to show real time matrix for Cafe, Bar, Salon, etc.
+  </description>
+  <author email="mobay@arrking.com" href="http://mobay.arrking.com">
+    Hai Liang Wang, Jian Fei Zhao, Kang Xin Yang
+  </author>
   <content src="index.html"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="BackupWebStorage" value="none"/>
+  <preference name="AutoHideSplashScreen" value="true" />
+  <preference name="StatusBarOverlaysWebView" value="true" /> 
+  <preference name="StatusBarBackgroundColor" value="#000000" />
+  <preference name="StatusBarStyle" value="lightcontent" />
+  <!-- http://stackoverflow.com/questions/21896014/phonegap-3-3-hidekeyboardformaccessorybar-not-working -->
+  <preference name="KeyboardDisplayRequiresUserAction" value="false" />
+  <preference name="HideKeyboardFormAccessoryBar" value="true"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
+  <feature name="Keyboard">
+    <param name="ios-package" value="CDVKeyboard" onload="true" />
+  </feature>
+  <!-- ******************************************************* -->
+  <!--                  moBay config start                 -->
+  <!-- ******************************************************* -->
+  <mobay name="host" value="mobay.mybluemix.net" />
+  <mobay name="ssehost" value="mobaysse.mybluemix.net" />
+  <mobay name="path" value="/mobile/auth/linkedin" />
+  <mobay name="pushAppId" value="cd16f387-608a-47fa-839e-1d0fd9a859d9" />
+  <mobay name="pushAppRoute" value="mobay.mybluemix.net" />
+  <mobay name="pushAppSecret" value="0870db1e3946355b335a042c2976679770772299" />
+  <!-- console log level -->
+  <!-- https://code.google.com/p/console-js/ -->
+  <!-- "log"|"debug"|"info"|"warn"|"error"|on"|"off" -->
+  <mobay name="console" value="warn" />
+  <!-- enable/disable weinre debugging -->
+  <mobay name="weinreDebug" value="false" />
+  <!-- weinre server url -->
+  <mobay name="weinreServer" value="http://192.168.9.232:9088/target/target-script-min.js#musa" />
+  <!-- ******************************************************* -->
+  <!--                  moBay config end                   -->
+  <!-- ******************************************************* -->
 </widget>
