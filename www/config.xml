@@ -2,7 +2,7 @@
 <widget id="com.arrking.mobay" version="0.0.1" ios-CFBundleVersion="201411061020" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>moBay</name>
   <description>
-      Project to show real time matrix for Cafe, Bar, Salon, etc.
+      Mobilb Bay, show real time matrix for Cafe, Bar, Salon, etc.
   </description>
   <author email="mobay@arrking.com" href="http://mobay.arrking.com">
     Hai Liang Wang, Jian Fei Zhao, Kang Xin Yang
