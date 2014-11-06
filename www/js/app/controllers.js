@@ -1,3 +1,9 @@
+/*
+ * Licensed Materials - Property of Hai Liang Wang
+ * All Rights Reserved.
+ */
+define(['ionic'], function() {
+
 angular.module('mobay.controllers', [])
 
 .controller('DashCtrl', function($scope) {
@@ -15,5 +21,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('SettingsCtrl', function($scope) {
+});
+
 });
 
