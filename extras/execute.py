@@ -13,7 +13,7 @@ plugins = ['com.ibm.mobile.cordova.ibmbluemix',
         'org.apache.cordova.statusbar',
         'uk.co.whiteoctober.cordova.appversion',
         'com.phonegap.plugins.barcodescanner',
-        'com.ben2.cordova.keyboard',
+        'com.ionic.keyboard',
         'org.apache.cordova.network-information',
         'org.apache.cordova.geolocation',
         'org.apache.cordova.camera',
@@ -26,7 +26,7 @@ plugins = ['com.ibm.mobile.cordova.ibmbluemix',
 def install_plugins():
     for x in plugins:
         print 'install cordova plugin %s' % (x)
-        p = subprocess.Popen('cordova plugin add %s' % (x), shell = True)
+        p = subprocess.Popen('grunt plugin:add:%s' % (x), shell = True)
         p.wait()
 
 def build_www(platform='ios'):
