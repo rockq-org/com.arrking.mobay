@@ -6,6 +6,9 @@ define(['ionic'], function() {
 
 angular.module('mobay.controllers', [])
 
+.controller('LoginCtrl', function($scope) {
+})
+
 .controller('DashCtrl', function($scope) {
 })
 
@@ -22,6 +25,7 @@ angular.module('mobay.controllers', [])
 
 .controller('SettingsCtrl', function($scope) {
 });
+
 
 });
 
