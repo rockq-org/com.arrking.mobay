@@ -22,8 +22,8 @@ $dark:                            #444 !default;
 */
 @font-face {
   font-family: "Ionicons";
-  src: url("../lib/ionic/fonts/ionicons.eot?v=1.5.2");
-  src: url("../lib/ionic/fonts/ionicons.eot?v=1.5.2#iefix") format("embedded-opentype"), url("../lib/ionic/fonts/ionicons.ttf?v=1.5.2") format("truetype"), url("../lib/ionic/fonts/ionicons.woff?v=1.5.2") format("woff"), url("../lib/ionic/fonts/ionicons.svg?v=1.5.2#Ionicons") format("svg");
+  src: url("../js/lib/ionic/fonts/ionicons.eot?v=1.5.2");
+  src: url("../js/lib/ionic/fonts/ionicons.eot?v=1.5.2#iefix") format("embedded-opentype"), url("../js/lib/ionic/fonts/ionicons.ttf?v=1.5.2") format("truetype"), url("../js/lib/ionic/fonts/ionicons.woff?v=1.5.2") format("woff"), url("../js/lib/ionic/fonts/ionicons.svg?v=1.5.2#Ionicons") format("svg");
   font-weight: normal;
   font-style: normal; }
 
