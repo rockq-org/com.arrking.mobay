@@ -64,7 +64,13 @@ http://ionicframework.com/getting-started/
 		cd com.arrking.mobay
         ionic platform add ios
 		ionic prepare ios && ionic build ios
-		open platforms/ios/moBay.xcodeproj
+		open platforms/ios/moBay.xcodeproj 
+
+### Customize SASS
+http://learn.ionicframework.com/videos/sass/
+
+        ionic setup sass 
+        ionic serve
 
 Then, install the app into your device or simulator.
 

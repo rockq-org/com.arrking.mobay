@@ -76,7 +76,7 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services'])
           controller: 'ProfileCtrl'
         }
       }
-    })
+    })  
 
     .state('tab.settings', {
       url: '/settings',
