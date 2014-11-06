@@ -1,5 +1,3 @@
-define(['ionic'], function() {
-
 angular.module('mobay.services', [])
 
 /**
@@ -25,6 +23,4 @@ angular.module('mobay.services', [])
       return friends[friendId];
     }
   }
-});
-
 });

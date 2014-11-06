@@ -2,11 +2,14 @@
  * Licensed Materials - Property of Hai Liang Wang
  * All Rights Reserved.
  */
-define(['ionic'], function() {
-
 angular.module('mobay.controllers', [])
 
 .controller('LoginCtrl', function($scope) {
+	// Form data for the login modal
+	// $scope.loginData = {};
+
+	$scope.doLogin = function(){
+	};
 })
 
 .controller('DashCtrl', function($scope) {
@@ -25,7 +28,3 @@ angular.module('mobay.controllers', [])
 
 .controller('SettingsCtrl', function($scope) {
 });
-
-
-});
-

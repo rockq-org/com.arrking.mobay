@@ -1,5 +1,3 @@
-// Ionic Starter App
-
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
@@ -27,7 +25,26 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services'])
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
+  // doc : https://github.com/angular-ui/ui-router/wiki
   $stateProvider
+
+    // abstract is used for nested states 
+    // https://github.com/angular-ui/ui-router/wiki/Nested-States-%26-Nested-Views
+    .state('login', {
+        url: '/login',
+        abstract: true,
+        templateUrl: 'templates/login.html'
+    })
+
+    .state('login.form', {
+        url: '/form',
+        views:{
+            'login-form':{
+                templateUrl : 'templates/login-form.html',
+                controller: 'LoginCtrl'
+            }
+        }
+    })
 
     // setup an abstract state for the tabs directive
     .state('tab', {
@@ -89,7 +106,6 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services'])
     });    
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/login/form');
 
 });
-
