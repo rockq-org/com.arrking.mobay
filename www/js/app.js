@@ -48,34 +48,45 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services'])
       }
     })
 
-    .state('tab.friends', {
-      url: '/friends',
+    .state('tab.notifications', {
+      url: '/notifications',
       views: {
-        'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'
-        }
-      }
-    })
-    .state('tab.friend-detail', {
-      url: '/friend/:friendId',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/friend-detail.html',
-          controller: 'FriendDetailCtrl'
+        'tab-notifications': {
+          templateUrl: 'templates/tab-notifications.html',
+          controller: 'NotificationsCtrl'
         }
       }
     })
 
-    .state('tab.account', {
-      url: '/account',
+    .state('tab.notification-detail', {
+      url: '/notification/:friendId',
       views: {
-        'tab-account': {
-          templateUrl: 'templates/tab-account.html',
-          controller: 'AccountCtrl'
+        'tab-notifications': {
+          templateUrl: 'templates/notification-detail.html',
+          controller: 'NotificationDetailCtrl'
         }
       }
-    });
+    })
+
+    .state('tab.profile', {
+      url: '/profile',
+      views: {
+        'tab-profile': {
+          templateUrl: 'templates/tab-profile.html',
+          controller: 'ProfileCtrl'
+        }
+      }
+    })
+
+    .state('tab.settings', {
+      url: '/settings',
+      views: {
+        'tab-settings': {
+          templateUrl: 'templates/tab-settings.html',
+          controller: 'SettingsCtrl'
+        }
+      }
+    });    
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/dash');
