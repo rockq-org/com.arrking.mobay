@@ -11,7 +11,7 @@
 > https://github.com/arrking/com.arrking.mobay
 
 
-## Development Framework - Cordova and jQuery Mobile
+## Development Framework - Cordova and Ionic Framework
 
 ### About Cordova
 
@@ -23,7 +23,7 @@ http://cordova.apache.org
 
 http://rensanning.iteye.com/category/305123
 
-### Install Cordova 
+### Install Cordova and all other tools
 
 > precondition : NodeJS v0.10.22, npm v1.3.14, (Mac OS X, xCode for iOS apps)
 
@@ -42,7 +42,11 @@ http://rensanning.iteye.com/category/305123
 
 http://ionicframework.com/getting-started/
 
-## How to contribute to lotus lamp ?
+### Get the ionic project management tool 
+
+https://github.com/diegonetto/generator-ionic
+
+## How to contribute to moBay ?
 
 ### Get the project 
 
