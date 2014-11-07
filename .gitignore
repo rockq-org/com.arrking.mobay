@@ -9,4 +9,5 @@ plugins
 www/
 *.swp
 *sublime-*
+!mobay.sublime-project
 www-build

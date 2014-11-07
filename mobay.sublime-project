@@ -1,0 +1,50 @@
+{
+    "folders":
+    [
+        {
+            "path": ".",
+            "folder_exclude_patterns": ["node_modules","logs", "www-build",
+                                        ".tmp", ".sass-cache"],
+            "file_exclude_patterns": [".gitignore",
+                                      "mobile.sublime-project",
+                                      ".cfignore",
+                                      ".jshintrc",
+                                      "mobile.sublime-workspace",
+                                      "*.swp",
+                                      ".bowerrc",
+                                      ".editorconfig",
+                                      ".jshintignore"]
+        },
+    ],
+    "settings":
+    {
+        "tab_size": 4
+    },
+    "build_systems":
+    [
+        {
+            "name": "build-ios",
+            "cmd": ["extras/build-ios"],
+            "working_dir": "${project_path}",
+            "env":{
+                "PATH":"$PATH:/usr/local/bin"
+            }
+        },
+        {
+            "name": "deploy-ipa-to-device",
+            "cmd": ["extras/deploy-ipa"],
+            "working_dir": "${project_path}",
+            "env":{
+                "PATH":"$PATH:/usr/local/bin"
+            }
+        },
+        {
+            "name": "deploy-app-to-sim",
+            "cmd": ["extras/deploy-app-to-sim"],
+            "working_dir": "${project_path}",
+            "env":{
+                "PATH":"$PATH:/usr/local/bin"
+            }
+        }
+    ]
+}
