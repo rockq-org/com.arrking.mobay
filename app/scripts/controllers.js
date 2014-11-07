@@ -4,8 +4,9 @@
  */
 angular.module('mobay.controllers', [])
 
-.controller('LoginCtrl', function($scope) {
+.controller('LoginCtrl', function($scope, Store) {
 	// check out the sid value and decide which page should be
+
 
 	// hide splash screen
 	setTimeout(function() {

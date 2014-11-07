@@ -1,0 +1,16 @@
+#! /bin/bash 
+###########################################
+#
+###########################################
+
+# constants
+baseDir=$(cd `dirname "$0"`;pwd)
+projDir=`dirname $baseDir`
+
+# functions
+
+# main 
+[ -z "${BASH_SOURCE[0]}" -o "${BASH_SOURCE[0]}" = "$0" ] || return
+cd $projDir
+grunt build:ios
+ios-sim launch ./platforms/ios/build/emulator/moBay.app  --devicetypeid "com.apple.CoreSimulator.SimDeviceType.iPhone-5s, 8.1" --verbose --exit
