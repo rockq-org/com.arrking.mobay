@@ -4,15 +4,20 @@
  */
 angular.module('mobay.controllers', [])
 
-.controller('LoginCtrl', function($scope, Store) {
+.controller('LoginCtrl', function($scope, $state, store, cfg) {
 	// check out the sid value and decide which page should be
-
-
-	// hide splash screen
-	setTimeout(function() {
-        navigator.splashscreen.hide();
-    }, 2000);
-
+    // navigator.splashscreen.hide();
+    var sid = store.getUserSID();
+	if(sid){
+		// validate the session is available
+		// get user profile
+		alert(sid);
+	}else{
+		// show login page, hide splash screen
+		alert('no sid');
+	}
+	// $state.go("tab.dash");
+	// alert(MOBAYCFG.console)
 
 	// Form data for the login modal
 	// $scope.loginData = {};

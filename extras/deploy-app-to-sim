@@ -14,3 +14,6 @@ projDir=`dirname $baseDir`
 cd $projDir
 grunt build:ios
 ios-sim launch ./platforms/ios/build/emulator/moBay.app  --devicetypeid "com.apple.CoreSimulator.SimDeviceType.iPhone-5s, 8.1" --verbose --exit
+# bring the iOS Simulator to front
+# http://stackoverflow.com/questions/11248284/mac-os-x-bring-non-bundle-gui-applications-to-foreground-when-launched-from-t
+osascript -e 'tell application "iOS Simulator" to activate'

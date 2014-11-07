@@ -29,7 +29,7 @@ angular.module('mobay.services', [])
  * Persistence Object Manager
  * depends on understore
  */
-.factory('Store', function(){
+.factory('store', function(){
 
     function _getAppVersion() {
     return window.localStorage.getItem('MUSA_SNOWBALL_VERSION');
@@ -186,5 +186,4 @@ angular.module('mobay.services', [])
     setProfileEditorProperty: _setProfileEditorProperty,
     getProfileEditorProperty: _getProfileEditorProperty
   }
-
 });

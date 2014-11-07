@@ -39,17 +39,37 @@ module.exports = function (grunt) {
       },
       development: {
         constants: {
-          ENV: {
-            name: 'development',
-            apiEndpoint: 'http://dev.yoursite.com:10000/'
+          'cfg': {
+            host: 'mobay.mybluemix.net',
+            ssehost: 'mobaysse.mybluemix.net',
+            linkedinOauth: '/mobile/auth/linkedin',
+            pushAppId: 'cd16f387-608a-47fa-839e-1d0fd9a859d9',
+            pushAppRoute: 'mobay.mybluemix.net',
+            pushAppSecret: '0870db1e3946355b335a042c2976679770772299',
+            // console log level
+            // https://code.google.com/p/console-js/
+            // "log"|"debug"|"info"|"warn"|"error"|on"|"off"
+            console: 'DEBUG',
+            weinreDebug: 'false',
+            weinreServer: 'http://192.168.9.232:9088/target/target-script-min.js#musa'
           }
         }
       },
       production: {
         constants: {
-          ENV: {
-            name: 'production',
-            apiEndpoint: 'http://api.yoursite.com/'
+          'cfg': {
+            host: 'mobay.mybluemix.net',
+            ssehost: 'mobaysse.mybluemix.net',
+            linkedinOauth: '/mobile/auth/linkedin',
+            pushAppId: 'cd16f387-608a-47fa-839e-1d0fd9a859d9',
+            pushAppRoute: 'mobay.mybluemix.net',
+            pushAppSecret: '0870db1e3946355b335a042c2976679770772299',
+            // console log level
+            // https://code.google.com/p/console-js/
+            // "log"|"debug"|"info"|"warn"|"error"|on"|"off"
+            console: 'WARN',
+            weinreDebug: 'false',
+            weinreServer: 'http://192.168.9.232:9088/target/target-script-min.js#musa'
           }
         }
       }

@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'mobay.services' is found in services.js
 // 'mobay.controllers' is found in controllers.js
-angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services'])
+angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
