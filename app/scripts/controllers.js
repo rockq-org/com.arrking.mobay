@@ -8,17 +8,7 @@ angular.module('mobay.controllers', [])
 	// check out the sid value and decide which page should be
     // navigator.splashscreen.hide();
     var sid = store.getUserSID();
-	if(sid){
-		// validate the session is available
-		// get user profile
-		alert(sid);
-	}else{
-		// show login page, hide splash screen
-		alert('no sid');
-	}
 	// $state.go("tab.dash");
-	// alert(MOBAYCFG.console)
-
 	// Form data for the login modal
 	// $scope.loginData = {};
 	$scope.doLogin = function(){
