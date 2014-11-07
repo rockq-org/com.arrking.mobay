@@ -4,19 +4,41 @@
  */
 angular.module('mobay.controllers', [])
 
-.controller('LoginCtrl', function($scope, $state, store, cfg) {
+.controller('LoginCtrl', function($scope, $state, $http, store, cfg, webq) {
 	// check out the sid value and decide which page should be
     // navigator.splashscreen.hide();
     try{
-    	var sid = store.getNotifications();
-    	console.debug(sid);
+    	var sid = store.getUserSID();
+    	if(sid){
+    		webq.getUserProfile()
+			.success(function(data, status, headers) {
+				// this callback will be called asynchronously
+				// when the response is available
+				console.debug('>> get user profile status ' + status)
+				console.debug('>> get user profile data ' + JSON.stringify(data))
+				$state.go('tab.dash');
+			}).
+			error(function(data, status, headers) {
+				console.debug('>> get user profile status' + status)
+				// called asynchronously if an error occurs
+				// or server returns response with an error status.
+			});
+    	}else{
+    		// no sid, keep user at login page
+    	}
     }catch(e){
     	console.error(e);
     }
-	// $state.go("tab.dash");
 	// Form data for the login modal
-	// $scope.loginData = {};
+	$scope.loginData = {};
 	$scope.doLogin = function(){
+		webq.loginLocalPassport($scope.loginData.username, 
+			$scope.loginData.password).
+		then(function(data){
+			console.debug('Im in.')
+		}, function(error){
+			console.debug('ops ..')
+		})
 	};
 })
 

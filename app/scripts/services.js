@@ -1,4 +1,4 @@
-angular.module('mobay.services', [])
+angular.module('mobay.services', ['config'])
 
 /**
  * A simple example service that returns some data.
@@ -148,7 +148,6 @@ angular.module('mobay.services', [])
 
   this.setNotificationAsRead = function(id) {
     var json = this.getNotifications()[id];
-    console.log('get json ' + JSON.stringify(json));
     json.isRead = true;
     json.id = id;
     this.saveNotifications(json);
@@ -161,6 +160,59 @@ angular.module('mobay.services', [])
   this.getProfileEditorProperty = function() {
     return window.sessionStorage.getItem('MUSA_USER_PROFILE_EDITOR_PROPERTY');
   }
+})
+// web request utility
+.service('webq', function($http, cfg){
+
+
+  // retrieve user profile information
+  this.getUserProfile = function(){
+      return $http.get('http://{0}/user/me'.f(cfg.host), {
+          headers: {
+            'Accept': 'application/json'
+          },
+          responseType: 'json'
+        });
+  }
+
+  // login user
+  this.loginLocalPassport = function(username, password){
+    var defer = Q.defer();
+    // Get cookie at first
+    // this is a trick approach, in order to get the 
+    // Set-Cookie value, first attempt to access an 
+    // unsupport GET path, express will inject the 
+    // Set-Cookie value into the headers. The browser
+    // then accepts it. In the following post request,
+    // Server side can get the req.cookies.
+    console.debug('login ' + username + password);
+    $http.get('http://{0}/auth/local'.f(cfg.host))
+      .error(function(data, status, headers) {
+        $http.post('http://{0}/auth/local'.f(cfg.host),
+            {
+                email: username,
+                password: password
+            }, 
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                responseType : 'json'
+        }).
+        success(function(data, status, headers) {
+          console.debug('login data ' + JSON.stringify(data))
+          defer.resolve(data);
+        }).
+        error(function(data, status, headers) {
+          console.debug('error ' + status);
+          console.debug(data);
+          defer.reject(data);
+        });
+      });
+    return defer.promise;
+  }
+
 })
 
 ;
