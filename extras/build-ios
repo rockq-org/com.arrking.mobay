@@ -1,0 +1,16 @@
+#! /bin/bash 
+###########################################
+# build ios with grunt
+###########################################
+
+# constants
+baseDir=$(cd `dirname "$0"`;pwd)
+prjDir=`dirname $baseDir`
+# functions
+
+# main 
+[ -z "${BASH_SOURCE[0]}" -o "${BASH_SOURCE[0]}" = "$0" ] || return
+echo ">> Build in " $prjDir
+cd $prjDir
+grunt build:ios
+

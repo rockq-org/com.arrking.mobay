@@ -1,0 +1,33 @@
+#! /bin/bash 
+###########################################
+# build moBay ipa
+###########################################
+
+# run as debug mode
+set -x
+# constants
+baseDir=$(cd `dirname "$0"`;pwd)
+rootDir=`dirname $baseDir`
+buildDir=~/tmp
+xcodeprj=$rootDir/platforms/ios
+
+# functions
+
+# main 
+[ -z "${BASH_SOURCE[0]}" -o "${BASH_SOURCE[0]}" = "$0" ] || return
+cd $rootDir
+echo ">>BUILD IPA build"
+grunt build:ios
+version=`head www/config.xml|grep version|awk -F"=" '{ if(NR==2){ print $4 } }'|cut -c2-13`
+archivePath=$buildDir/moBay.$version.xcarchive
+exportPath=$buildDir/moBay.$version.ipa
+rm -rf $exportArchive $archivePath
+cd $xcodeprj
+echo ">>BUILD IPA clean"
+xcodebuild -project moBay.xcodeproj -scheme "moBay" -configuration "Debug" clean
+echo ">>BUILD IPA archive"
+xcodebuild  -project moBay.xcodeproj -sdk iphoneos -scheme "moBay" -configuration "Debug" -archivePath "$archivePath" archive
+echo ">>BUILD IPA export"
+xcodebuild -exportArchive -exportFormat IPA -exportProvisioningProfile "dev.com.arrking.mobay" -archivePath "$archivePath" -exportPath "$exportPath"
+# get transporter_chief.rb from http://gamua.com/blog/2012/03/how-to-deploy-ios-apps-to-the-iphone-via-the-command-line/
+~/bin/transporter_chief.rb $exportPath

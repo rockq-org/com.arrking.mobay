@@ -5,9 +5,16 @@
 angular.module('mobay.controllers', [])
 
 .controller('LoginCtrl', function($scope) {
+	// check out the sid value and decide which page should be
+
+	// hide splash screen
+	setTimeout(function() {
+        navigator.splashscreen.hide();
+    }, 2000);
+
+
 	// Form data for the login modal
 	// $scope.loginData = {};
-
 	$scope.doLogin = function(){
 	};
 })
