@@ -29,28 +29,28 @@ angular.module('mobay.services', [])
  * Persistence Object Manager
  * depends on understore
  */
-.factory('store', function(){
+.service('store', function(){
 
-    function _getAppVersion() {
+  this.getAppVersion = function () {
     return window.localStorage.getItem('MUSA_SNOWBALL_VERSION');
   }
 
-  function _setAppVersion(appVersion) {
+  this.setAppVersion = function(appVersion) {
     window.localStorage.setItem('MUSA_SNOWBALL_VERSION', appVersion);
   }
 
-  function _saveUserAvatar(data) {
-    var profile = _getUserProfile();
+  this.saveUserAvatar = function(data) {
+    var profile = this.getUserProfile();
     profile._json.pictureUrl = data;
-    _setUserProfile(profile);
+    this.setUserProfile(profile);
   }
 
-  function _setMaps(data) {
-    window.localStorage.setItem('{0}-MUSA_MAPS'.f(_getUserId()), JSON.stringify(data));
+  this.setMaps = function(data) {
+    window.localStorage.setItem('{0}-MUSA_MAPS'.f(this.getUserId()), JSON.stringify(data));
   }
 
-  function _getMaps() {
-    var value = window.localStorage.getItem('{0}-MUSA_MAPS'.f(_getUserId()));
+  this.getMaps = function() {
+    var value = window.localStorage.getItem('{0}-MUSA_MAPS'.f(this.getUserId()));
     if (value) {
       return JSON.parse(value);
     } else {
@@ -58,43 +58,43 @@ angular.module('mobay.services', [])
     }
   }
 
-  function _setCurrentMapId(mapId) {
-    window.localStorage.setItem('{0}-MUSA_CUR_MAP'.f(_getUserId()), mapId);
+  this.setCurrentMapId = function(mapId) {
+    window.localStorage.setItem('{0}-MUSA_CUR_MAP'.f(this.getUserId()), mapId);
   }
 
-  function _getCurrentMapId() {
-    return window.localStorage.getItem('{0}-MUSA_CUR_MAP'.f(_getUserId()));
+  this.getCurrentMapId = function() {
+    return window.localStorage.getItem('{0}-MUSA_CUR_MAP'.f(this.getUserId()));
   }
 
   // email address
-  function _setUserId(id) {
+  this.setUserId = function(id) {
     window.localStorage.setItem('MUSA_USER_ID', id);
   }
 
-  function _getUserId() {
+  this.getUserId = function() {
     return window.localStorage.getItem('MUSA_USER_ID');
   }
 
-  function _getSubTags() {
-    return JSON.parse(window.localStorage.getItem('{0}-SUBTAGS'.f(_getUserId())) || '[]');
+  this.getSubTags = function() {
+    return JSON.parse(window.localStorage.getItem('{0}-SUBTAGS'.f(this.getUserId())) || '[]');
   }
 
-  function _setSubTags(data) {
-    window.localStorage.setItem('{0}-SUBTAGS'.f(_getUserId()), JSON.stringify(data));
+  this.setSubTags = function(data) {
+    window.localStorage.setItem('{0}-SUBTAGS'.f(this.getUserId()), JSON.stringify(data));
   }
 
-  function _removeSubTag(tagName) {
-    if (_.indexOf(_getSubTags(), tagName) != -1) {
-      var tmp = _.without(_getSubTags(), tagName);
-      _setSubTags(tmp);
+  this.removeSubTag = function(tagName) {
+    if (_.indexOf(this.getSubTags(), tagName) != -1) {
+      var tmp = _.without(this.getSubTags(), tagName);
+      this.setSubTags(tmp);
       return tmp;
     } else {
-      return _getSubTags();
+      return this.getSubTags();
     }
   }
 
-  function _saveNotifications(data) {
-    var key = '{0}-NOTIFICATIONS'.f(_getUserId());
+  this.saveNotifications = function(data) {
+    var key = '{0}-NOTIFICATIONS'.f(this.getUserId());
     var blob = window.localStorage.getItem(key);
     var json = {};
     if (blob) {
@@ -116,9 +116,9 @@ angular.module('mobay.services', [])
     window.localStorage.setItem(key, JSON.stringify(json));
   }
 
-  function _getNotifications() {
+  this.getNotifications = function() {
     var json = {};
-    var blob = window.localStorage.getItem('{0}-NOTIFICATIONS'.f(_getUserId()));
+    var blob = window.localStorage.getItem('{0}-NOTIFICATIONS'.f(this.getUserId()));
     if (blob) {
       json = JSON.parse(blob);
     }
@@ -126,64 +126,41 @@ angular.module('mobay.services', [])
   }
 
   // data is in json format
-  function _setUserProfile(data) {
-    window.localStorage.setItem('{0}-MUSA_USER_PROFILE'.f(_getUserId()), JSON.stringify(data));
+  this.setUserProfile = function(data) {
+    window.localStorage.setItem('{0}-MUSA_USER_PROFILE'.f(this.getUserId()), JSON.stringify(data));
   }
 
-  function _getUserProfile() {
-    return JSON.parse(window.localStorage.getItem('{0}-MUSA_USER_PROFILE'.f(_getUserId())));
+  this.getUserProfile = function() {
+    return JSON.parse(window.localStorage.getItem('{0}-MUSA_USER_PROFILE'.f(this.getUserId())));
   }
 
-  function _getUserSID() {
-    return window.localStorage.getItem('MUSA_USER_SID'.f(_getUserId()));
+  this.getUserSID = function() {
+    return window.localStorage.getItem('MUSA_USER_SID'.f(this.getUserId()));
   }
 
-  function _setUserSID(sid) {
-    window.localStorage.setItem('MUSA_USER_SID'.f(_getUserId()), sid);
+  this.setUserSID = function(sid) {
+    window.localStorage.setItem('MUSA_USER_SID'.f(this.getUserId()), sid);
   }
 
-  function _deleteUserSID() {
-    window.localStorage.removeItem('MUSA_USER_SID'.f(_getUserId()));
+  this.deleteUserSID = function() {
+    window.localStorage.removeItem('MUSA_USER_SID'.f(this.getUserId()));
   }
 
-  function _setNotificationAsRead(id) {
-    var json = _getNotifications()[id];
+  this.setNotificationAsRead = function(id) {
+    var json = this.getNotifications()[id];
     console.log('get json ' + JSON.stringify(json));
     json.isRead = true;
     json.id = id;
-    _saveNotifications(json);
+    this.saveNotifications(json);
   }
 
-  function _setProfileEditorProperty(property) {
+  this.setProfileEditorProperty = function(property) {
     window.sessionStorage.setItem('MUSA_USER_PROFILE_EDITOR_PROPERTY', property);
   }
 
-  function _getProfileEditorProperty() {
+  this.getProfileEditorProperty = function() {
     return window.sessionStorage.getItem('MUSA_USER_PROFILE_EDITOR_PROPERTY');
   }
+})
 
-  return {
-    saveNotifications: _saveNotifications,
-    getNotifications: _getNotifications,
-    setUserProfile: _setUserProfile,
-    getUserProfile: _getUserProfile,
-    setUserSID: _setUserSID,
-    getUserSID: _getUserSID,
-    deleteUserSID: _deleteUserSID,
-    setAppVersion: _setAppVersion,
-    getAppVersion: _getAppVersion,
-    setUserId: _setUserId,
-    getUserId: _getUserId,
-    setNotificationAsRead: _setNotificationAsRead,
-    getSubTags: _getSubTags,
-    setSubTags: _setSubTags,
-    removeSubTag: _removeSubTag,
-    saveUserAvatar: _saveUserAvatar,
-    getMaps: _getMaps,
-    setMaps: _setMaps,
-    setCurrentMapId: _setCurrentMapId,
-    getCurrentMapId: _getCurrentMapId,
-    setProfileEditorProperty: _setProfileEditorProperty,
-    getProfileEditorProperty: _getProfileEditorProperty
-  }
-});
+;

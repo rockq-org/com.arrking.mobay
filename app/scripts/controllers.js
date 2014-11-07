@@ -7,7 +7,12 @@ angular.module('mobay.controllers', [])
 .controller('LoginCtrl', function($scope, $state, store, cfg) {
 	// check out the sid value and decide which page should be
     // navigator.splashscreen.hide();
-    var sid = store.getUserSID();
+    try{
+    	var sid = store.getNotifications();
+    	console.debug(sid);
+    }catch(e){
+    	console.error(e);
+    }
 	// $state.go("tab.dash");
 	// Form data for the login modal
 	// $scope.loginData = {};
