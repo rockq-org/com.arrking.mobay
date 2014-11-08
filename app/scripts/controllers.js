@@ -4,30 +4,26 @@
  */
 angular.module('mobay.controllers', [])
 
-.controller('LoginCtrl', function($scope, $state, $http, store, cfg, webq) {
+.controller('LoginCtrl', function($scope, $state, $http, $log, store, cfg, webq) {
 	// check out the sid value and decide which page should be
     // navigator.splashscreen.hide();
     try{
     	var sid = store.getUserSID();
+    	alert(sid);
     	if(sid){
     		webq.getUserProfile()
 			.success(function(data, status, headers) {
 				// this callback will be called asynchronously
 				// when the response is available
-				console.debug('>> get user profile status ' + status)
-				console.debug('>> get user profile data ' + JSON.stringify(data))
 				$state.go('tab.dash');
 			}).
 			error(function(data, status, headers) {
-				console.debug('>> get user profile status' + status)
-				// called asynchronously if an error occurs
-				// or server returns response with an error status.
+				// error occured, maybe the session is expired
+				// so, keep the user at login page
 			});
-    	}else{
-    		// no sid, keep user at login page
     	}
     }catch(e){
-    	console.error(e);
+    	$log.error(e);
     }
 	// Form data for the login modal
 	$scope.loginData = {};
@@ -35,17 +31,26 @@ angular.module('mobay.controllers', [])
 		webq.loginLocalPassport($scope.loginData.username, 
 			$scope.loginData.password).
 		then(function(data){
-			console.debug('Im in.');
-			webq.getUserProfile()
-			.success(function(data, status, headers) {
-				console.debug(data);
-				$state.go('tab.dash');
-			})
-			.error(function(data, status){
-				console.error(data)
-			})
+			// set sid into storage
+            cordova.plugins.musa.setCookieByDomain('http://{0}/,http://{1}/'.f(cfg.host, cfg.ssehost), data.sid, function() {
+				webq.getUserProfile()
+				.success(function(data, status, headers) {
+					$log.debug(data);
+					$state.go('tab.dash');
+				})
+				.error(function(data, status){
+					$log.error('can not get user profile.')
+					$log.error(data);
+				})
+            });
 		}, function(error){
-			console.debug('ops ..')
+			// TODO show an error message
+			/*
+			 * Possible Cause for login error 
+			 * (1) wrong username and password
+			 * (2) no network
+			 */
+			$log.error(error);
 			$scope.loginData = {};
 		})
 	};

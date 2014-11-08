@@ -192,8 +192,12 @@ angular.module('mobay.services', ['config'])
             responseType : 'json'
     }).
     success(function(data, status, headers) {
-      console.debug('login data ' + JSON.stringify(data))
-      defer.resolve(data);
+      console.debug('login data ' + JSON.stringify(data));
+      if(data.sid){
+        defer.resolve(data);
+      }else{
+        defer.reject('no sid value in response.');
+      }
     }).
     error(function(data, status, headers) {
       console.debug('error ' + status);

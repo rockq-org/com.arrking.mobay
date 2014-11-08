@@ -21,9 +21,13 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $httpProvider, $sceDelegateProvider) {
+.config(function($stateProvider, $urlRouterProvider, $logProvider, $httpProvider, $sceDelegateProvider, cfg) {
 
   $httpProvider.defaults.withCredentials = true;
+  $logProvider.debugEnabled(cfg.debug);
+
+  // set log level - debug|production
+
   // http://stackoverflow.com/questions/12111936/angularjs-performs-an-options-http-request-for-a-cross-origin-resource
   $sceDelegateProvider.resourceUrlWhitelist([
     // Allow same origin resource loads.
