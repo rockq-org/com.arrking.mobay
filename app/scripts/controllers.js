@@ -35,9 +35,18 @@ angular.module('mobay.controllers', [])
 		webq.loginLocalPassport($scope.loginData.username, 
 			$scope.loginData.password).
 		then(function(data){
-			console.debug('Im in.')
+			console.debug('Im in.');
+			webq.getUserProfile()
+			.success(function(data, status, headers) {
+				console.debug(data);
+				$state.go('tab.dash');
+			})
+			.error(function(data, status){
+				console.error(data)
+			})
 		}, function(error){
 			console.debug('ops ..')
+			$scope.loginData = {};
 		})
 	};
 })

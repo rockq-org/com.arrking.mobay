@@ -50,7 +50,7 @@ https://github.com/diegonetto/generator-ionic
 
 ### Get the project 
 
-		git clone git@github.com:arrking/musa-hw-mobile.git
+		git clone git@github.com:arrking/com.arrking.mobay.git
 
 ### Install node modules 
 
@@ -77,11 +77,10 @@ https://github.com/diegonetto/generator-ionic
         grunt build:ios
 		open platforms/ios/moBay.xcodeproj 
 
-### Customize SASS
-http://learn.ionicframework.com/videos/sass/
+### Development on the fly
 
-        ionic setup sass 
-        ionic serve
+        cd com.arrking.mobay
+        grunt serve
 
 Then, install the app into your device or simulator.
 
