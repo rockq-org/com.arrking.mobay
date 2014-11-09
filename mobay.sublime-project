@@ -3,17 +3,25 @@
     [
         {
             "path": ".",
-            "folder_exclude_patterns": ["node_modules","logs", "www-build",
-                                        ".tmp", ".sass-cache"],
-            "file_exclude_patterns": [".gitignore",
-                                      "mobile.sublime-project",
-                                      ".cfignore",
-                                      ".jshintrc",
-                                      "mobile.sublime-workspace",
-                                      "*.swp",
-                                      ".bowerrc",
-                                      ".editorconfig",
-                                      ".jshintignore"]
+            "folder_exclude_patterns": 
+            [
+                "node_modules","logs",
+                "www-build",
+                ".tmp",
+                ".sass-cache"
+            ],
+            "file_exclude_patterns": 
+            [
+                ".gitignore",
+                "mobile.sublime-project",
+                "cfignore",
+                "jshintrc",
+                "mobile.sublime-workspace",
+                "*.swp",
+                ".bowerrc",
+                ".editorconfig",
+                ".jshintignore"
+            ]
         },
     ],
     "settings":
