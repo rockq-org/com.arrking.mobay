@@ -58,6 +58,36 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('ProfileCtrl', function($scope) {
+    $scope.labels = [
+        {
+            name: '学校'
+        },
+        {
+            name: '公司'
+        },
+        {
+            name: '兴趣'
+        }
+    ];
+    $scope.school = '中国科学院大学';
+    $scope.save = function (){
+        $scope.school = '12345';
+        location.href='#/tab/profile';
+    };
+})
+
+.controller('PeopleCtrl', function ($scope) {
+    $scope.people = [
+        {
+            name: '路人甲'
+        },
+        {
+            name: '路人乙'
+        },
+        {
+            name: '路人丙'
+        }
+    ];
 })
 
 .controller('SettingsCtrl', function($scope) {
