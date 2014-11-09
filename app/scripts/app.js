@@ -14,7 +14,10 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
         }
         if (window.StatusBar) {
             // org.apache.cordova.statusbar required
-            StatusBar.styleDefault();
+            StatusBar.overlaysWebView(true);
+            StatusBar.styleLightContent();
+            StatusBar.backgroundColorByName("white");
+            // StatusBar.hide();
         }
         if (store.getAccessToken()['access_token']) {
             navigator.splashscreen.hide();
