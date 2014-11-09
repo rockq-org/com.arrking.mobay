@@ -76,6 +76,25 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
       }
     })
 
+    .state('tab.dash-people', {
+      url: '/dash/people',
+      views: {
+        'tab-dash': {
+          templateUrl: 'templates/people.html',
+          controller: 'PeopleCtrl'
+        }
+      }
+    })
+
+    .state('tab.dash-people-detail', {
+      url: '/dash/people/:userid',
+      views: {
+        'tab-dash': {
+          templateUrl: 'templates/people-detail.html'
+        }
+      }
+    })
+
     .state('tab.notifications', {
       url: '/notifications',
       views: {
@@ -105,6 +124,15 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
         }
       }
     })  
+
+    .state('tab.profile-edit', {
+      url: '/profile/edit',
+      views: {
+        'tab-profile': {
+          templateUrl: 'templates/profile-edit.html'
+        }
+      }
+    })
 
     .state('tab.settings', {
       url: '/settings',

@@ -5,50 +5,50 @@
 angular.module('mobay.controllers', [])
 
 .controller('LoginCtrl', function($scope, $state, $http, store, cfg, webq) {
-	// check out the sid value and decide which page should be
+    // check out the sid value and decide which page should be
     // navigator.splashscreen.hide();
     try{
-    	var sid = store.getUserSID();
-    	if(sid){
-    		webq.getUserProfile()
-			.success(function(data, status, headers) {
-				// this callback will be called asynchronously
-				// when the response is available
-				console.debug('>> get user profile status ' + status)
-				console.debug('>> get user profile data ' + JSON.stringify(data))
-				$state.go('tab.dash');
-			}).
-			error(function(data, status, headers) {
-				console.debug('>> get user profile status' + status)
-				// called asynchronously if an error occurs
-				// or server returns response with an error status.
-			});
-    	}else{
-    		// no sid, keep user at login page
-    	}
+        var sid = store.getUserSID();
+        if(sid){
+            webq.getUserProfile()
+            .success(function(data, status, headers) {
+                // this callback will be called asynchronously
+                // when the response is available
+                console.debug('>> get user profile status ' + status)
+                console.debug('>> get user profile data ' + JSON.stringify(data))
+                $state.go('tab.dash');
+            }).
+            error(function(data, status, headers) {
+                console.debug('>> get user profile status' + status)
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+            });
+        }else{
+            // no sid, keep user at login page
+        }
     }catch(e){
-    	console.error(e);
+        console.error(e);
     }
-	// Form data for the login modal
-	$scope.loginData = {};
-	$scope.doLogin = function(){
-		webq.loginLocalPassport($scope.loginData.username, 
-			$scope.loginData.password).
-		then(function(data){
-			console.debug('Im in.');
-			webq.getUserProfile()
-			.success(function(data, status, headers) {
-				console.debug(data);
-				$state.go('tab.dash');
-			})
-			.error(function(data, status){
-				console.error(data)
-			})
-		}, function(error){
-			console.debug('ops ..')
-			$scope.loginData = {};
-		})
-	};
+    // Form data for the login modal
+    $scope.loginData = {};
+    $scope.doLogin = function(){
+        webq.loginLocalPassport($scope.loginData.username, 
+            $scope.loginData.password).
+        then(function(data){
+            console.debug('Im in.');
+            webq.getUserProfile()
+            .success(function(data, status, headers) {
+                console.debug(data);
+                $state.go('tab.dash');
+            })
+            .error(function(data, status){
+                console.error(data)
+            })
+        }, function(error){
+            console.debug('ops ..')
+            $scope.loginData = {};
+        })
+    };
 })
 
 .controller('DashCtrl', function($scope) {
@@ -63,6 +63,36 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('ProfileCtrl', function($scope) {
+    $scope.labels = [
+        {
+            name: '学校'
+        },
+        {
+            name: '公司'
+        },
+        {
+            name: '兴趣'
+        }
+    ];
+    $scope.school = '中国科学院大学';
+    $scope.save = function (){
+        $scope.school = '12345';
+        location.href='#/tab/profile';
+    };
+})
+
+.controller('PeopleCtrl', function ($scope) {
+    $scope.people = [
+        {
+            name: '路人甲'
+        },
+        {
+            name: '路人乙'
+        },
+        {
+            name: '路人丙'
+        }
+    ];
 })
 
 .controller('SettingsCtrl', function($scope) {

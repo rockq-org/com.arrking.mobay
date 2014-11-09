@@ -1,5 +1,40 @@
-<ion-view title="Profile">
-  <ion-content class="padding">
-    <h1>Profile</h1>
-  </ion-content>
+<ion-view title="个人信息" hide-nav-bar="true">
+    <ion-header-bar class="bar-dark">
+        <h1 class="title">
+            个人信息
+        </h1>
+    </ion-header-bar>
+
+    <ion-content class="padding-top stable-bg">
+        <div class="list">
+            <div class="list">
+                <ion-item class="item-thumbnail-right item-icon-right" href="#">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDts5TfpUl1ueJFvwCZx1jvZMain_yk5eVP0zTXTxDH2v-OVc_">
+                    <h2>昵称</h2>
+                    <p>状态</p>
+                </ion-item>
+            </div>
+        </div>
+
+        <div class="list">
+            <div class="list">
+                <ion-item href="#/tab/profile/edit" class="item-icon-right">
+                    学校
+                    <span class="item-note">{{school}}</span>
+                    <i class="icon ion-ios7-arrow-right dark"></i>
+                </ion-item>
+                <ion-item href="#/tab/profile/edit" class="item-icon-right">
+                    公司
+                    <span class="item-note">中国科学院</span>
+                    <i class="icon ion-ios7-arrow-right dark"></i>
+                </ion-item>
+                <ion-item href="#/tab/profile/edit" class="item-icon-right">
+                    兴趣
+                    <span class="item-note"></span>
+                    <i class="icon ion-ios7-arrow-right dark"></i>
+                </ion-item>
+                </a>
+            </div>
+        </div>
+    </ion-content>
 </ion-view>
