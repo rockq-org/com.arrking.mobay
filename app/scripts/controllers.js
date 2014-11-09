@@ -91,5 +91,14 @@ angular.module('mobay.controllers', [])
     ];
 })
 
-.controller('SettingsCtrl', function($scope) {
+.controller('SettingsCtrl', function ($scope, $http) {
+})
+
+.controller('TermsCtrl', function ($scope, $http, cfg) {
+    $http({
+        method: 'GET',
+        url: 'http://' + cfg.host + '/public/md/user-service-agreements.md'
+    }).success(function(data, status, headers, config) {
+        console.log('xxx');
+    });
 });

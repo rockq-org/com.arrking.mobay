@@ -151,6 +151,16 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
                 controller: 'SettingsCtrl'
             }
         }
+    })
+
+    .state('tab.settings-terms', {
+        url: '/settings/terms',
+        views: {
+            'tab-settings': {
+                templateUrl: 'templates/settings-terms.html',
+                controller: 'TermsCtrl'
+            }
+        }
     });
 
     // if none of the above states are matched, use this as the fallback
