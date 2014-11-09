@@ -1,2 +1,11 @@
 // Your application styles go here
+@import "modules/variables.scss";
 @import "modules/fast.scss";
+
+// make sure customized scss above below lines
+
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../fonts" !default;
+
+// Include all of Ionic
+@import "../lib/ionic/scss/ionic";
