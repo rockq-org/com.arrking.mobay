@@ -7,7 +7,7 @@
 // 'mobay.controllers' is found in controllers.js
 angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $log, $state, cfg, store, webq) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -18,12 +18,17 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    if(store.getAccessToken()['access_token']){
+      $state.go('tab.dash');
+    }else{
+      navigator.splashscreen.hide();
+    }
   });
 })
 
 .config(function($stateProvider, $urlRouterProvider, $logProvider, $httpProvider, $sceDelegateProvider, cfg) {
 
-  $httpProvider.defaults.withCredentials = true;
+  // $httpProvider.defaults.withCredentials = true;
   $logProvider.debugEnabled(cfg.debug);
 
   // set log level - debug|production

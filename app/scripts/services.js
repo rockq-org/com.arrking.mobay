@@ -160,24 +160,66 @@ angular.module('mobay.services', ['config'])
   this.getProfileEditorProperty = function() {
     return window.sessionStorage.getItem('MUSA_USER_PROFILE_EDITOR_PROPERTY');
   }
+
+  this.setAccessToken = function(data){
+    window.localStorage.setItem('MUSA_ACCESS_TOKEN', JSON.stringify(data));
+  }
+
+  this.getAccessToken = function(){
+    var token = window.localStorage.getItem('MUSA_ACCESS_TOKEN');
+    if(token){
+      return JSON.parse(token);
+    }else{
+      return {}
+    }
+  }
+
+  this.deleteAccessToken = function(){
+    window.localStorage.removeItem('MUSA_ACCESS_TOKEN');
+  }
+
 })
 // web request utility
-.service('webq', function($http, cfg){
-
+.service('webq', function($http, $q, cfg, store){
 
   // retrieve user profile information
   this.getUserProfile = function(){
-      return $http.get('http://{0}/user/me'.f(cfg.host), {
-          headers: {
-            'Accept': 'application/json'
-          },
-          responseType: 'json'
-        });
+    var defer = $q.defer();
+    // $http.get('http://{0}/user/me'.f(cfg.host), {
+    //     headers: {
+    //       'Accept': 'application/json'
+    //     },
+    //     responseType: 'json'
+    // }).
+    // success(function(data, status){
+    //   alert('sc')
+    //   defer.resolve(data);
+    // }).
+    // error(function(data, status){
+    //   alert('fa')
+    //   defer.reject(data);
+    // });
+
+    $http.get('http://{0}/secret'.f(cfg.host),{
+      headers:{
+        'Authorization': 'Bearer {0}'.f(store.getAccessToken()['access_token'])
+      }
+    }).
+    success(function(data){
+      defer.resolve(data);
+    }).
+    error(function(err){
+      // keep at the login page
+      $log.error(err);
+      defer.reject(err)
+    });
+
+    return defer.promise;
   }
 
   // login user
   this.loginLocalPassport = function(username, password){
-    var defer = Q.defer();
+    var defer = $q.defer();
 
     $http.post('http://{0}/auth/local'.f(cfg.host),
         {
@@ -193,11 +235,7 @@ angular.module('mobay.services', ['config'])
     }).
     success(function(data, status, headers) {
       console.debug('login data ' + JSON.stringify(data));
-      if(data.sid){
-        defer.resolve(data);
-      }else{
-        defer.reject('no sid value in response.');
-      }
+      defer.resolve(data);
     }).
     error(function(data, status, headers) {
       console.debug('error ' + status);

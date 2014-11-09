@@ -7,56 +7,48 @@ angular.module('mobay.controllers', [])
 .controller('LoginCtrl', function($scope, $state, $http, $log, store, cfg, webq) {
 	// check out the sid value and decide which page should be
     // navigator.splashscreen.hide();
-    try{
-    	var sid = store.getUserSID();
-    	alert(sid);
-    	if(sid){
-    		webq.getUserProfile()
-			.success(function(data, status, headers) {
-				// this callback will be called asynchronously
-				// when the response is available
-				$state.go('tab.dash');
-			}).
-			error(function(data, status, headers) {
-				// error occured, maybe the session is expired
-				// so, keep the user at login page
-			});
-    	}
-    }catch(e){
-    	$log.error(e);
-    }
+  //   try{
+		// $state.go('tab.dash');
+  //   	var sid = store.getUserSID();
+  //   }catch(e){
+  //   	$log.error(e);
+  //   }
 	// Form data for the login modal
 	$scope.loginData = {};
 	$scope.doLogin = function(){
 		webq.loginLocalPassport($scope.loginData.username, 
-			$scope.loginData.password).
-		then(function(data){
-			// set sid into storage
-            cordova.plugins.musa.setCookieByDomain('http://{0}/,http://{1}/'.f(cfg.host, cfg.ssehost), data.sid, function() {
-				webq.getUserProfile()
-				.success(function(data, status, headers) {
-					$log.debug(data);
-					$state.go('tab.dash');
-				})
-				.error(function(data, status){
-					$log.error('can not get user profile.')
-					$log.error(data);
-				})
-            });
-		}, function(error){
+			$scope.loginData.password).then(function(token){
+			store.setAccessToken(token);
+			$state.go('tab.dash');
+		}, function(err){
 			// TODO show an error message
 			/*
 			 * Possible Cause for login error 
 			 * (1) wrong username and password
 			 * (2) no network
 			 */
-			$log.error(error);
+			$log.error(err);
 			$scope.loginData = {};
 		})
 	};
 })
 
-.controller('DashCtrl', function($scope) {
+.controller('DashCtrl', function($scope, $state, $log, webq) {
+	webq.getUserProfile().then(function(profile){
+		$log.debug(profile);
+		navigator.splashscreen.hide();
+	}, function(err){
+		// maybe token is revoked or has no network
+		// TODO add a utility for get network status
+		if(true){
+			// has no network
+			navigator.splashscreen.hide();
+		}else{
+			// token is revoked, force the user login again
+			$state.go('login.form');
+		}
+		$log.error(err);
+	})
 })
 
 .controller('NotificationsCtrl', function($scope, Friends) {
