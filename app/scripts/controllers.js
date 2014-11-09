@@ -36,13 +36,11 @@ angular.module('mobay.controllers', [])
 .controller('DashCtrl', function($scope, $state, $log, webq) {
 	webq.getUserProfile().then(function(profile){
 		$log.debug(profile);
-		navigator.splashscreen.hide();
 	}, function(err){
 		// maybe token is revoked or has no network
 		// TODO add a utility for get network status
 		if(true){
 			// has no network
-			navigator.splashscreen.hide();
 		}else{
 			// token is revoked, force the user login again
 			$state.go('login.form');

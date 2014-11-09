@@ -6,7 +6,8 @@ node_modules
 .sass-cache
 platforms
 plugins
-www
+www/
+www/index.html
 *.swp
 *sublime-*
 !mobay.sublime-project

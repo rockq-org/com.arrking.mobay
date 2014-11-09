@@ -19,6 +19,7 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
       StatusBar.styleDefault();
     }
     if(store.getAccessToken()['access_token']){
+      navigator.splashscreen.hide();
       $state.go('tab.dash');
     }else{
       navigator.splashscreen.hide();

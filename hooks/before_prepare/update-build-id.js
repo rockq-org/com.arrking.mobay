@@ -33,8 +33,6 @@ if (rootdir) {
         var result = data.replace(/(ios-CFBundleVersion=['"])[\d_]+(['"])/g, "$1" + build + "$2");
 
         fs.writeFileSync(fullfilename, result, 'utf8');
-        // write a copy to www, further retrieve configurations in app js
-        fs.writeFileSync(path.join(rootdir, "www/config.xml"), result, 'utf8');
         console.log("Updated build id: " + build);
     } else {
         console.log("missing: "+fullfilename);
