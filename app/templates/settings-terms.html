@@ -1,9 +1,7 @@
-<ion-view title="服务条款">
+<ion-view title="服务条款" >
     <ion-content has-header="true">
-        <ion-list>
-            <ion-item>
-                <h1>条款</h1>
-            </ion-item>
-        </ion-list>
+		<div class="item text-center" style="border: 0;" ng-show="terms==null">加载中...</div>
+		<div ng-bind-html="terms">
+		</div>
     </ion-content>
 </ion-view>
