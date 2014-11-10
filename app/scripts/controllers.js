@@ -93,6 +93,7 @@ angular.module('mobay.controllers', [])
 
 .controller('SettingsCtrl', function ($rootScope, $scope, $log, $http, cfg) {
     $scope.title = 'moBay';
+    $scope.appVersion = cfg.version;
 
     function mailUnAvailable(){
         $scope.title = '邮件服务不可用';
