@@ -258,7 +258,7 @@ angular.module('mobay.services', ['config'])
         if(token){
             $http.get('http://{0}/logout'.f(cfg.host), {
                 headers:{
-                    'Authorization': 'Bearer {0}'.f()
+                    'Authorization': 'Bearer {0}'.f(token)
                 }   
             });
         }
