@@ -91,7 +91,44 @@ angular.module('mobay.controllers', [])
     ];
 })
 
-.controller('SettingsCtrl', function ($scope, $http) {
+.controller('SettingsCtrl', function ($rootScope, $scope, $log, $http, cfg) {
+    $scope.title = 'moBay';
+
+    function mailUnAvailable(){
+        $scope.title = '邮件服务不可用';
+        setTimeout(function(){
+            $scope.title = 'moBay';
+            // https://docs.angularjs.org/api/ng/type/$rootScope.Scope
+            $rootScope.$digest();
+        }, 2000)
+    }
+
+    $scope.openFeedbackMailTemplate = function(){
+        if(window.cordova && window.cordova.plugins.email){
+            cordova.plugins.email.isAvailable(function(isAvailable) {
+                // alert('Service is not available') unless isAvailable;
+                if (isAvailable) {
+                    // get appVersion
+                    cordova.plugins.email.open({
+                        to: ['mobay@arrking.com'], // email addresses for TO field
+                        //bcc: [],
+                        //cc:  [],
+                        // attachments: Array, // file paths or base64 data streams
+                        subject: '[moBay用户反馈] 版本 v{0}'.f(cfg.version||''), // subject of the email
+                        body: '你好，moBay 团队 <br/>', // email body (for HTML, set isHtml to true)
+                        isHtml: true, // indicats if the body is HTML or plain text
+                    }, function() {
+                        $log.debug('email view dismissed');
+                    });
+                } else {
+                    mailUnAvailable();
+                }
+            });
+        }else{
+            mailUnAvailable();
+            $log.debug('no mail plugins')
+        }
+    }
 })
 
 .controller('TermsCtrl', function ($scope, $log, $http, cfg) {

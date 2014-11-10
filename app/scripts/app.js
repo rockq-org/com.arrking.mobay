@@ -19,11 +19,13 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
             StatusBar.backgroundColorByName("white");
             // StatusBar.hide();
         }
-        if (store.getAccessToken()['access_token']) {
-            navigator.splashscreen.hide();
-            $state.go('tab.dash');
-        } else {
-            navigator.splashscreen.hide();
+        if(window.navigator.splashscreen){
+            if (store.getAccessToken()['access_token']) {
+                navigator.splashscreen.hide();
+                $state.go('tab.dash');
+            } else {
+                navigator.splashscreen.hide();
+            }
         }
     });
 })

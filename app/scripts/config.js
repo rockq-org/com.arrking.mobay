@@ -3,6 +3,7 @@
  angular.module("config", [])
 
 .constant("cfg", {
+  "version": "0.0.2",
   "host": "mobay.mybluemix.net",
   "debug": true,
   "ssehost": "mobaysse.mybluemix.net",

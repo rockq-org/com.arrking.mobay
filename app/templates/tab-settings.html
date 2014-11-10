@@ -1,11 +1,8 @@
 <ion-view title="设置" hide-nav-bar="true">
     <ion-header-bar class="bar-dark" align-title="left">
-        <h1 class="title">
-            moBay(试用版)
+        <h1 class="title" ng-bind='title'>
+            
         </h1>
-        <div class="buttons">
-            <button class="button button-outline button-small icon-left ion-email">意见反馈</button>
-        </div>
     </ion-header-bar>
 
     <ion-content class="padding-top stable-bg">
@@ -42,10 +39,16 @@
                 版本
                 <span class="item-note">v0.0.1</span>
             </div>
+            <!-- http://ionicframework.com/docs/api/directive/onTap/ -->
+            <div class="item item-icon-right" on-tap="openFeedbackMailTemplate()">
+                用户反馈
+                <i class="icon ion-paper-airplane"></i>
+            </div>
             <a class="item item-icon-right stable-bg assertive" href="#/tab/settings/terms">
                 服务协议
                 <i class="icon ion-ios7-paper-outline"></i>
             </a>
+
         </div>
     </ion-content>
 </ion-view>
