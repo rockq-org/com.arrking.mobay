@@ -252,6 +252,18 @@ angular.module('mobay.services', ['config'])
         return defer.promise;
     };
 
+    // logout user
+    this.logout = function(){
+        var token = store.getAccessToken()['access_token'];
+        if(token){
+            $http.get('http://{0}/logout'.f(cfg.host), {
+                headers:{
+                    'Authorization': 'Bearer {0}'.f()
+                }   
+            });
+        }
+    }
+
 })
 
 ;

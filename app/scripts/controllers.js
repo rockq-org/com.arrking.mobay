@@ -91,7 +91,7 @@ angular.module('mobay.controllers', [])
     ];
 })
 
-.controller('SettingsCtrl', function ($rootScope, $scope, $log, $http, cfg) {
+.controller('SettingsCtrl', function ($rootScope, $state, $scope, $log, $http, cfg, webq) {
     $scope.title = 'moBay';
     $scope.appVersion = cfg.version;
 
@@ -102,6 +102,11 @@ angular.module('mobay.controllers', [])
             // https://docs.angularjs.org/api/ng/type/$rootScope.Scope
             $rootScope.$digest();
         }, 2000)
+    }
+
+    $scope.logout = function(){
+        webq.logout();
+        $state.go('login.form');
     }
 
     $scope.openFeedbackMailTemplate = function(){
