@@ -257,7 +257,7 @@ angular.module('mobay.services', ['config'])
             responseType: 'json'
         }).
         success(function(data, status, headers) {
-            console.debug('login successfully. ' + JSON.stringify(data));
+            $log.debug('login api response: ' + JSON.stringify(data));
             if(data['access_token']){
                 defer.resolve(data);
             }else{
@@ -265,8 +265,8 @@ angular.module('mobay.services', ['config'])
             }
         }).
         error(function(data, status, headers) {
-            console.debug('error ' + status);
-            console.debug(data);
+            $log.debug('error ' + status);
+            $log.debug(data);
             defer.reject(data);
         });
 

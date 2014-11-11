@@ -15,6 +15,8 @@ angular.module('mobay.controllers', [])
   //    $log.error(e);
   //   }
     // Form data for the login modal
+    $scope.errMessage = false;
+
     $scope.loginData = {};
     $scope.doLogin = function(){
         webq.loginLocalPassport($scope.loginData.username,
@@ -33,8 +35,24 @@ angular.module('mobay.controllers', [])
              * (1) wrong username and password
              * (2) no network
              */
-            $log.error(err);
-            $scope.loginData = {};
+            if(err.rc){
+                switch(err.rc){
+                    case 2:
+                        $scope.errMessage = '不存在该用户';
+                        $scope.loginData = {};
+                        break;
+                    case 3:
+                        $scope.errMessage = '密码错误';
+                        $scope.loginData.password = '';
+                        break;
+                    default:
+                        $log.error(err);
+                }
+            }else{
+                $log.error('>> can not understand :');
+                $log.error(err)
+                $scope.loginData = {};
+            }
         });
     };
 })

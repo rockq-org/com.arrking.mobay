@@ -13,3 +13,44 @@
 .rotate-right {
 	transform: rotate(90deg);
 }
+
+.bar.bar-error {
+  display: block;
+  height: 24px;
+  
+  /* starts right below a normal header */
+  top: 0px;
+  
+  /* make the text centered vertically and horizontally */
+  text-align: center;
+  padding: 0;
+  line-height: 24px;
+
+  /* transition 'sliding down' (check below)*/
+  -webkit-transition: 200ms all;
+}
+
+
+/* 
+ * make the content's top changes animate.
+ * might not always look good, but looks
+ * good when our loader is added & removed
+ */
+
+.has-header .has-error {
+  /* 44px (header) + 24px */
+  padding-top: 24px;
+  top: 68px;
+}
+
+/* make loading bar slide up/down */
+.bar-error.ng-enter,
+.bar-error.ng-leave.ng-leave-active {
+  height: 0;
+  border-width: 0px;
+}
+.bar-error.ng-enter.ng-enter-active,
+.bar-error.ng-leave {
+  height: 24px;
+  border-width: 1px;
+}
