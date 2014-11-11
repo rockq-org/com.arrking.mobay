@@ -162,11 +162,11 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
         }
     })
 
-    .state('tab.profile-edit', {
+    .state('tab.profile-editor', {
         url: '/profile/edit/{key}/{value}',
         views: {
             'tab-profile': {
-                templateUrl: 'templates/profile-edit.html',
+                templateUrl: 'templates/profile-editor.html',
                 controller: 'ProfileEditorCtrl'
             }
         }

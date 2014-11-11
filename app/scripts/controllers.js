@@ -127,7 +127,7 @@ angular.module('mobay.controllers', [])
     $scope.data.value = $stateParams.value;
 
     $scope.save = function(){
-        $log.debug('>> get new value :' + $scope.data.value);
+        $log.debug('>> {0} : {1}'.f($scope.data.title, $scope.data.value));
         // TODO save that value from webq
 
         $state.go('tab.profile');
