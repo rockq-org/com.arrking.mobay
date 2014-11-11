@@ -10,8 +10,8 @@
             <div class="list">
                 <ion-item class="item-thumbnail-right item-icon-right" href="#">
                     <img ng-src="{{avatarUrl}}">
-                    <h2>昵称</h2>
-                    <p>状态</p>
+                    <h2>{{name}}</h2>
+                    <p>{{email}}</p>
                 </ion-item>
             </div>
         </div>
@@ -20,17 +20,17 @@
             <div class="list">
                 <ion-item href="#/tab/profile/edit" class="item-icon-right">
                     学校
-                    <span class="item-note" ng-bind='school'></span>
+                    <span class="item-note">{{school}}</span>
                     <i class="icon ion-ios7-arrow-right dark"></i>
                 </ion-item>
                 <ion-item href="#/tab/profile/edit" class="item-icon-right">
                     公司
-                    <span class="item-note" ng-bind='company'></span>
+                    <span class="item-note">{{company}}</span>
                     <i class="icon ion-ios7-arrow-right dark"></i>
                 </ion-item>
                 <ion-item href="#/tab/profile/edit" class="item-icon-right">
                     兴趣
-                    <span class="item-note" ng-bind='interests'></span>
+                    <span class="item-note">{{interests}}</span>
                     <i class="icon ion-ios7-arrow-right dark"></i>
                 </ion-item>
                 </a>

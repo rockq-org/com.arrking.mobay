@@ -5,55 +5,53 @@
  */
 angular.module('mobay.controllers', [])
 
-.controller('LoginCtrl', function($scope, $state, $http, $log, store, cfg, webq) {
-    // check out the sid value and decide which page should be
-    // navigator.splashscreen.hide();
-  //   try{
-        // $state.go('tab.dash');
-  //    var sid = store.getUserSID();
-  //   }catch(e){
-  //    $log.error(e);
-  //   }
-    // Form data for the login modal
+.controller('LoginCtrl', function($scope, $state, $http, $log, $ionicLoading, store, cfg, webq) {
     $scope.errMessage = false;
-
     $scope.loginData = {};
+
     $scope.doLogin = function(){
-        webq.loginLocalPassport($scope.loginData.username,
-            $scope.loginData.password).then(function(token){
-            store.setAccessToken(token);
-            webq.getUserProfile().then(function(data){
-                store.setUserId(data.emails[0].value);
-                store.setUserProfile(data);
-                $state.go('tab.dash');
-                
-            })
-        }, function(err){
-            // TODO show an error message
-            /*
-             * Possible Cause for login error 
-             * (1) wrong username and password
-             * (2) no network
-             */
-            if(err.rc){
-                switch(err.rc){
-                    case 2:
-                        $scope.errMessage = '不存在该用户';
-                        $scope.loginData = {};
-                        break;
-                    case 3:
-                        $scope.errMessage = '密码错误';
-                        $scope.loginData.password = '';
-                        break;
-                    default:
-                        $log.error(err);
+        if($scope.loginData.username &&
+            $scope.loginData.password){
+            $ionicLoading.show({template: '登录中 ...'});
+            webq.loginLocalPassport($scope.loginData.username,
+                $scope.loginData.password).then(function(token){
+                store.setAccessToken(token);
+                webq.getUserProfile().then(function(data){
+                    store.setUserId(data.emails[0].value);
+                    store.setUserProfile(data);
+                    $state.go('tab.dash');
+                })
+            }, function(err){
+                // TODO show an error message
+                /*
+                 * Possible Cause for login error 
+                 * (1) wrong username and password
+                 * (2) no network
+                 */
+                if(err.rc){
+                    switch(err.rc){
+                        case 2:
+                            $scope.errMessage = '不存在该用户';
+                            $scope.loginData = {};
+                            break;
+                        case 3:
+                            $scope.errMessage = '密码错误';
+                            $scope.loginData.password = '';
+                            break;
+                        default:
+                            $log.error(err);
+                    }
+                }else{
+                    $log.error('>> can not understand :');
+                    $log.error(err)
+                    $scope.loginData = {};
                 }
-            }else{
-                $log.error('>> can not understand :');
-                $log.error(err)
-                $scope.loginData = {};
-            }
-        });
+            }).finally(function(){
+                $ionicLoading.hide();
+            });
+        }else{
+            $scope.errMessage = '用户名或密码不能为空';
+        }
     };
 })
 
@@ -82,18 +80,20 @@ angular.module('mobay.controllers', [])
         }
     ];
 
-    var profile = store.getUserProfile()._json;
+    var profile = store.getUserProfile();
     // TODO resolve the default avatar
-    $scope.avatarUrl = profile.pictureUrl || 'http://musa-hw-cafe.qiniudn.com/avatar/local-mobay-demo@qq.com-1414464704244.png';
+    $scope.avatarUrl = profile._json.pictureUrl || 'http://musa-hw-cafe.qiniudn.com/avatar/local-mobay-demo@qq.com-1414464704244.png';
     $log.debug(">> get user profile " + JSON.stringify(profile));
+    $scope.name = profile.displayName;
+    $scope.email = profile.emails[0].value;
     // append edu
-    if (profile.educations._total > 0) {
-      $scope.school = profile.educations.values[0].schoolName;
+    if (profile._json.educations._total > 0) {
+      $scope.school = profile._json.educations.values[0].schoolName;
     }
 
     // append company
-    if (profile.positions._total > 0) {
-      $scope.company = profile.positions.values[0].company.name;
+    if (profile._json.positions._total > 0) {
+      $scope.company = profile._json.positions.values[0].company.name;
     }
 
     $scope.save = function (){
