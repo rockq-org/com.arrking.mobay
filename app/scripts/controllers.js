@@ -95,11 +95,43 @@ angular.module('mobay.controllers', [])
     if (profile._json.positions._total > 0) {
       $scope.company = profile._json.positions.values[0].company.name;
     }
-
     $scope.save = function (){
         $scope.school = '12345';
         location.href='#/tab/profile';
     };
+
+    // take photo as avatar
+    $scope.updateAvatar = function(){
+    }
+})
+
+.controller('ProfileEditorCtrl', function($state, $scope, $log, $stateParams){
+    $log.debug($stateParams);
+    $scope.data = {};
+    switch($stateParams.key){
+        case 'company':
+            $scope.data.title = '公司';
+            $scope.data.placeholder = '请输入公司/单位';
+            break;
+        case 'interests':
+            $scope.data.title = '兴趣';
+            $scope.data.placeholder = '请输入兴趣爱好';
+            break;
+        case 'school':
+            $scope.data.title = '学校';
+            $scope.data.placeholder = '请输入(曾经)就读学校';
+            break;
+        default:
+            break;
+    };
+    $scope.data.value = $stateParams.value;
+
+    $scope.save = function(){
+        $log.debug('>> get new value :' + $scope.data.value);
+        // TODO save that value from webq
+
+        $state.go('tab.profile');
+    }
 })
 
 .controller('PeopleCtrl', function ($scope) {

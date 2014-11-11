@@ -9,7 +9,7 @@
         <div class="list">
             <div class="list">
                 <ion-item class="item-thumbnail-right item-icon-right" href="#">
-                    <img ng-src="{{avatarUrl}}">
+                    <img ng-src="{{avatarUrl}}" on-click="updateAvatar()">
                     <h2>{{name}}</h2>
                     <p>{{email}}</p>
                 </ion-item>
@@ -18,20 +18,26 @@
 
         <div class="list">
             <div class="list">
-                <ion-item href="#/tab/profile/edit" class="item-icon-right">
+                <ion-item class="item-icon-right">
                     学校
                     <span class="item-note">{{school}}</span>
-                    <i class="icon ion-ios7-arrow-right dark"></i>
+                    <a ui-sref="tab.profile-edit({key: 'school', value: school})">
+                        <i class="icon ion-ios7-arrow-right dark"></i>
+                    </a>
                 </ion-item>
-                <ion-item href="#/tab/profile/edit" class="item-icon-right">
+                <ion-item class="item-icon-right">
                     公司
                     <span class="item-note">{{company}}</span>
-                    <i class="icon ion-ios7-arrow-right dark"></i>
+                    <a ui-sref="tab.profile-edit({key: 'company', value: company})">
+                        <i class="icon ion-ios7-arrow-right dark"></i>
+                    </a>
                 </ion-item>
-                <ion-item href="#/tab/profile/edit" class="item-icon-right">
+                <ion-item class="item-icon-right">
                     兴趣
                     <span class="item-note">{{interests}}</span>
-                    <i class="icon ion-ios7-arrow-right dark"></i>
+                    <a ui-sref="tab.profile-edit({key: 'interests', value: interests})">
+                        <i class="icon ion-ios7-arrow-right dark"></i>
+                    </a>
                 </ion-item>
                 </a>
             </div>
