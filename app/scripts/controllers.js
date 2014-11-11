@@ -20,7 +20,12 @@ angular.module('mobay.controllers', [])
         webq.loginLocalPassport($scope.loginData.username,
             $scope.loginData.password).then(function(token){
             store.setAccessToken(token);
-            $state.go('tab.dash');
+            webq.getUserProfile().then(function(data){
+                store.setUserId(data.emails[0].value);
+                store.setUserProfile(data);
+                $state.go('tab.dash');
+                
+            })
         }, function(err){
             // TODO show an error message
             /*
@@ -35,19 +40,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('DashCtrl', function($scope, $state, $log, webq) {
-    webq.getUserProfile().then(function(profile){
-        $log.debug(profile);
-    }, function(err){
-        // maybe token is revoked or has no network
-        // TODO add a utility for get network status
-        if(true){
-            // has no network
-        }else{
-            // token is revoked, force the user login again
-            $state.go('login.form');
-        }
-        $log.error(err);
-    });
+
 })
 
 .controller('NotificationsCtrl', function($scope, Friends) {
@@ -58,7 +51,7 @@ angular.module('mobay.controllers', [])
     $scope.friend = Friends.get($stateParams.friendId);
 })
 
-.controller('ProfileCtrl', function($scope) {
+.controller('ProfileCtrl', function($scope, $log, store) {
     $scope.labels = [
         {
             name: '学校'
@@ -70,7 +63,21 @@ angular.module('mobay.controllers', [])
             name: '兴趣'
         }
     ];
-    $scope.school = '中国科学院大学';
+
+    var profile = store.getUserProfile()._json;
+    // TODO resolve the default avatar
+    $scope.avatarUrl = profile.pictureUrl || 'http://musa-hw-cafe.qiniudn.com/avatar/local-mobay-demo@qq.com-1414464704244.png';
+    $log.debug(">> get user profile " + JSON.stringify(profile));
+    // append edu
+    if (profile.educations._total > 0) {
+      $scope.school = profile.educations.values[0].schoolName;
+    }
+
+    // append company
+    if (profile.positions._total > 0) {
+      $scope.company = profile.positions.values[0].company.name;
+    }
+
     $scope.save = function (){
         $scope.school = '12345';
         location.href='#/tab/profile';

@@ -21,8 +21,16 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
         }
         if(window.navigator.splashscreen){
             if (store.getAccessToken()['access_token']) {
-                navigator.splashscreen.hide();
-                $state.go('tab.dash');
+                webq.getUserProfile().then(function(data){
+                    // save data into localStorage
+                    store.setUserId(data.emails[0].value);
+                    store.setUserProfile(data);
+                    $state.go('tab.dash');
+                    navigator.splashscreen.hide();
+                }, function(err){
+                    $state.go('login.form');
+                    navigator.splashscreen.hide();
+                });
             } else {
                 navigator.splashscreen.hide();
             }

@@ -190,7 +190,8 @@ angular.module('mobay.services', ['config'])
 
 //https://docs.angularjs.org/api/ng/service/$http#interceptors
 .service('accessTokenHttpInterceptor', function($q, $log, store){
-    var noAccessTokenUrls = ['/public/md/user-service-agreements.md']
+    var noAccessTokenUrls = ['/public/md/user-service-agreements.md',
+        '/auth/local']
     return {
         request: function(cfg){
             // add exceptions for Authorization header
@@ -222,23 +223,14 @@ angular.module('mobay.services', ['config'])
     // retrieve user profile information
     this.getUserProfile = function() {
         var defer = $q.defer();
-        // $http.get('http://{0}/user/me'.f(cfg.host), {
-        //     headers: {
-        //       'Accept': 'application/json'
-        //     },
-        //     responseType: 'json'
-        // }).
-        // success(function(data, status){
-        //   alert('sc')
-        //   defer.resolve(data);
-        // }).
-        // error(function(data, status){
-        //   alert('fa')
-        //   defer.reject(data);
-        // });
-
-        $http.get('http://{0}/secret'.f(cfg.host))
+        $http.get('http://{0}/user/me'.f(cfg.host),{
+            headers:{
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }   
+        })
         .success(function(data) {
+            $log.debug(data)
             defer.resolve(data);
         })
         .error(function(err) {
@@ -265,8 +257,12 @@ angular.module('mobay.services', ['config'])
             responseType: 'json'
         }).
         success(function(data, status, headers) {
-            console.debug('login data ' + JSON.stringify(data));
-            defer.resolve(data);
+            console.debug('login successfully. ' + JSON.stringify(data));
+            if(data['access_token']){
+                defer.resolve(data);
+            }else{
+                defer.reject(data);
+            }
         }).
         error(function(data, status, headers) {
             console.debug('error ' + status);

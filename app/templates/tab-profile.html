@@ -9,7 +9,7 @@
         <div class="list">
             <div class="list">
                 <ion-item class="item-thumbnail-right item-icon-right" href="#">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDts5TfpUl1ueJFvwCZx1jvZMain_yk5eVP0zTXTxDH2v-OVc_">
+                    <img ng-src="{{avatarUrl}}">
                     <h2>昵称</h2>
                     <p>状态</p>
                 </ion-item>
@@ -20,17 +20,17 @@
             <div class="list">
                 <ion-item href="#/tab/profile/edit" class="item-icon-right">
                     学校
-                    <span class="item-note">{{school}}</span>
+                    <span class="item-note" ng-bind='school'></span>
                     <i class="icon ion-ios7-arrow-right dark"></i>
                 </ion-item>
                 <ion-item href="#/tab/profile/edit" class="item-icon-right">
                     公司
-                    <span class="item-note">中国科学院</span>
+                    <span class="item-note" ng-bind='company'></span>
                     <i class="icon ion-ios7-arrow-right dark"></i>
                 </ion-item>
                 <ion-item href="#/tab/profile/edit" class="item-icon-right">
                     兴趣
-                    <span class="item-note"></span>
+                    <span class="item-note" ng-bind='interests'></span>
                     <i class="icon ion-ios7-arrow-right dark"></i>
                 </ion-item>
                 </a>
