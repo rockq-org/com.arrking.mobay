@@ -33,6 +33,7 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
 .config(function($stateProvider, $urlRouterProvider, $logProvider, $httpProvider, $sceDelegateProvider, cfg) {
 
     // $httpProvider.defaults.withCredentials = true;
+    $httpProvider.interceptors.push('accessTokenHttpInterceptor');
     $logProvider.debugEnabled(cfg.debug);
 
     // set log level - debug|production
@@ -74,7 +75,21 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
     .state('tab', {
         url: '/tab',
         abstract: true,
-        templateUrl: 'templates/tabs.html'
+        templateUrl: 'templates/tabs.html',
+        //  https://github.com/driftyco/ng-cordova/issues/8
+        //  use the resolve feature of the UI router to wait 
+        //  for ionic.Platform.ready signal before each state 
+        //  that might need a plugin
+        resolve: {
+            cordova: function($q, $log) {
+                var deferred = $q.defer();
+                ionic.Platform.ready(function() {
+                    $log.debug('ionic.Platform.ready');
+                    deferred.resolve();
+                });
+                return deferred.promise;
+            }
+        }
     })
 
     // Each tab has its own nav history stack:

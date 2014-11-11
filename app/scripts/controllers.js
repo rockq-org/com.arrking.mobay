@@ -137,21 +137,8 @@ angular.module('mobay.controllers', [])
     }
 })
 
-.controller('TermsCtrl', function ($scope, $log, $http, cfg) {
-    $http({
-        method: 'GET',
-        url: 'http://' + cfg.host + '/public/md/user-service-agreements.md'
-    }).success(function(data, status, headers, config) {
-        $log.debug(data);
-        try{
-            var converter = new Showdown.converter();
-            var html = converter.makeHtml(data);
-            $scope.terms = html;
-        }catch(e){
-            $log.error(e);
-        }
-    }).error(function(data, status){
-        $log.error('Can not get /public/md/user-service-agreements.md from server.');
-        $log.debug(data);
-    });
+.controller('TermsCtrl', function ($scope, $log, webq, cfg) {
+    webq.getUserServiceAgreements().then(function(data){
+        $scope.terms = data;
+    })
 });

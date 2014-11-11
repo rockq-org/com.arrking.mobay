@@ -143,15 +143,15 @@ angular.module('mobay.services', ['config'])
     };
 
     this.getUserSID = function() {
-        return window.localStorage.getItem('MUSA_USER_SID'.f(this.getUserId()));
+        return window.localStorage.getItem('MUSA_USER_SID');
     };
 
     this.setUserSID = function(sid) {
-        window.localStorage.setItem('MUSA_USER_SID'.f(this.getUserId()), sid);
+        window.localStorage.setItem('MUSA_USER_SID', sid);
     };
 
     this.deleteUserSID = function() {
-        window.localStorage.removeItem('MUSA_USER_SID'.f(this.getUserId()));
+        window.localStorage.removeItem('MUSA_USER_SID');
     };
 
     this.setNotificationAsRead = function(id) {
@@ -187,8 +187,37 @@ angular.module('mobay.services', ['config'])
     };
 
 })
+
+//https://docs.angularjs.org/api/ng/service/$http#interceptors
+.service('accessTokenHttpInterceptor', function($q, $log, store){
+    var noAccessTokenUrls = ['/public/md/user-service-agreements.md']
+    return {
+        request: function(cfg){
+            // add exceptions for Authorization header
+            if(cfg.url.startsWith('templates')){
+                // load load local templates
+                // do nothing
+            } else if(_.find(noAccessTokenUrls, function(x){
+                return cfg.url.endsWith(x);
+            })){
+                // a list of urls that post no 
+                // Authorization Token
+            }else if(store.getAccessToken()['access_token']){
+                _.extend(cfg, {
+                    headers:{
+                        'Authorization': 'Bearer {0}'.f(store.getAccessToken()['access_token'])
+                    }
+                });
+                $log.debug('>> add access_token for request ...')
+                $log.debug(cfg);
+            }
+            return cfg;
+        }
+    }
+})
+
 // web request utility
-.service('webq', function($http, $q, cfg, store) {
+.service('webq', function($http, $q, $log, cfg, store) {
 
     // retrieve user profile information
     this.getUserProfile = function() {
@@ -208,15 +237,11 @@ angular.module('mobay.services', ['config'])
         //   defer.reject(data);
         // });
 
-        $http.get('http://{0}/secret'.f(cfg.host), {
-            headers: {
-                'Authorization': 'Bearer {0}'.f(store.getAccessToken()['access_token'])
-            }
-        }).
-        success(function(data) {
+        $http.get('http://{0}/secret'.f(cfg.host))
+        .success(function(data) {
             defer.resolve(data);
-        }).
-        error(function(err) {
+        })
+        .error(function(err) {
             // keep at the login page
             $log.error(err);
             defer.reject(err);
@@ -254,16 +279,31 @@ angular.module('mobay.services', ['config'])
 
     // logout user
     this.logout = function(){
-        var token = store.getAccessToken()['access_token'];
-        if(token){
-            $http.get('http://{0}/logout'.f(cfg.host), {
-                headers:{
-                    'Authorization': 'Bearer {0}'.f(token)
-                }   
-            });
-        }
+        $http.get('http://{0}/logout'.f(cfg.host));
+        store.deleteUserSID();
     }
 
+    // get user service agreements in markdown format
+    this.getUserServiceAgreements = function(){
+        var defer = $q.defer();
+        $http({
+            method: 'GET',
+            url: 'http://' + cfg.host + '/public/md/user-service-agreements.md'
+        }).success(function(data, status, headers, config) {
+            try{
+                $log.debug(data);
+                var converter = new Showdown.converter();
+                defer.resolve(converter.makeHtml(data));
+            }catch(e){
+                $log.error(e);
+                defer.reject(e);
+            }
+        }).error(function(err, status){
+            $log.error('Can not get /public/md/user-service-agreements.md from server.');
+            defer.reject(err);
+        });
+        return defer.promise;
+    }
 })
 
 ;
