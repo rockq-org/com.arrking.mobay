@@ -151,6 +151,7 @@ angular.module('mobay.controllers', [])
 .controller('SettingsCtrl', function ($rootScope, $state, $scope, $log, $http, cfg, webq) {
     $scope.title = 'moBay';
     $scope.appVersion = cfg.version;
+    $scope.$root.tabsHidden = "";
 
     function mailUnAvailable(){
         $scope.title = '邮件服务不可用';
@@ -195,6 +196,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('TermsCtrl', function ($scope, $log, webq, cfg) {
+    $scope.$root.tabsHidden = "tabs-hide";
     webq.getUserServiceAgreements().then(function(data){
         $scope.terms = data;
     })
