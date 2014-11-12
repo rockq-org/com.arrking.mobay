@@ -10,9 +10,31 @@
             <div class="item item-divider">
                 订阅项
             </div>
-            <ion-toggle ng-model="model1" toggle-class="toggle-positive" class="item">活动</ion-toggle>
-            <ion-toggle ng-model="model2" toggle-class="toggle-positive" class="item">资讯</ion-toggle>
-            <ion-toggle ng-model="model3" toggle-class="toggle-positive" class="item">优惠</ion-toggle>
+            <ion-toggle 
+                    ng-model="subscriptions.promotion.checked" 
+                    ng-checked="subscriptions.promotion.checked"
+                    toggle-class="toggle-positive" 
+                    ng-change="changeSubscriptions('promotion', subscriptions.promotion.checked)"
+                    class="item">
+                {{ subscriptions.promotion.text }}
+            </ion-toggle>
+            <ion-toggle 
+                    ng-model="subscriptions.itnews.checked" 
+                    ng-checked="subscriptions.itnews.checked"
+                    toggle-class="toggle-positive" 
+                    ng-change="changeSubscriptions('itnews', subscriptions.itnews.checked)"
+                    class="item">
+                {{ subscriptions.itnews.text }}
+            </ion-toggle>
+            <ion-toggle 
+                    ng-model="subscriptions.activity.checked" 
+                    ng-checked="subscriptions.activity.checked"
+                    toggle-class="toggle-positive" 
+                    ng-change="changeSubscriptions('activity', subscriptions.activity.checked)"
+                    class="item">
+                {{ subscriptions.activity.text }}
+            </ion-toggle>
+
         </div>
         <div class="list">
             <div class="item item-divider">

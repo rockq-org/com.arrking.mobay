@@ -322,7 +322,7 @@ angular.module('mobay.services', ['config'])
     }
 })
 
-.service('mbaas', function($log, cfg, store){
+.service('mbaas', function($q, $log, cfg, store){
     var _push;
 
     function _registerDevice(username){
@@ -369,8 +369,54 @@ angular.module('mobay.services', ['config'])
     }
 
     // check the mbaas service is running
-    this.isRunning(){
+    this.isRunning = function(){
         return _push?true:false;
+    }
+
+    // sub a tag
+    this.subTag = function(tagName){
+        var defer = $q.defer();
+        if (_push) {
+            _push.subscribeTag(tagName).done(function(response) {
+                // Successfully subscribed to tag
+                defer.resolve(response);
+            }, function(err) {
+                // Handle errors
+                defer.reject({
+                    rc: 1,
+                    msg: err
+                });
+            });
+        } else {
+            defer.reject({
+                rc: 2,
+                msg: "mbass is not initialized."
+            })
+        }
+        return defer.promise;
+    }
+
+    // unsub a tag
+    this.unSubTag = function(tagName){
+        var defer = $q.defer();
+        if (_push) {
+            _push.unsubscribeTag(tagName).done(function(response) {
+                // Successfully subscribed to tag
+                defer.resolve(response);
+            }, function(err) {
+                // Handle errors
+                defer.reject({
+                    rc: 1,
+                    msg: err
+                });
+            });
+        } else {
+            defer.reject({
+                rc: 2,
+                msg: "mbass is not initialized."
+            })
+        }
+        return defer.promise;
     }
 })
 

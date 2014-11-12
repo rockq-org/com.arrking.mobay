@@ -191,11 +191,10 @@ angular.module('mobay.controllers', [])
     ];
 })
 
-.controller('SettingsCtrl', function ($rootScope, $state, $scope, $log, $http, cfg, webq) {
+.controller('SettingsCtrl', function ($rootScope, $state, $scope, $log, $http, cfg, store, webq, mbaas) {
     $scope.title = 'moBay';
     $scope.appVersion = cfg.version;
     $scope.$root.tabsHidden = "";
-
     function mailUnAvailable(){
         $scope.title = '邮件服务不可用';
         setTimeout(function(){
@@ -203,6 +202,44 @@ angular.module('mobay.controllers', [])
             // https://docs.angularjs.org/api/ng/type/$rootScope.Scope
             $rootScope.$digest();
         }, 2000)
+    }
+    var preSubscriptions = store.getSubTags();
+    $scope.subscriptions = {
+        promotion: {
+            checked: _.indexOf(preSubscriptions, 'promotion') !== -1,
+            text: '优惠' 
+        },
+        itnews: {
+            text: '资讯',
+            checked: _.indexOf(preSubscriptions, 'itnews') !== -1,
+        },
+        activity: {
+            text: '活动',
+            checked: _.indexOf(preSubscriptions, 'activity') !== -1
+        } 
+    };
+
+    $scope.changeSubscriptions = function(key, value){
+        $log.debug("subscribe: ", key, ", boolean ",value);
+        if(value){
+            mbaas.subTag(key).then(function(response){
+                $log.debug(response);
+                // save to localStorage by store
+                preSubscriptions.push(key);
+                store.setSubTags(preSubscriptions);
+            }, function(err){
+                $log.debug(err);
+                $scope.subscriptions[key].checked = false;
+            });
+        }else{
+            mbaas.unSubTag(key).then(function(response){
+                $log.debug(response);
+                preSubscriptions = store.removeSubTag(key);
+            }, function(err){
+                $log.debug(err);
+                $scope.subscriptions[key].checked = true;
+            });;
+        }
     }
 
     $scope.logout = function(){
