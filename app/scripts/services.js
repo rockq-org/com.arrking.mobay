@@ -204,13 +204,13 @@ angular.module('mobay.services', ['config'])
                 // a list of urls that post no 
                 // Authorization Token
             }else if(store.getAccessToken()['access_token']){
-                _.extend(cfg, {
-                    headers:{
+                if(cfg.headers){
+                    cfg.headers['Authorization'] =  'Bearer {0}'.f(store.getAccessToken()['access_token']);
+                }else{
+                    cfg['headers'] = {
                         'Authorization': 'Bearer {0}'.f(store.getAccessToken()['access_token'])
                     }
-                });
-                $log.debug('>> add access_token for request ...')
-                $log.debug(cfg);
+                }
             }
             return cfg;
         }
@@ -297,6 +297,26 @@ angular.module('mobay.services', ['config'])
         }).error(function(err, status){
             $log.error('Can not get /public/md/user-service-agreements.md from server.');
             defer.reject(err);
+        });
+        return defer.promise;
+    }
+
+    // save user profile properties
+    this.saveUserProfile = function(profile){
+        var defer = $q.defer();
+        $http.put("http://{0}/user/me".f(cfg.host) , {
+            profile: profile
+        },
+        {
+            headers:{
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(data, status){
+            defer.resolve(data);
+        }).error(function(data, status){
+            defer.reject(data);
         });
         return defer.promise;
     }

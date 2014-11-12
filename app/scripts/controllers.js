@@ -68,18 +68,8 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('ProfileCtrl', function($scope, $log, store) {
-    $scope.labels = [
-        {
-            name: '学校'
-        },
-        {
-            name: '公司'
-        },
-        {
-            name: '兴趣'
-        }
-    ];
-
+    // show tabs
+    $scope.$root.tabsHidden = "";
     var profile = store.getUserProfile();
     // TODO resolve the default avatar
     $scope.avatarUrl = profile._json.pictureUrl || 'http://musa-hw-cafe.qiniudn.com/avatar/local-mobay-demo@qq.com-1414464704244.png';
@@ -95,6 +85,10 @@ angular.module('mobay.controllers', [])
     if (profile._json.positions._total > 0) {
       $scope.company = profile._json.positions.values[0].company.name;
     }
+
+    if (profile._json.interests){
+        $scope.interests = profile._json.interests;
+    }
     $scope.save = function (){
         $scope.school = '12345';
         location.href='#/tab/profile';
@@ -105,7 +99,9 @@ angular.module('mobay.controllers', [])
     }
 })
 
-.controller('ProfileEditorCtrl', function($state, $scope, $log, $stateParams){
+.controller('ProfileEditorCtrl', function($state, $scope, $log, $stateParams, store, webq){
+    // hide tabs
+    $scope.$root.tabsHidden = "tabs-hide";
     $log.debug($stateParams);
     $scope.data = {};
     switch($stateParams.key){
@@ -128,9 +124,51 @@ angular.module('mobay.controllers', [])
 
     $scope.save = function(){
         $log.debug('>> {0} : {1}'.f($scope.data.title, $scope.data.value));
-        // TODO save that value from webq
-
-        $state.go('tab.profile');
+        if($scope.data.value !== $stateParams.value){
+            // TODO save that value from webq
+            var profile = store.getUserProfile();
+            switch($stateParams.key){
+                case 'company':
+                    if ($scope.data.value) {
+                        profile._json.positions._total = 1;
+                        profile._json.positions.values[0] = {
+                          isCurrent: true,
+                          company: {
+                            name: $scope.data.value
+                          }
+                        }
+                    } else {
+                        profile._json.positions._total = 0;
+                        profile._json.positions.values = {};
+                    }
+                    break;
+                case 'interests':
+                    if ($scope.data.value) {
+                        profile._json.interests = $scope.data.value;
+                    }
+                    break;
+                case 'school':
+                  if ($scope.data.value) {
+                    profile._json.educations._total = 1;
+                    profile._json.educations.values[0] = {
+                      schoolName: $scope.data.value
+                    };
+                  } else {
+                    profile._json.educations._total = 0;
+                    profile._json.educations.values = [];
+                  }
+                  break;
+                default:
+                    break;
+            };
+            webq.saveUserProfile(profile).then(function(data){
+                $log.debug(data);
+                store.setUserProfile(profile);
+                $state.go('tab.profile');
+            }, function(err){
+                $log.error(err);
+            });
+        }
     }
 })
 
