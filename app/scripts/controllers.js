@@ -65,13 +65,27 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('NotificationsCtrl', function($scope, store) {
+    $scope.$root.tabsHidden = "";
     $scope.notifications = store.getNotifications();
     $scope.notificationKeys = _.keys($scope.notifications);
 })
 
-.controller('NotificationDetailCtrl', function($scope, $stateParams, Friends) {
-    $scope.friend = Friends.get($stateParams.friendId);
-    $log.debug('>> open message id ' + $stateParams.msgId)
+.controller('NotificationDetailCtrl', function($scope, $stateParams, $log, webq) {
+    $scope.$root.tabsHidden = "tabs-hide";
+    // $log.debug('>> open message id ' + $stateParams.msgId);
+    $scope.title = $stateParams.title;
+    webq.getNotificationDetail($stateParams.msgId).success(function(data){
+        try{
+            var converter = new Showdown.converter();
+            $scope.content = converter.makeHtml(data.post.body);
+        }catch(e){
+            $scope.content = '无法取得通知内容';
+            $log.error(e);
+        }
+    }).error(function(err){
+        $scope.content = '无法取得通知内容';
+        $log.error(err);
+    });
 })
 
 .controller('ProfileCtrl', function($scope, $log, store) {

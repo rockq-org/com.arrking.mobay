@@ -336,6 +336,17 @@ angular.module('mobay.services', ['config'])
         });
         return defer.promise;
     }
+
+    // get notification detail
+    this.getNotificationDetail = function(msgId){
+        return $http.get('http://{0}/cms/post/{1}'.f(cfg.host, msgId), {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                responseType: 'json'
+            });
+    }
 })
 
 .service('mbaas', function($q, $log, cfg, store, webq){

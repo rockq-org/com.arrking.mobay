@@ -7,7 +7,7 @@
 
 	<ion-content class="stable-bg">
 		<ion-list>
-			<ion-item ng-repeat="x in notificationKeys" type="item-text-wrap" href="#/tab/notification/{{x}}" class="item-thumbnail-left">
+			<ion-item ng-repeat="x in notificationKeys" type="item-text-wrap" href="#/tab/notification/{{x}}/{{notifications[x].title}}" class="item-thumbnail-left">
 				<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDts5TfpUl1ueJFvwCZx1jvZMain_yk5eVP0zTXTxDH2v-OVc_" alt="">
 				<h2>{{notifications[x].title}}</h2>
 				<p>{{notifications[x].description}}</p>
