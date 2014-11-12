@@ -39,7 +39,6 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
                 navigator.splashscreen.hide();
             }
         }
-
     });
 })
 

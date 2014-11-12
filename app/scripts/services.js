@@ -320,14 +320,29 @@ angular.module('mobay.services', ['config'])
         });
         return defer.promise;
     }
+
+    // get notifications from remote server
+    this.getNotifications = function(){
+        var defer = $q.defer();
+        $http.get('http://{0}/user/notifications'.f(cfg.host), {
+            headers: {
+                accept: 'application/json'
+            }
+        }).success(function(data){
+            defer.resolve(data);
+        }).
+        error(function(err){
+            defer.reject(err)
+        });
+        return defer.promise;
+    }
 })
 
-.service('mbaas', function($q, $log, cfg, store){
+.service('mbaas', function($q, $log, cfg, store, webq){
     var _push;
 
     function _registerDevice(username){
-        // handleApplePushNotificationArrival is defined as globally in app.js
-        _push.registerDevice(device.uuid, username, '(function(msg){setTimeout(handleApplePushNotificationArrival(msg),5000);})').then(
+        _push.registerDevice(device.uuid, username, '(function(msg){setTimeout(window.handleApplePushNotificationArrival(msg),5000);})').then(
             function(response) {
                 $log.debug('bluemix push registered device ' + JSON.stringify(response));
                 _push.getSubscriptions().done(function(response) {
@@ -341,11 +356,44 @@ angular.module('mobay.services', ['config'])
                 $log.error('bluemix push error registering device ' + error);
             }
         );
-
     }
 
     this.start = function(username) {
         $log.debug('>> start mbaas service .');
+        /**
+         * this code is ugly, but still not found better ways to make handleBlueMixNotification globally.
+         * because it has to be global to support callback from IBMPush iOS Native Code.
+         * use a timeout function can make backgroud-foreground works.
+         * but close-foreground still does not work.
+         * the message arrives, but when the app wake up, the cordova method does not called.
+         */
+        if(!window.handleApplePushNotificationArrival){
+            window.handleApplePushNotificationArrival = function(msg){
+                // msg = { alert, payload:{}}
+                webq.getNotifications().then(function(data) {
+                    if (_.isObject(data.notifications)) {
+                        var tags = store.getSubTags();
+                        var keys = _.keys(data.notifications);
+                        keys.forEach(function(key) {
+                          try {
+                            var notification = JSON.parse(data.notifications[key]);
+                            // check if the notification is subscribed by this user
+                            if (_.indexOf(tags, notification.category) != -1) {
+                              $log.debug('save notification into localStorage - ' + JSON.stringify(notification));
+                              store.saveNotifications(notification);
+                            }
+                          } catch (e) {
+                            $log.debug(e);
+                          }
+                        });
+                    }
+                }, function(err) {
+                    $log.debug(err);
+                });
+            }
+        }
+
+        // initialize IBM Bluemix Mobile SDK
         if(window.IBMBluemix){
             IBMBluemix.hybrid.initialize({
                 applicationId: cfg.pushAppId,
