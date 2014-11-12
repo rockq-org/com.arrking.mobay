@@ -65,8 +65,9 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('NotificationsCtrl', function($scope, store) {
+    $scope.getDateString = getDateString;
     $scope.notifications = store.getNotifications();
-    $scope.notificationKeys = _.keys($scope.notifications);
+    $scope.notificationKeys = _.keys($scope.notifications).sort().reverse();
 })
 
 .controller('NotificationDetailCtrl', function($scope, $stateParams, $log, webq) {

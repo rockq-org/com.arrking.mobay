@@ -8,10 +8,10 @@
 	<ion-content class="stable-bg">
 		<ion-list>
 			<ion-item ng-repeat="x in notificationKeys" type="item-text-wrap" href="#/tab/notification/{{x}}/{{notifications[x].title}}" class="item-thumbnail-left">
-				<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDts5TfpUl1ueJFvwCZx1jvZMain_yk5eVP0zTXTxDH2v-OVc_" alt="">
+				<img ng-src="sample/noty-{{notifications[x].category}}.png" alt="">
 				<h2>{{notifications[x].title}}</h2>
 				<p>{{notifications[x].description}}</p>
-				<small>{{notifications[x].date}}</small>
+				<small>{{getDateString(notifications[x].date)}}</small>
 				</ion-item>
 		</ion-list>
 	</ion-content>
