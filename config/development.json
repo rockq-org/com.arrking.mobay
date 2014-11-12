@@ -4,7 +4,7 @@
     "debug": true,
     "ssehost": "mobaysse.mybluemix.net",
     "linkedinOauth": "/mobile/auth/linkedin",
-    "pushAppId": "cd16f387-608a-47fa-839e-1d0fd9a859d9",
+    "pushAppId": "ce4f3de5-e09c-4fc1-9c76-b70ff66cbcac",
     "pushAppRoute": "mobay.mybluemix.net",
-    "pushAppSecret": "0870db1e3946355b335a042c2976679770772299"
+    "pushAppSecret": "32ee827761803e99e0164d30560aa0a6603bafcb"
 }

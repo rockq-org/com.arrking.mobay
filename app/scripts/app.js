@@ -5,7 +5,7 @@
 // 'mobay.services' is found in services.js
 // 'mobay.controllers' is found in controllers.js
 angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config'])
-.run(function($ionicPlatform, $log, $state, cfg, store, webq) {
+.run(function($ionicPlatform, $log, $state, cfg, store, webq, mbaas) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -25,6 +25,10 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
                     // save data into localStorage
                     store.setUserId(data.emails[0].value);
                     store.setUserProfile(data);
+                    // start mbaas service
+                    if(window.IBMBluemix.hybrid){
+                        mbaas.start(store.getUserId());
+                    }
                     $state.go('tab.dash');
                     navigator.splashscreen.hide();
                 }, function(err){
@@ -35,6 +39,7 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
                 navigator.splashscreen.hide();
             }
         }
+
     });
 })
 

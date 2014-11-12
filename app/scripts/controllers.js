@@ -5,7 +5,8 @@
  */
 angular.module('mobay.controllers', [])
 
-.controller('LoginCtrl', function($scope, $state, $http, $log, $ionicLoading, store, cfg, webq) {
+.controller('LoginCtrl', function($scope, $state, $http, $log, 
+    $ionicLoading, store, cfg, webq, mbaas) {
     $scope.errMessage = false;
     $scope.loginData = {};
 
@@ -19,6 +20,10 @@ angular.module('mobay.controllers', [])
                 webq.getUserProfile().then(function(data){
                     store.setUserId(data.emails[0].value);
                     store.setUserProfile(data);
+                    // start mbaas service, register device
+                    if(!mbaas.isRunning()){
+                        mbaas.start(data.emails[0].value);
+                    }
                     $state.go('tab.dash');
                 })
             }, function(err){

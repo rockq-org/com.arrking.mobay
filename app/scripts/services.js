@@ -322,4 +322,56 @@ angular.module('mobay.services', ['config'])
     }
 })
 
+.service('mbaas', function($log, cfg, store){
+    var _push;
+
+    function _registerDevice(username){
+        // handleApplePushNotificationArrival is defined as globally in app.js
+        _push.registerDevice(device.uuid, username, '(function(msg){setTimeout(handleApplePushNotificationArrival(msg),5000);})').then(
+            function(response) {
+                $log.debug('bluemix push registered device ' + JSON.stringify(response));
+                _push.getSubscriptions().done(function(response) {
+                    $log.debug('get subscriptions in mbaas ' + JSON.stringify(response.subscriptions));
+                    store.setSubTags(response.subscriptions);
+                }, function(err) {
+                    $log.error(err)
+                });
+            },
+            function(error) {
+                $log.error('bluemix push error registering device ' + error);
+            }
+        );
+
+    }
+
+    this.start = function(username) {
+        $log.debug('>> start mbaas service .');
+        if(window.IBMBluemix){
+            IBMBluemix.hybrid.initialize({
+                applicationId: cfg.pushAppId,
+                applicationRoute: cfg.pushAppRoute,
+                applicationSecret: cfg.pushAppSecret
+            }).then(function() {
+                IBMPush.hybrid.initializeService().then(
+                    function(pushService) {
+                        $log.debug("Initialized push successfully");
+                        // set _push
+                        _push = pushService;
+                        _registerDevice(username);
+                    },
+                    function(err) {
+                        $log.error("Error initializing the Push SDK");
+                    });
+            });
+        }else{
+            $log.error('>> can not start mbaas due to IBMBluemix.hybrid unavailable.')
+        }
+    }
+
+    // check the mbaas service is running
+    this.isRunning(){
+        return _push?true:false;
+    }
+})
+
 ;
