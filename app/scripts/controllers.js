@@ -64,12 +64,14 @@ angular.module('mobay.controllers', [])
 
 })
 
-.controller('NotificationsCtrl', function($scope, Friends) {
-    $scope.friends = Friends.all();
+.controller('NotificationsCtrl', function($scope, store) {
+    $scope.notifications = store.getNotifications();
+    $scope.notificationKeys = _.keys($scope.notifications);
 })
 
 .controller('NotificationDetailCtrl', function($scope, $stateParams, Friends) {
     $scope.friend = Friends.get($stateParams.friendId);
+    $log.debug('>> open message id ' + $stateParams.msgId)
 })
 
 .controller('ProfileCtrl', function($scope, $log, store) {

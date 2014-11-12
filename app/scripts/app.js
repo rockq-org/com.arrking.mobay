@@ -146,7 +146,7 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
     })
 
     .state('tab.notification-detail', {
-        url: '/notification/:friendId',
+        url: '/notification/:msgId',
         views:
         {
             'tab-notifications': {
