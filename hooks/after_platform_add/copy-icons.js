@@ -35,7 +35,11 @@ var icons = {
 			"identifier_ios_114x114.png": projName + "/Resources/icons/icon@2x.png",
 			"splash_ios_iphone_320x480.png": projName + "/Resources/splash/Default~iphone.png",
 			"splash_ios_iphone_640x960.png": projName + "/Resources/splash/Default@2x~iphone.png",
-			"splash_ios_iphone_640x1136.png": projName + "/Resources/splash/Default-568h@2x~iphone.png"
+			"splash_ios_iphone_640x1136.png": projName + "/Resources/splash/Default-568h@2x~iphone.png",
+			"splash_ios_ipad_1024x748.png": projName + "/Resources/splash/Default-Landscape~ipad.png",
+			"splash_ios_ipad_2048x1496.png": projName + "/Resources/splash/Default-Landscape@2x~ipad.png",
+			"splash_ios_ipad_768x1004.png": projName + "/Resources/splash/Default-Portrait~ipad.png",
+			"splash_ios_ipad_1536x2008.png": projName + "/Resources/splash/Default-Portrait@2x~ipad.png"
 	},
 	android: {
       "identifier_android_72x72.png": "res/drawable/icon.png",
