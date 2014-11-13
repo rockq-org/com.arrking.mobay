@@ -61,16 +61,14 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('DashCtrl', function($scope, $state, $log, webq, las) {
-    // resolve map location, boot up mapbox, cached views
-    if(!las.isRunning()){
-        las.start('las-map');
-    }
-    // with the
+    // resolve map location, boot up mapbox
     // $scope.$on('$viewContentLoaded', function(event){
+    //     las.start('las-map');
     // });
 })
 
 .controller('NotificationsCtrl', function($scope, store) {
+    $scope.$root.tabsHidden = "";
     $scope.getDateString = function(dateString) {
         var date = dateString ? new Date(dateString) : new Date();
         var yyyy = date.getFullYear();
@@ -97,22 +95,8 @@ angular.module('mobay.controllers', [])
         }
         return '{0}/{1}/{2} {3}:{4}'.f(yyyy, mm, dd, hh, min);
     };
-
-    function _init(){
-        $scope.$root.tabsHidden = "";
-        $scope.notifications = store.getNotifications();
-        $scope.notificationKeys = _.keys($scope.notifications).sort().reverse();
-    }
-
-    // a temporary for cached views, by default, in Beta 14 until now
-    // all views are cached views, it has better performance, but 
-    // some data should be updated when navigating back from other views.
-    $scope.$on('$stateChangeSuccess', function(event, toState) {
-        if (toState.name == "tab.notifications") { 
-            //this makes sure that it's not loaded on leave
-            _init();
-        }
-    })
+    $scope.notifications = store.getNotifications();
+    $scope.notificationKeys = _.keys($scope.notifications).sort().reverse();
 })
 
 .controller('NotificationDetailCtrl', function($scope, $stateParams, $log, webq) {
@@ -134,43 +118,35 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('ProfileCtrl', function($scope, $log, store) {
-
-    function _init(){
-        $scope.$root.tabsHidden = "";      
-        // show tabs
-        var profile = store.getUserProfile();
-        // TODO resolve the default avatar
-        $scope.avatarUrl = profile._json.pictureUrl || 'http://musa-hw-cafe.qiniudn.com/avatar/local-mobay-demo@qq.com-1414464704244.png';
-        $log.debug(">> get user profile " + JSON.stringify(profile));
-        $scope.name = profile.displayName;
-        $scope.email = profile.emails[0].value;
-        // append edu
-        if (profile._json.educations._total > 0) {
-          $scope.school = profile._json.educations.values[0].schoolName;
-        }
-        // append company
-        if (profile._json.positions._total > 0) {
-          $scope.company = profile._json.positions.values[0].company.name;
-        }
-
-        if (profile._json.interests){
-            $scope.interests = profile._json.interests;
-        }
+    $scope.$root.tabsHidden = "";      
+    // show tabs
+    var profile = store.getUserProfile();
+    // TODO resolve the default avatar
+    $scope.avatarUrl = profile._json.pictureUrl || 'http://musa-hw-cafe.qiniudn.com/avatar/local-mobay-demo@qq.com-1414464704244.png';
+    $log.debug(">> get user profile " + JSON.stringify(profile));
+    $scope.name = profile.displayName;
+    $scope.email = profile.emails[0].value;
+    // append edu
+    if (profile._json.educations._total > 0) {
+      $scope.school = profile._json.educations.values[0].schoolName;
     }
+
+    // append company
+    if (profile._json.positions._total > 0) {
+      $scope.company = profile._json.positions.values[0].company.name;
+    }
+
+    if (profile._json.interests){
+        $scope.interests = profile._json.interests;
+    }
+    $scope.save = function (){
+        $scope.school = '12345';
+        location.href='#/tab/profile';
+    };
 
     // take photo as avatar
     $scope.updateAvatar = function(){
     }
-
-    // a temporary for cached views, by default, in Beta 14 until now
-    // all views are cached views, it has better performance, but 
-    // some data should be updated when navigating back from other views.
-    $scope.$on('$stateChangeSuccess', function(event, toState) {
-        if (toState.name == "tab.profile") { 
-            //this makes sure that it's not loaded on leave
-            _init();
-        }
-    })
 })
 
 .controller('ProfileEditorCtrl', function($state, $scope, $log, $stateParams, store, webq){
@@ -261,10 +237,9 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('SettingsCtrl', function ($rootScope, $state, $scope, $log, $http, cfg, store, webq, mbaas) {
+    $scope.$root.tabsHidden = "";
     $scope.title = '移动港湾';
     $scope.appVersion = cfg.version;
-    var preSubscriptions = [];
-
     function mailUnAvailable(){
         $scope.title = '邮件服务不可用';
         setTimeout(function(){
@@ -273,25 +248,21 @@ angular.module('mobay.controllers', [])
             $rootScope.$digest();
         }, 2000)
     }
-
-    function _init(){
-        $scope.$root.tabsHidden = "";
-        preSubscriptions = store.getSubTags();
-        $scope.subscriptions = {
-            promotion: {
-                checked: _.indexOf(preSubscriptions, 'promotion') !== -1,
-                text: '优惠' 
-            },
-            itnews: {
-                text: '资讯',
-                checked: _.indexOf(preSubscriptions, 'itnews') !== -1,
-            },
-            activity: {
-                text: '活动',
-                checked: _.indexOf(preSubscriptions, 'activity') !== -1
-            } 
-        };
-    }
+    var preSubscriptions = store.getSubTags();
+    $scope.subscriptions = {
+        promotion: {
+            checked: _.indexOf(preSubscriptions, 'promotion') !== -1,
+            text: '优惠' 
+        },
+        itnews: {
+            text: '资讯',
+            checked: _.indexOf(preSubscriptions, 'itnews') !== -1,
+        },
+        activity: {
+            text: '活动',
+            checked: _.indexOf(preSubscriptions, 'activity') !== -1
+        } 
+    };
 
     $scope.changeSubscriptions = function(key, value){
         $log.debug("subscribe: ", key, ", boolean ",value);
@@ -347,16 +318,6 @@ angular.module('mobay.controllers', [])
             $log.debug('no mail plugins')
         }
     }
-
-    // a temporary for cached views, by default, in Beta 14 until now
-    // all views are cached views, it has better performance, but 
-    // some data should be updated when navigating back from other views.
-    $scope.$on('$stateChangeSuccess', function(event, toState) {
-        if (toState.name == "tab.settings") { 
-            //this makes sure that it's not loaded on leave
-            _init();
-        }
-    })
 })
 
 .controller('TermsCtrl', function ($scope, $log, webq, cfg) {
