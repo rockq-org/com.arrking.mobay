@@ -142,18 +142,6 @@ angular.module('mobay.services', ['config'])
         return JSON.parse(window.localStorage.getItem('{0}-MUSA_USER_PROFILE'.f(this.getUserId())));
     };
 
-    this.getUserSID = function() {
-        return window.localStorage.getItem('MUSA_USER_SID');
-    };
-
-    this.setUserSID = function(sid) {
-        window.localStorage.setItem('MUSA_USER_SID', sid);
-    };
-
-    this.deleteUserSID = function() {
-        window.localStorage.removeItem('MUSA_USER_SID');
-    };
-
     this.setNotificationAsRead = function(id) {
         var json = this.getNotifications()[id];
         json.isRead = true;
@@ -274,9 +262,11 @@ angular.module('mobay.services', ['config'])
     };
 
     // logout user
-    this.logout = function(){
-        $http.get('http://{0}/logout'.f(cfg.host));
-        store.deleteUserSID();
+    this.logout = function(callback){
+        $http.get('http://{0}/logout'.f(cfg.host)).finally(function(){
+            store.deleteAccessToken();
+            callback();
+        });
     }
 
     // get user service agreements in markdown format

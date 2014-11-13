@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.arrking.mobay" version="0.0.2" ios-CFBundleVersion="201411132309" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.arrking.mobay" version="0.0.2" ios-CFBundleVersion="201411132342" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>moBay</name>
   <description>
       Mobilb Bay, show real time matrix for Cafe, Bar, Salon, etc.
