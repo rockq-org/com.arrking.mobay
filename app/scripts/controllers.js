@@ -65,7 +65,32 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('NotificationsCtrl', function($scope, store) {
-    $scope.getDateString = getDateString;
+    $scope.getDateString = function(dateString) {
+        var date = dateString ? new Date(dateString) : new Date();
+        var yyyy = date.getFullYear();
+        var mm = date.getMonth() + 1; //January is 0!
+        var dd = date.getDate();
+        var hh = date.getHours();
+        var min = date.getMinutes();
+        var sec = date.getSeconds();
+
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+        if (hh < 10) {
+            hh = '0' + hh
+        }
+        if (min < 10) {
+            min = '0' + min
+        }
+        if (sec < 10) {
+            sec = '0' + sec
+        }
+        return '{0}/{1}/{2} {3}:{4}'.f(yyyy, mm, dd, hh, min);
+    };
     $scope.notifications = store.getNotifications();
     $scope.notificationKeys = _.keys($scope.notifications).sort().reverse();
 })
@@ -205,12 +230,12 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('SettingsCtrl', function ($rootScope, $state, $scope, $log, $http, cfg, store, webq, mbaas) {
-    $scope.title = 'moBay';
+    $scope.title = '移动港湾';
     $scope.appVersion = cfg.version;
     function mailUnAvailable(){
         $scope.title = '邮件服务不可用';
         setTimeout(function(){
-            $scope.title = 'moBay';
+            $scope.title = '移动港湾';
             // https://docs.angularjs.org/api/ng/type/$rootScope.Scope
             $rootScope.$digest();
         }, 2000)
