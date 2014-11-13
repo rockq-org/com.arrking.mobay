@@ -503,6 +503,10 @@ angular.module('mobay.services', ['config'])
             }).setView([45.706, 11.558 ], 1);
         }
     }
+
+    this.isRunning = function(){
+        return _map? true: false;
+    }
 })
 
 
