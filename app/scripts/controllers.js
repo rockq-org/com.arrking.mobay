@@ -68,6 +68,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('NotificationsCtrl', function($scope, store) {
+    $scope.$root.tabsHidden = "";
     $scope.getDateString = function(dateString) {
         var date = dateString ? new Date(dateString) : new Date();
         var yyyy = date.getFullYear();
@@ -99,6 +100,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('NotificationDetailCtrl', function($scope, $stateParams, $log, webq) {
+    $scope.$root.tabsHidden = "hide-tabs";
     // $log.debug('>> open message id ' + $stateParams.msgId);
     $scope.title = $stateParams.title;
     webq.getNotificationDetail($stateParams.msgId).success(function(data){
@@ -116,6 +118,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('ProfileCtrl', function($scope, $log, store) {
+    $scope.$root.tabsHidden = "";      
     // show tabs
     var profile = store.getUserProfile();
     // TODO resolve the default avatar
@@ -147,6 +150,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('ProfileEditorCtrl', function($state, $scope, $log, $stateParams, store, webq){
+    $scope.$root.tabsHidden = "hide-tabs";      
     // hide tabs
     $log.debug($stateParams);
     $scope.data = {};
@@ -233,6 +237,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('SettingsCtrl', function ($rootScope, $state, $scope, $log, $http, cfg, store, webq, mbaas) {
+    $scope.$root.tabsHidden = "";
     $scope.title = '移动港湾';
     $scope.appVersion = cfg.version;
     function mailUnAvailable(){
@@ -316,6 +321,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('TermsCtrl', function ($scope, $log, webq, cfg) {
+    $scope.$root.tabsHidden = "hide-tabs";
     webq.getUserServiceAgreements().then(function(data){
         $scope.terms = data;
     })

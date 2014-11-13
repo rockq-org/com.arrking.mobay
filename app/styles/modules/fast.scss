@@ -57,3 +57,11 @@
 .scroll {
   height: 100%;
 }
+
+.hide-tabs .tabs {
+    display: none;
+}
+
+.hide-tabs .has-tabs {
+  bottom: 0px;
+}
