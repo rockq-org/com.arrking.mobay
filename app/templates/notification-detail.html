@@ -1,10 +1,5 @@
-<!--
-  This template loads for the 'tab.friend-detail' state (app.js)
-  'friend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
-  The FriendsCtrl pulls data from the Friends service (service.js)
-  The Friends service returns an array of friend data
--->
-<ion-view title="{{title}}" style="background: #292D30;">
+<style> .tabs { display: none; } </style>
+<ion-view title="{{title}}" style="background: #292D30;" class="hide-tabs">
   <ion-content has-header="true" padding="true" style="background: #ffffff;">
 	<div class="item text-center" style="border: 0;" ng-show="content==null">加载中...</div>
   	<div ng-bind-html="content"></div>

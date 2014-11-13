@@ -60,8 +60,11 @@ angular.module('mobay.controllers', [])
     };
 })
 
-.controller('DashCtrl', function($scope, $state, $log, webq) {
-
+.controller('DashCtrl', function($scope, $state, $log, webq, las) {
+    // resolve map location, boot up mapbox
+    $scope.$on('$viewContentLoaded', function(event){
+        las.start('las-map');
+    });
 })
 
 .controller('NotificationsCtrl', function($scope, store) {

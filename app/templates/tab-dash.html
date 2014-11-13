@@ -1,4 +1,4 @@
-<ion-view title="首页" hide-nav-bar="true">
+<ion-view hide-nav-bar="true">
     <ion-header-bar class="bar-dark">
     	<button class="button button-icon icon ion-navicon"></button>
         <div class="button-bar button-small" id="headerTab">
@@ -6,7 +6,8 @@
             <a class="button button-outline" href="#/tab/dash/people">圈子</a>
         </div>
     </ion-header-bar>
-    <ion-content class="stable-bg padding-top">
-        <h1>地图</h1>
+    <ion-content class="stable-bg padding-top" scroll="false">
+        <div id="las-map" style="position:absolute; top:0; bottom:0; width:100%;">
+        </div>
     </ion-content>
 </ion-view>

@@ -479,4 +479,31 @@ angular.module('mobay.services', ['config'])
     }
 })
 
+// location awareness service
+.service('las', function($http ,$log, webq){
+    var _map;
+
+    this.start = function(mapDiv){
+        if(!this._map){
+            L.mapbox.accessToken = "pk.eyJ1IjoiaGFpbiIsImEiOiJFQUVqelIwIn0.397XBIShpknPNDl6e95mow";
+            var southWest = L.latLng(-85.051, -86.528),
+                northEast = L.latLng(85.051, 99.053),
+                bounds = L.latLngBounds(southWest, northEast);
+
+            _map = L.mapbox.map(mapDiv,
+                "hain.ja31ci75", {
+                    minZoom: 1,
+                    maxZoom: 3,
+                    maxBounds: bounds,
+                    // Set it to false if you don't want the map to zoom 
+                    // beyond min/max zoom and then bounce back when pinch-zooming.
+                    // TODO it does not work.
+                    // https://github.com/arrking/musa-hw-mobile/issues/101
+                    bounceAtZoomLimits: false
+            }).setView([45.706, 11.558 ], 1);
+        }
+    }
+})
+
+
 ;
