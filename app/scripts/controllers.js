@@ -79,9 +79,6 @@ angular.module('mobay.controllers', [])
     }
 
     $scope.openMapView = function(){
-        if(){
-            $state.go();
-        }
     }
 
     $scope.openPeopleView = function(){
