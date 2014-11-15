@@ -60,11 +60,33 @@ angular.module('mobay.controllers', [])
     };
 })
 
-.controller('DashCtrl', function($scope, $state, $log, webq, las) {
+.controller('DashCtrl', function($scope, $ionicLoading, $state, $log, webq, las) {
     // resolve map location, boot up mapbox
     // $scope.$on('$viewContentLoaded', function(event){
     //     las.start('las-map');
     // });
+
+    $scope.incoming = function(){
+        $ionicLoading.show({
+            template: 'not done yet ...',
+            duration: 1000
+        });
+    }
+
+    $scope.scanQRCode = function(){
+        // TODO open the QR Scanner, post locin event
+        
+    }
+
+    $scope.openMapView = function(){
+        if(){
+            $state.go();
+        }
+    }
+
+    $scope.openPeopleView = function(){
+
+    }
 })
 
 .controller('NotificationsCtrl', function($scope, store) {
