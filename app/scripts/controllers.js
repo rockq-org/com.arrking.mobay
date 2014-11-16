@@ -61,11 +61,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('DashCtrl', function($scope, $ionicLoading, $state, $log, webq, las) {
-    // resolve map location, boot up mapbox
-    // $scope.$on('$viewContentLoaded', function(event){
-    //     las.start('las-map');
-    // });
-
+    $scope.$root.tabsHidden = "";
     $scope.incoming = function(){
         $ionicLoading.show({
             template: 'not done yet ...',
@@ -84,6 +80,27 @@ angular.module('mobay.controllers', [])
     $scope.openPeopleView = function(){
 
     }
+})
+
+.controller('MapCtrl', function($scope, $log, las){
+    $scope.$root.tabsHidden = "hide-tabs";
+    $scope.$on('$viewContentLoaded', function(event){
+        las.start('las-map');
+    });
+})
+
+.controller('PeopleCtrl', function ($scope) {
+    $scope.people = [
+        {
+            name: '路人甲'
+        },
+        {
+            name: '路人乙'
+        },
+        {
+            name: '路人丙'
+        }
+    ];
 })
 
 .controller('NotificationsCtrl', function($scope, store) {
@@ -239,20 +256,6 @@ angular.module('mobay.controllers', [])
             });
         }
     }
-})
-
-.controller('PeopleCtrl', function ($scope) {
-    $scope.people = [
-        {
-            name: '路人甲'
-        },
-        {
-            name: '路人乙'
-        },
-        {
-            name: '路人丙'
-        }
-    ];
 })
 
 .controller('SettingsCtrl', function ($rootScope, $state, $scope, $log, $http, cfg, store, webq, mbaas) {

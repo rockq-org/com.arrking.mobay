@@ -62,3 +62,14 @@
 .hide-tabs .has-tabs {
   bottom: 0px;
 }
+
+#las-map-container .scroll {
+  height: 100%;
+}
+
+#las-map {
+  position:absolute; 
+  top:0; 
+  bottom:0; 
+  width:100%;
+}

@@ -1,12 +1,11 @@
 <ion-view title="圈子" hide-nav-bar="true">
     <ion-header-bar class="bar-dark">
-        <button class="button button-icon icon ion-navicon"></button>
         <div class="button-bar button-small" id="headerTab">
             <a class="button button-outline" href="#/tab/dash">地图</a>
             <a class="button button-light" href="#/tab/dash/people">圈子</a>
         </div>
     </ion-header-bar>
-    <ion-content class="stable-bg">
+    <ion-content class="stable-bg" has-header="true" >
         <ion-list>
             <ion-item class="item-avatar item-icon-right" ng-repeat="item in people" href="#/tab/dash/people/0">
                 <img src="http://ionicframework.com/img/docs/venkman.jpg">
