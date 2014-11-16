@@ -491,6 +491,9 @@ angular.module('mobay.services', ['config'])
                     // https://github.com/arrking/musa-hw-mobile/issues/101
                     bounceAtZoomLimits: false
             }).setView([45.706, 11.558 ], 1);
+            // https://www.mapbox.com/mapbox.js/api/v1.6.1/l-control-attribution/
+            var credits = L.control.attribution({prefix: false}).addTo(_map);
+            credits.addAttribution('© 北京金矢科技有限公司');
         }
     }
 
