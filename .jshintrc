@@ -21,6 +21,15 @@
   "globals": {
     "angular": false,
     "cordova": false,
-    "StatusBar": false
+    "StatusBar": false,
+    "alert": false,
+    "ionic": false,
+    "_": false,
+    "L": false,
+    "Showdown": false,
+    "device": false,
+    "IBMBluemix": false,
+    "IBMPush": false,
+    "geolib": false
   }
 }

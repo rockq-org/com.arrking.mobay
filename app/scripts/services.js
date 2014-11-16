@@ -179,7 +179,7 @@ angular.module('mobay.services', ['config'])
 //https://docs.angularjs.org/api/ng/service/$http#interceptors
 .service('accessTokenHttpInterceptor', function($q, $log, store){
     var noAccessTokenUrls = ['/public/md/user-service-agreements.md',
-        '/auth/local']
+        '/auth/local'];
     return {
         request: function(cfg){
             // add exceptions for Authorization header
@@ -191,18 +191,18 @@ angular.module('mobay.services', ['config'])
             })){
                 // a list of urls that post no 
                 // Authorization Token
-            }else if(store.getAccessToken()['access_token']){
+            }else if(store.getAccessToken().access_token){
                 if(cfg.headers){
-                    cfg.headers['Authorization'] =  'Bearer {0}'.f(store.getAccessToken()['access_token']);
+                    cfg.headers.Authorization =  'Bearer {0}'.f(store.getAccessToken().access_token);
                 }else{
-                    cfg['headers'] = {
-                        'Authorization': 'Bearer {0}'.f(store.getAccessToken()['access_token'])
-                    }
+                    cfg.headers = {
+                        'Authorization': 'Bearer {0}'.f(store.getAccessToken().access_token)
+                    };
                 }
             }
             return cfg;
         }
-    }
+    };
 })
 
 // web request utility
@@ -215,10 +215,10 @@ angular.module('mobay.services', ['config'])
             headers:{
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
-            }   
+            }
         })
         .success(function(data) {
-            $log.debug(data)
+            $log.debug(data);
             defer.resolve(data);
         })
         .error(function(err) {
@@ -246,7 +246,7 @@ angular.module('mobay.services', ['config'])
         }).
         success(function(data, status, headers) {
             $log.debug('login api response: ' + JSON.stringify(data));
-            if(data['access_token']){
+            if(data.access_token){
                 defer.resolve(data);
             }else{
                 defer.reject(data);
@@ -267,7 +267,7 @@ angular.module('mobay.services', ['config'])
             store.deleteAccessToken();
             callback();
         });
-    }
+    };
 
     // get user service agreements in markdown format
     this.getUserServiceAgreements = function(){
@@ -289,12 +289,12 @@ angular.module('mobay.services', ['config'])
             defer.reject(err);
         });
         return defer.promise;
-    }
+    };
 
     // save user profile properties
     this.saveUserProfile = function(profile){
         var defer = $q.defer();
-        $http.put("http://{0}/user/me".f(cfg.host) , {
+        $http.put('http://{0}/user/me'.f(cfg.host) , {
             profile: profile
         },
         {
@@ -309,7 +309,7 @@ angular.module('mobay.services', ['config'])
             defer.reject(data);
         });
         return defer.promise;
-    }
+    };
 
     // get notifications from remote server
     this.getNotifications = function(){
@@ -322,10 +322,10 @@ angular.module('mobay.services', ['config'])
             defer.resolve(data);
         }).
         error(function(err){
-            defer.reject(err)
+            defer.reject(err);
         });
         return defer.promise;
-    }
+    };
 
     // get notification detail
     this.getNotificationDetail = function(msgId){
@@ -336,24 +336,42 @@ angular.module('mobay.services', ['config'])
                 },
                 responseType: 'json'
             });
-    }
+    };
 
     // get maps data from CafeServer
     this.getMapdata = function(){
         var defer = $q.defer();
-        $http.get("http://{0}/rtls/maps".f(cfg.host), {
+        $http.get('http://{0}/rtls/maps'.f(cfg.host), {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
             responseType: 'json'
         }).success(function(data, status){
-            defer.resolve(data);            
+            defer.resolve(data);
         }).error(function(data, status){
             defer.reject(data);
         });
         return defer.promise;
-    }
+    };
+
+    // this upload 
+    this.uploadRTLSData = function(data){
+        $http.post('http://{0}/rtls/locin'.f(cfg.host), data, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            responseType: 'json'
+        })
+        .success(function(res, status){
+            // {rc: 0, msg: visible event is published.}
+            $log.debug(res);
+        })
+        .error(function(err, status){
+            $log.debug(err);
+        });
+    };
 })
 
 .service('mbaas', function($q, $log, cfg, store, webq){
@@ -367,7 +385,7 @@ angular.module('mobay.services', ['config'])
                     $log.debug('get subscriptions in mbaas ' + JSON.stringify(response.subscriptions));
                     store.setSubTags(response.subscriptions);
                 }, function(err) {
-                    $log.error(err)
+                    $log.error(err);
                 });
             },
             function(error) {
@@ -393,22 +411,22 @@ angular.module('mobay.services', ['config'])
                         var tags = store.getSubTags();
                         var keys = _.keys(data.notifications);
                         keys.forEach(function(key) {
-                          try {
-                            var notification = JSON.parse(data.notifications[key]);
-                            // check if the notification is subscribed by this user
-                            if (_.indexOf(tags, notification.category) != -1) {
-                              $log.debug('save notification into localStorage - ' + JSON.stringify(notification));
-                              store.saveNotifications(notification);
+                            try {
+                                var notification = JSON.parse(data.notifications[key]);
+                                // check if the notification is subscribed by this user
+                                if (_.indexOf(tags, notification.category) !== -1) {
+                                    $log.debug('save notification into localStorage - ' + JSON.stringify(notification));
+                                    store.saveNotifications(notification);
+                                }
+                            } catch (e) {
+                                $log.debug(e);
                             }
-                          } catch (e) {
-                            $log.debug(e);
-                          }
                         });
                     }
                 }, function(err) {
                     $log.debug(err);
                 });
-            }
+            };
         }
 
         // initialize IBM Bluemix Mobile SDK
@@ -420,24 +438,24 @@ angular.module('mobay.services', ['config'])
             }).then(function() {
                 IBMPush.hybrid.initializeService().then(
                     function(pushService) {
-                        $log.debug("Initialized push successfully");
+                        $log.debug('Initialized push successfully');
                         // set _push
                         _push = pushService;
                         _registerDevice(username);
                     },
                     function(err) {
-                        $log.error("Error initializing the Push SDK");
+                        $log.error('Error initializing the Push SDK');
                     });
             });
         }else{
-            $log.error('>> can not start mbaas due to IBMBluemix.hybrid unavailable.')
+            $log.error('>> can not start mbaas due to IBMBluemix.hybrid unavailable.');
         }
-    }
+    };
 
     // check the mbaas service is running
     this.isRunning = function(){
         return _push?true:false;
-    }
+    };
 
     // sub a tag
     this.subTag = function(tagName){
@@ -456,11 +474,11 @@ angular.module('mobay.services', ['config'])
         } else {
             defer.reject({
                 rc: 2,
-                msg: "mbass is not initialized."
-            })
+                msg: 'mbass is not initialized.'
+            });
         }
         return defer.promise;
-    }
+    };
 
     // unsub a tag
     this.unSubTag = function(tagName){
@@ -479,11 +497,11 @@ angular.module('mobay.services', ['config'])
         } else {
             defer.reject({
                 rc: 2,
-                msg: "mbass is not initialized."
-            })
+                msg: 'mbass is not initialized.'
+            });
         }
         return defer.promise;
-    }
+    };
 })
 
 // location awareness service
@@ -492,13 +510,13 @@ angular.module('mobay.services', ['config'])
 
     this.start = function(mapDiv){
         if(!this._map){
-            L.mapbox.accessToken = "pk.eyJ1IjoiaGFpbiIsImEiOiJFQUVqelIwIn0.397XBIShpknPNDl6e95mow";
+            L.mapbox.accessToken = 'pk.eyJ1IjoiaGFpbiIsImEiOiJFQUVqelIwIn0.397XBIShpknPNDl6e95mow';
             var southWest = L.latLng(-85.051, -86.528),
                 northEast = L.latLng(85.051, 99.053),
                 bounds = L.latLngBounds(southWest, northEast);
 
             _map = L.mapbox.map(mapDiv,
-                "hain.ja31ci75", {
+                'hain.ja31ci75', {
                     minZoom: 1,
                     maxZoom: 3,
                     maxBounds: bounds,
@@ -507,19 +525,19 @@ angular.module('mobay.services', ['config'])
                     // TODO it does not work.
                     // https://github.com/arrking/musa-hw-mobile/issues/101
                     bounceAtZoomLimits: false
-            }).setView([45.706, 11.558 ], 1);
+                }).setView([45.706, 11.558 ], 1);
             // https://www.mapbox.com/mapbox.js/api/v1.6.1/l-control-attribution/
             var credits = L.control.attribution({prefix: false}).addTo(_map);
             credits.addAttribution('© 北京金矢科技有限公司');
         }
-    }
+    };
 
     this.isRunning = function(){
         return _map? true: false;
-    }
+    };
 })
 
-.service('gps', function($q, $log){
+.service('gps', function($q, $log, store){
     // get current position by gps plugin
     this.getCurrentPosition = function() {
         var defer = $q.defer();
@@ -545,22 +563,40 @@ angular.module('mobay.services', ['config'])
                 defer.reject(err);
             });
         return defer.promise;
-    }
+    };
 
     // is point inside circle
     this.isPointInsideCircle = function(premise, point) {
+        var defer = $q.defer();
         var mapData = store.getMaps();
         if (mapData) {
             $log.debug('center ' + JSON.stringify(mapData[premise].circle));
             $log.debug('point ' + JSON.stringify(point));
-            return geolib.isPointInCircle(point,
-                mapData[premise].circle.center,
-                mapData[premise].circle.radius);
+            try{
+                if(geolib.isPointInCircle(point, mapData[premise].circle.center, mapData[premise].circle.radius)){
+                    defer.resolve();
+                }else{
+                    defer.reject({
+                        rc: 1,
+                        msg: '您当前不在{0} '.f(mapData[premise].name)
+                    });
+                }
+            }catch(e){
+                $log.error(e);
+                defer.reject({
+                    rc: 2,
+                    msg: 'UNKNOW ERROR, get log for detail.'
+                });
+            }
         } else {
-            $log.error('NO MAP Data.');
-            return false;
+            $log.error('NO MAP DATA.');
+            defer.reject({
+                rc: 3,
+                msg: '无法得到地图信息'
+            });
         }
-    }
+        return defer.promise;
+    };
 
 })
 

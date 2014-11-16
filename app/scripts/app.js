@@ -16,11 +16,11 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
             // org.apache.cordova.statusbar required
             StatusBar.overlaysWebView(true);
             StatusBar.styleLightContent();
-            StatusBar.backgroundColorByName("white");
+            StatusBar.backgroundColorByName('white');
             // StatusBar.hide();
         }
         if(window.navigator.splashscreen){
-            if (store.getAccessToken()['access_token']) {
+            if (store.getAccessToken().access_token) {
                 webq.getUserProfile().then(function(data){
                     // save data into localStorage
                     store.setUserId(data.emails[0].value);
