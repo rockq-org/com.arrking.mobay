@@ -37,7 +37,7 @@ angular.module('mobay.services', ['config'])
  * Persistence Object Manager
  * depends on understore
  */
-.service('store', function() {
+.service('store', function($log) {
 
     this.getAppVersion = function() {
         return window.localStorage.getItem('MUSA_SNOWBALL_VERSION');
@@ -120,7 +120,7 @@ angular.module('mobay.services', ['config'])
             category: data.category,
             description: data.description || ''
         };
-        console.log('[DEBUG] save notifications ... ' + JSON.stringify(json));
+        $log.debug('[DEBUG] save notifications ... ' + JSON.stringify(json));
         window.localStorage.setItem(key, JSON.stringify(json));
     };
 
@@ -337,6 +337,23 @@ angular.module('mobay.services', ['config'])
                 responseType: 'json'
             });
     }
+
+    // get maps data from CafeServer
+    this.getMapdata = function(){
+        var defer = $q.defer();
+        $http.get("http://{0}/rtls/maps".f(cfg.host), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(data, status){
+            defer.resolve(data);            
+        }).error(function(data, status){
+            defer.reject(data);
+        });
+        return defer.promise;
+    }
 })
 
 .service('mbaas', function($q, $log, cfg, store, webq){
@@ -502,5 +519,49 @@ angular.module('mobay.services', ['config'])
     }
 })
 
+.service('gps', function($q, $log){
+    // get current position by gps plugin
+    this.getCurrentPosition = function() {
+        var defer = $q.defer();
+        navigator.geolocation.getCurrentPosition(function(position) {
+                // onSuccess Callback
+                // This method accepts a Position object, which contains the
+                // current GPS coordinates
+                //
+                // alert('Latitude: '          + position.coords.latitude          + '\n' +
+                //       'Longitude: '         + position.coords.longitude         + '\n' +
+                //       'Altitude: '          + position.coords.altitude          + '\n' +
+                //       'Accuracy: '          + position.coords.accuracy          + '\n' +
+                //       'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+                //       'Heading: '           + position.coords.heading           + '\n' +
+                //       'Speed: '             + position.coords.speed             + '\n' +
+                //       'Timestamp: '         + position.timestamp                + '\n');
+                defer.resolve(position);
+            },
+            // onError Callback receives a PositionError object
+            //
+            function(err) {
+                $log.error(err);
+                defer.reject(err);
+            });
+        return defer.promise;
+    }
+
+    // is point inside circle
+    this.isPointInsideCircle = function(premise, point) {
+        var mapData = store.getMaps();
+        if (mapData) {
+            $log.debug('center ' + JSON.stringify(mapData[premise].circle));
+            $log.debug('point ' + JSON.stringify(point));
+            return geolib.isPointInCircle(point,
+                mapData[premise].circle.center,
+                mapData[premise].circle.radius);
+        } else {
+            $log.error('NO MAP Data.');
+            return false;
+        }
+    }
+
+})
 
 ;

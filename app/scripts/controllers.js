@@ -24,6 +24,10 @@ angular.module('mobay.controllers', [])
                     if(!mbaas.isRunning()){
                         mbaas.start(data.emails[0].value);
                     }
+                    // save map meta data
+                    webq.getMapdata().then(function(data){
+                        store.setMaps(data);
+                    });
                     $state.go('tab.dash');
                 })
             }, function(err){
@@ -60,7 +64,8 @@ angular.module('mobay.controllers', [])
     };
 })
 
-.controller('DashCtrl', function($scope, $ionicLoading, $state, $log, webq, las) {
+.controller('DashCtrl', function($scope, $ionicLoading, 
+    $state, $log, store, webq, las, gps) {
     $scope.$root.tabsHidden = "";
     $scope.incoming = function(){
         $ionicLoading.show({
@@ -70,8 +75,11 @@ angular.module('mobay.controllers', [])
     }
 
     $scope.scanQRCode = function(){
-        // TODO open the QR Scanner, post locin event
-        
+        gps.getCurrentPosition().then(function(data){
+            alert(JSON.stringify(store.getMaps()));
+        }, function(err){
+            alert(err);
+        });
     }
 
     $scope.openMapView = function(){

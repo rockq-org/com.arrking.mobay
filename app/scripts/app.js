@@ -29,6 +29,14 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
                     if(window.IBMBluemix.hybrid){
                         mbaas.start(store.getUserId());
                     }
+
+                    // save map meta data
+                    webq.getMapdata().then(function(data){
+                        store.setMaps(data);
+                    }, function(err){
+                        alert(err);
+                    });
+
                     $state.go('tab.dash');
                     navigator.splashscreen.hide();
                 }, function(err){
