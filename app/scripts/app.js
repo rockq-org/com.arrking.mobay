@@ -38,13 +38,16 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
                         alert(err);
                     });
 
-                    $state.go('tab.dash');
                     navigator.splashscreen.hide();
                 }, function(err){
+                    // TODO 
+                    // {1} no network, stays in dash
+                    // {2} access token is expired, go to login 
                     $state.go('login.form');
                     navigator.splashscreen.hide();
                 });
             } else {
+                $state.go('login.form');
                 navigator.splashscreen.hide();
             }
         }
@@ -216,6 +219,6 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
     });
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/login/form');
+    $urlRouterProvider.otherwise('/tab/dash');
 
 });
