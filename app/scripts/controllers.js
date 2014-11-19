@@ -223,7 +223,7 @@ angular.module('mobay.controllers', [])
     $scope.$root.tabsHidden = 'hide-tabs';
     var mapId = 'HelloWorldCafe';
     self._map;
-    self._markers = {};
+    $scope.markers = {};
 
     // trick point - handle sub menu 
     $scope.$root.subMenuIcon = 'ion-ios7-people-outline';
@@ -245,7 +245,7 @@ angular.module('mobay.controllers', [])
         $scope.modal.hide();
     }
         
-
+    // bind users that already online
     function _loadMarkers(){
         webq.getRTLSDataByMapId(mapId).then(function(data){
             _.each(data, function(val, key, list){
@@ -284,7 +284,7 @@ angular.module('mobay.controllers', [])
     });
 
     window.MOBAY_DISPLAY = function(name){
-        alert(name + JSON.stringify(_.keys(self._markers)));
+        alert(name + JSON.stringify(_.keys($scope.markers)));
         var confirmPopup = $ionicPopup.confirm({
              title: 'Consume Ice Cream',
              template: 'Are you sure you want to eat this ice cream?'
@@ -297,13 +297,29 @@ angular.module('mobay.controllers', [])
              }
            });
     }
+    // display a user in map centrically
+    $scope.locate = function(username){
+        if($scope.modal && $scope.modal.isShown()){
+            $scope.modal.hide();
+        };
+        setTimeout(function() {
+            try{
+                self._map.panTo($scope.markers[username].marker.getLatLng());
+                $scope.markers[username].marker
+                    .closePopup()
+                    .openPopup();
+            }catch(e){
+                $log.error(e);
+            }
+        }, 1000);
+    }
 
     $scope.$on('sse:rtls', function(event, data){
         try{
             // alert(JSON.stringify(data));
             // alert(data.mapId + data.username);
             if(data.mapId === mapId){
-                var markerKeys = _.keys(self._markers);
+                var markerKeys = _.keys($scope.markers);
                 switch(data.type){
                     case 'visible':
                         if(_.indexOf(markerKeys, data.username) == -1){
@@ -312,7 +328,7 @@ angular.module('mobay.controllers', [])
                                 .bindPopup('<img width="50px" height="50px" ' +
                                     'src="{0}" onclick="javascript:MOBAY_DISPLAY(\'{1}\')"></img>'.f(data.profile.pictureUrl, data.username))
                                 .openPopup();
-                            self._markers[data.username] = {
+                            $scope.markers[data.username] = {
                                 picture: data.profile.pictureUrl,
                                 displayName: data.displayName,
                                 status: data.status,

@@ -566,7 +566,7 @@ angular.module('mobay.services', ['config'])
                 // alert(JSON.stringify(JSON.parse(e.data)));
                 $rootScope.$broadcast('sse:rtls', JSON.parse(e.data));
             }catch(err){
-                alert(err);
+                $log.error(err);
             }
         }, false);
     };

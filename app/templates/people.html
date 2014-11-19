@@ -4,8 +4,15 @@
       <a class="button button-icon icon ion-ios7-close-outline" ng-click="closeModal()"></a>
     </ion-header-bar>
     <ion-content>
-      <div class="list">
+        <div class="list">
+            <a ng-repeat="(key, item) in markers" 
+               ng-click="locate(key)"
+               class="item item-thumbnail-left">
 
-    </div>
+              <img ng-src="{{ item.picture }}">
+              <h2>{{ item.displayName }}</h2>
+              <h4>{{ item.status }}</h4>
+            </a>
+        </div>
     </ion-content>
 </ion-modal-view>
