@@ -68,6 +68,7 @@ angular.module('mobay.controllers', [])
 .controller('DashCtrl', function($scope, $ionicPopup, $ionicLoading,
     $state, $log, store, $q, webq, gps) {
     $scope.$root.tabsHidden = '';
+    $scope.$root.subMenuShown = false;
     $scope.incoming = function(){
         $ionicLoading.show({
             template: 'not done yet ...',
@@ -222,6 +223,13 @@ angular.module('mobay.controllers', [])
     var mapId = 'HelloWorldCafe';
     self._map;
     self._markers = {};
+
+    // trick point - handle sub menu 
+    $scope.$root.subMenuIcon = 'ion-ios7-people-outline';
+    $scope.$root.subMenuShown = true;
+
+    $scope.$root.subMenu = function(){
+    }
         
     $scope.$on('$viewContentLoaded', function(event){
         var mb = store.getMaps()[mapId].mapbox;
