@@ -217,8 +217,8 @@ angular.module('mobay.controllers', [])
     };
 })
 
-.controller('MapCtrl', function($rootScope, $scope, $ionicModal, $ionicPopup, $log, store,
-    webq){
+.controller('MapCtrl', function($rootScope, $scope, $ionicModal, 
+    $ionicPopup, $log, $timeout, store, webq){
     var self = this;
     $scope.$root.tabsHidden = 'hide-tabs';
     var mapId = 'HelloWorldCafe';
@@ -314,6 +314,16 @@ angular.module('mobay.controllers', [])
         }, 1000);
     }
 
+    $scope.doRefresh = function() {
+        $timeout( function() {
+          //simulate async response
+          // $scope.items.push('New Item ' + Math.floor(Math.random() * 1000) + 4);
+     
+          // //Stop the ion-refresher from spinning
+          $scope.$broadcast('scroll.refreshComplete');
+        }, 1000);
+    };
+
     $scope.$on('sse:rtls', function(event, data){
         try{
             // alert(JSON.stringify(data));
@@ -354,11 +364,15 @@ angular.module('mobay.controllers', [])
         }
     });
 
+
+
     //Cleanup the modal when we're done with it!
     $scope.$on('$destroy', function() {
         $scope.modal.remove();
         delete window.MOBAY_DISPLAY;
     });
+
+
 
 })
 
