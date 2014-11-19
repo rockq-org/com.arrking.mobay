@@ -6,7 +6,7 @@
 angular.module('mobay.controllers', [])
 
 .controller('LoginCtrl', function($scope, $state, $http, $log,
-    $ionicLoading, store, cfg, webq, mbaas) {
+    $ionicLoading, store, cfg, webq, mbaas, sse) {
     $scope.errMessage = false;
     $scope.loginData = {};
 
@@ -27,6 +27,7 @@ angular.module('mobay.controllers', [])
                     // save map meta data
                     webq.getMapdata().then(function(data){
                         store.setMaps(data);
+                        sse.start();
                     });
                     $state.go('tab.dash');
                 });
@@ -65,7 +66,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('DashCtrl', function($scope, $ionicPopup, $ionicLoading,
-    $state, $log, store, $q, webq, las, gps) {
+    $state, $log, store, $q, webq, gps) {
     $scope.$root.tabsHidden = '';
     $scope.incoming = function(){
         $ionicLoading.show({
@@ -215,11 +216,93 @@ angular.module('mobay.controllers', [])
     };
 })
 
-.controller('MapCtrl', function($scope, $log, las){
+.controller('MapCtrl', function($scope, $ionicPopup, $log, store){
+    var self = this;
     $scope.$root.tabsHidden = 'hide-tabs';
+    var mapId = 'HelloWorldCafe';
+    self._map;
+    self._markers = {};
+        
     $scope.$on('$viewContentLoaded', function(event){
-        las.start('las-map');
+        var mb = store.getMaps()[mapId].mapbox;
+        L.mapbox.accessToken = mb.accessToken;
+        var southWest = L.latLng(mb.southWest.lat, mb.southWest.lng),
+            northEast = L.latLng(mb.northEast.lat, mb.northEast.lng),
+            bounds = L.latLngBounds(southWest, northEast);
+
+        self._map = L.mapbox.map('las-map',
+            mb.id, {
+                minZoom: mb.minZoom,
+                maxZoom: mb.maxZoom,
+                maxBounds: bounds,
+                // Set it to false if you don't want the map to zoom 
+                // beyond min/max zoom and then bounce back when pinch-zooming.
+                // TODO it does not work.
+                // https://github.com/arrking/musa-hw-mobile/issues/101
+                bounceAtZoomLimits: false
+            }).setView([mb.centerLat, mb.centerLng ], mb.defaultZoom);
+        // https://www.mapbox.com/mapbox.js/api/v1.6.1/l-control-attribution/
+        var credits = L.control.attribution({prefix: false}).addTo(self._map);
+        credits.addAttribution('© 北京金矢科技有限公司');
     });
+
+    window.MOBAY_DISPLAY = function(name){
+        alert(name + JSON.stringify(_.keys(self._markers)));
+        var confirmPopup = $ionicPopup.confirm({
+             title: 'Consume Ice Cream',
+             template: 'Are you sure you want to eat this ice cream?'
+           });
+           confirmPopup.then(function(res) {
+             if(res) {
+               console.log('You are sure');
+             } else {
+               console.log('You are not sure');
+             }
+           });
+    }
+
+    $scope.$on('sse:rtls', function(event, data){
+        try{
+            // alert(JSON.stringify(data));
+            // alert(data.mapId + data.username);
+            if(data.mapId === mapId){
+                var markerKeys = _.keys(self._markers);
+                switch(data.type){
+                    case 'visible':
+                        if(_.indexOf(markerKeys, data.username) == -1){
+                            var m = L.marker([data.lat,data.lng])
+                                .addTo(self._map)
+                                .bindPopup('<img width="50px" height="50px" ' +
+                                    'src="{0}" onclick="javascript:MOBAY_DISPLAY(\'{1}\')"></img>'.f(data.profile.pictureUrl, data.username))
+                                .openPopup();
+                            self._markers[data.username] = {
+                                picture: data.profile.pictureUrl,
+                                displayName: data.displayName,
+                                status: data.status,
+                                marker: m,
+                                profile: data.profile,
+                                passport: data.passport
+                            };
+                        }else{
+                            alert('update marker');
+                        }
+                        break;
+                    case 'invisible':
+
+                        break;
+                    default:
+                        break;
+                }
+            }else{
+                $log.debug('>> get event for {0} .'.f(data.mapId));
+            }
+        }catch(e){
+            alert(e);
+        }
+    });
+
+
+
 })
 
 .controller('PeopleCtrl', function ($scope) {

@@ -5,7 +5,7 @@
 // 'mobay.services' is found in services.js
 // 'mobay.controllers' is found in controllers.js
 angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config'])
-.run(function($ionicPlatform, $log, $state, cfg, store, webq, mbaas) {
+.run(function($ionicPlatform, $log, $state, cfg, store, webq, mbaas, sse) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -33,6 +33,7 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
                     // save map meta data
                     webq.getMapdata().then(function(data){
                         store.setMaps(data);
+                        sse.start();
                     }, function(err){
                         alert(err);
                     });

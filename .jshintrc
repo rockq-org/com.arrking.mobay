@@ -30,6 +30,7 @@
     "device": false,
     "IBMBluemix": false,
     "IBMPush": false,
-    "geolib": false
+    "geolib": false,
+    "EventSource": false
   }
 }

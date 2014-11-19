@@ -504,39 +504,6 @@ angular.module('mobay.services', ['config'])
     };
 })
 
-// location awareness service
-.service('las', function($http ,$log, webq){
-    var _map;
-
-    this.start = function(mapDiv){
-        if(!this._map){
-            L.mapbox.accessToken = 'pk.eyJ1IjoiaGFpbiIsImEiOiJFQUVqelIwIn0.397XBIShpknPNDl6e95mow';
-            var southWest = L.latLng(-85.051, -86.528),
-                northEast = L.latLng(85.051, 99.053),
-                bounds = L.latLngBounds(southWest, northEast);
-
-            _map = L.mapbox.map(mapDiv,
-                'hain.ja31ci75', {
-                    minZoom: 1,
-                    maxZoom: 3,
-                    maxBounds: bounds,
-                    // Set it to false if you don't want the map to zoom 
-                    // beyond min/max zoom and then bounce back when pinch-zooming.
-                    // TODO it does not work.
-                    // https://github.com/arrking/musa-hw-mobile/issues/101
-                    bounceAtZoomLimits: false
-                }).setView([45.706, 11.558 ], 1);
-            // https://www.mapbox.com/mapbox.js/api/v1.6.1/l-control-attribution/
-            var credits = L.control.attribution({prefix: false}).addTo(_map);
-            credits.addAttribution('© 北京金矢科技有限公司');
-        }
-    };
-
-    this.isRunning = function(){
-        return _map? true: false;
-    };
-})
-
 .service('gps', function($q, $log, store){
     // get current position by gps plugin
     this.getCurrentPosition = function() {
@@ -598,6 +565,23 @@ angular.module('mobay.services', ['config'])
         return defer.promise;
     };
 
+})
+
+.service('sse', function($rootScope, $log, cfg){
+
+    this.start = function(){
+        var source = new EventSource('http://{0}/sse/out/activity'.f(cfg.ssehost));
+        source.addEventListener('message', function(e) {
+            // emit event
+            try{
+                // alert(typeof e.data);
+                // alert(JSON.stringify(JSON.parse(e.data)));
+                $rootScope.$broadcast('sse:rtls', JSON.parse(e.data));
+            }catch(err){
+                alert(err);
+            }
+        }, false);
+    };
 })
 
 ;
