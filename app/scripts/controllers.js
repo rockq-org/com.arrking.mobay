@@ -217,7 +217,8 @@ angular.module('mobay.controllers', [])
     };
 })
 
-.controller('MapCtrl', function($scope, $ionicModal, $ionicPopup, $log, store){
+.controller('MapCtrl', function($rootScope, $scope, $ionicModal, $ionicPopup, $log, store,
+    webq){
     var self = this;
     $scope.$root.tabsHidden = 'hide-tabs';
     var mapId = 'HelloWorldCafe';
@@ -244,6 +245,19 @@ angular.module('mobay.controllers', [])
         $scope.modal.hide();
     }
         
+
+    function _loadMarkers(){
+        webq.getRTLSDataByMapId(mapId).then(function(data){
+            _.each(data, function(val, key, list){
+                try{
+                    $rootScope.$broadcast('sse:rtls', JSON.parse(val));
+                }catch(e){
+                    $log.error(e);
+                }
+            });
+        })
+    }
+
     $scope.$on('$viewContentLoaded', function(event){
         var mb = store.getMaps()[mapId].mapbox;
         L.mapbox.accessToken = mb.accessToken;
@@ -265,6 +279,8 @@ angular.module('mobay.controllers', [])
         // https://www.mapbox.com/mapbox.js/api/v1.6.1/l-control-attribution/
         var credits = L.control.attribution({prefix: false}).addTo(self._map);
         credits.addAttribution('© 北京金矢科技有限公司');
+
+        _loadMarkers();
     });
 
     window.MOBAY_DISPLAY = function(name){
@@ -328,20 +344,6 @@ angular.module('mobay.controllers', [])
         delete window.MOBAY_DISPLAY;
     });
 
-})
-
-.controller('PeopleCtrl', function ($scope) {
-    $scope.people = [
-        {
-            name: '路人甲'
-        },
-        {
-            name: '路人乙'
-        },
-        {
-            name: '路人丙'
-        }
-    ];
 })
 
 .controller('NotificationsCtrl', function($scope, store) {

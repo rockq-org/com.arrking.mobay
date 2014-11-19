@@ -1,38 +1,6 @@
 'use strict';
 angular.module('mobay.services', ['config'])
 
-/**
- * A simple example service that returns some data.
- */
-.factory('Friends', function() {
-    // Might use a resource here that returns a JSON array
-
-    // Some fake testing data
-    var friends = [{
-        id: 0,
-        name: 'Scruff McGruff'
-    }, {
-        id: 1,
-        name: 'G.I. Joe'
-    }, {
-        id: 2,
-        name: 'Miss Frizzle'
-    }, {
-        id: 3,
-        name: 'Ash Ketchum'
-    }];
-
-    return {
-        all: function() {
-            return friends;
-        },
-        get: function(friendId) {
-            // Simple index lookup
-            return friends[friendId];
-        }
-    };
-})
-
 /** 
  * Persistence Object Manager
  * depends on understore
@@ -372,6 +340,26 @@ angular.module('mobay.services', ['config'])
             $log.debug(err);
         });
     };
+
+    // get online people for a specific mapId
+    this.getRTLSDataByMapId = function(mapId){
+        var defer = $q.defer();
+        $http.get('http://{0}/rtls/hw'.f(cfg.host), {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(data){
+            defer.resolve(data);
+        }).error(function(err, status){
+            defer.reject({
+                error: err,
+                status: status
+            });
+        });
+        return defer.promise;
+    }
 })
 
 .service('mbaas', function($q, $log, cfg, store, webq){
