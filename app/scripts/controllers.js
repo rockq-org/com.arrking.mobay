@@ -228,9 +228,10 @@ angular.module('mobay.controllers', [])
     $scope.$root.subMenuIcon = 'ion-ios7-people-outline';
     $scope.$root.subMenuShown = true;
 
+    // display online people list
     $ionicModal.fromTemplateUrl('templates/people.html', {
         scope: $scope,
-        animation: 'slide-in-up'
+        animation: 'fade-in'
     }).then(function(modal) {
         $scope.modal = modal;
     });
@@ -239,6 +240,9 @@ angular.module('mobay.controllers', [])
         $scope.modal.show();
     }
 
+    $scope.closeModal = function(){
+        $scope.modal.hide();
+    }
         
     $scope.$on('$viewContentLoaded', function(event){
         var mb = store.getMaps()[mapId].mapbox;
@@ -318,7 +322,11 @@ angular.module('mobay.controllers', [])
         }
     });
 
-
+    //Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+        $scope.modal.remove();
+        delete window.MOBAY_DISPLAY;
+    });
 
 })
 
