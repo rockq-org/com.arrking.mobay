@@ -234,17 +234,33 @@ angular.module('mobay.controllers', [])
         scope: $scope,
         animation: 'fade-in'
     }).then(function(modal) {
-        $scope.modal = modal;
+        $scope.peopleList = modal;
+    });
+
+    // display a specific user profile in a card
+    $ionicModal.fromTemplateUrl('templates/people-detail.html', {
+        scope: $scope,
+        animation: 'fade-in'
+    }).then(function(modal) {
+        $scope.peopleDetail = modal;
     });
 
     $scope.$root.subMenu = function(){
-        $scope.modal.show();
-    }
+        $scope.peopleList.show();
+    };
 
-    $scope.closeModal = function(){
-        $scope.modal.hide();
-    }
-        
+    $scope.closePeopleListModal = function(){
+        if($scope.peopleList && $scope.peopleList.isShown()){
+            $scope.peopleList.hide();
+        };
+    };
+
+    $scope.closePeopleDetailModal = function(){
+        if($scope.peopleDetail && $scope.peopleDetail.isShown()){
+            $scope.peopleDetail.hide();
+        };
+    };
+
     // bind users that already online
     function _loadMarkers(){
         webq.getRTLSDataByMapId(mapId).then(function(data){
@@ -284,23 +300,17 @@ angular.module('mobay.controllers', [])
     });
 
     window.MOBAY_DISPLAY = function(name){
-        alert(name + JSON.stringify(_.keys($scope.markers)));
-        var confirmPopup = $ionicPopup.confirm({
-             title: 'Consume Ice Cream',
-             template: 'Are you sure you want to eat this ice cream?'
-           });
-           confirmPopup.then(function(res) {
-             if(res) {
-               console.log('You are sure');
-             } else {
-               console.log('You are not sure');
-             }
-           });
+        if($scope.markers[name]){
+            $scope.candidate = $scope.markers[name];
+            if(!$scope.peopleDetail.isShown()){
+                $scope.peopleDetail.show();
+            }
+        }
     }
     // display a user in map centrically
     $scope.locate = function(username){
-        if($scope.modal && $scope.modal.isShown()){
-            $scope.modal.hide();
+        if($scope.peopleList && $scope.peopleList.isShown()){
+            $scope.peopleList.hide();
         };
         setTimeout(function() {
             try{
@@ -364,15 +374,16 @@ angular.module('mobay.controllers', [])
         }
     });
 
-
-
     //Cleanup the modal when we're done with it!
     $scope.$on('$destroy', function() {
-        $scope.modal.remove();
-        delete window.MOBAY_DISPLAY;
+        try{
+            $scope.peopleDetail.remove();
+            $scope.peopleList.remove();
+            delete window.MOBAY_DISPLAY;
+        }catch(e){
+            $log.error(e);
+        }
     });
-
-
 
 })
 

@@ -1,31 +1,31 @@
-<ion-view title="详细信息">
-  	<ion-content class="padding-top stable-bg">
-        <div class="list">
-            <div class="list">
-                <ion-item class="item-thumbnail-right item-icon-right" href="#">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDts5TfpUl1ueJFvwCZx1jvZMain_yk5eVP0zTXTxDH2v-OVc_">
-                    <h2>昵称</h2>
-                    <p>状态</p>
-                </ion-item>
+<ion-modal-view>
+    <ion-header-bar class="bar bar-header bar-dark">
+      <h1 class="title">个人信息</h1>
+      <a class="button button-icon icon ion-ios7-close-outline" ng-click="closePeopleDetailModal()"></a>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list card">
+            <div class="item">
+                <h2>{{candidate.displayName}}</h2>
+                <p>{{candidate.status}}</p>
             </div>
-        </div>
 
-        <div class="list">
-            <div class="list">
-                <ion-item href="#/tab/profile/edit">
-                    学校
-                    <span class="item-note">{{school}}</span>
-                </ion-item>
-                <ion-item href="#/tab/profile/edit">
-                    公司
-                    <span class="item-note">中国科学院</span>
-                </ion-item>
-                <ion-item href="#/tab/profile/edit">
-                    兴趣
-                    <span class="item-note"></span>
-                </ion-item>
-                </a>
+
+                <div class="item item-image">
+                <img ng-src="{{candidate.picture}}">
+  </div>
+            <div class="item item-icon-left balanced">
+                <i class="icon ion-university"></i>
+                学校：{{candidate.edu}}
+            </div>              
+            <div class="item item-icon-left balanced">
+                <i class="icon ion-briefcase"></i>
+                单位／公司：{{candidate.company}}
+            </div>            
+            <div class="item item-icon-left balanced">
+                <i class="icon ion-android-contact"></i>
+                兴趣：{{candidate.profile.interests}}
             </div>
         </div>
     </ion-content>
-</ion-view>
+</ion-modal-view>
