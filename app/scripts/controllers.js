@@ -217,7 +217,7 @@ angular.module('mobay.controllers', [])
     };
 })
 
-.controller('MapCtrl', function($scope, $ionicPopup, $log, store){
+.controller('MapCtrl', function($scope, $ionicModal, $ionicPopup, $log, store){
     var self = this;
     $scope.$root.tabsHidden = 'hide-tabs';
     var mapId = 'HelloWorldCafe';
@@ -228,8 +228,17 @@ angular.module('mobay.controllers', [])
     $scope.$root.subMenuIcon = 'ion-ios7-people-outline';
     $scope.$root.subMenuShown = true;
 
+    $ionicModal.fromTemplateUrl('templates/people.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.modal = modal;
+    });
+
     $scope.$root.subMenu = function(){
+        $scope.modal.show();
     }
+
         
     $scope.$on('$viewContentLoaded', function(event){
         var mb = store.getMaps()[mapId].mapbox;
