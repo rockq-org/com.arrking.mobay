@@ -216,7 +216,6 @@ angular.module('mobay.controllers', [])
     var self = this;
     $scope.$root.tabsHidden = 'hide-tabs';
     var mapId = 'HelloWorldCafe';
-    self._map;
     $scope.markers = {};
 
     // trick point - handle sub menu 
@@ -275,7 +274,7 @@ angular.module('mobay.controllers', [])
             northEast = L.latLng(mb.northEast.lat, mb.northEast.lng),
             bounds = L.latLngBounds(southWest, northEast);
 
-        self._map = L.mapbox.map('las-map',
+        self.map = L.mapbox.map('las-map',
             mb.id, {
                 minZoom: mb.minZoom,
                 maxZoom: mb.maxZoom,
@@ -287,7 +286,7 @@ angular.module('mobay.controllers', [])
                 bounceAtZoomLimits: false
             }).setView([mb.centerLat, mb.centerLng ], mb.defaultZoom);
         // https://www.mapbox.com/mapbox.js/api/v1.6.1/l-control-attribution/
-        var credits = L.control.attribution({prefix: false}).addTo(self._map);
+        var credits = L.control.attribution({prefix: false}).addTo(self.map);
         credits.addAttribution('© 北京金矢科技有限公司');
 
         _loadMarkers();
@@ -320,7 +319,7 @@ angular.module('mobay.controllers', [])
         };
         setTimeout(function() {
             try{
-                self._map.panTo($scope.markers[username].marker.getLatLng());
+                self.map.panTo($scope.markers[username].marker.getLatLng());
                 $scope.markers[username].marker
                     .closePopup()
                     .openPopup();
@@ -350,7 +349,7 @@ angular.module('mobay.controllers', [])
                     case 'visible':
                         if(_.indexOf(markerKeys, data.username) == -1){
                             var m = L.marker([data.lat,data.lng])
-                                .addTo(self._map)
+                                .addTo(self.map)
                                 .bindPopup('<img width="50px" height="50px" ' +
                                     'src="{0}" onclick="javascript:MOBAY_DISPLAY(\'{1}\')"></img>'.f(data.profile.pictureUrl, data.username))
                                 .openPopup();
@@ -363,11 +362,24 @@ angular.module('mobay.controllers', [])
                                 passport: data.passport
                             };
                         }else{
-                            alert('update marker');
+                            $scope.markers[data.username].marker.setLatLng([data.lat,data.lng]);
+                            $scope.markers[data.username].marker.update();
+                            $scope.markers[data.username].marker.bindPopup('<img width="50px" height="50px" ' +
+                                    'src="{0}" onclick="javascript:MOBAY_DISPLAY(\'{1}\')"></img>'.f(data.profile.pictureUrl, data.username))
+                                    .openPopup();
+                            $scope.markers[data.username].picture = data.profile.pictureUrl;
+                            $scope.markers[data.username].status = data.status;
+                            $scope.markers[data.username].displayName= data.displayName;
+                            $scope.markers[data.username].profile= data.profile;
+                            $scope.markers[data.username].passport= data.passport;
+
                         }
                         break;
                     case 'invisible':
-
+                        if($scope.markers[data.username]){
+                            self.map.removeLayer($scope.markers[data.username].marker);
+                            delete $scope.markers[data.username];
+                        }
                         break;
                     default:
                         break;
