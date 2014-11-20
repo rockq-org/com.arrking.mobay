@@ -69,12 +69,45 @@ angular.module('mobay.controllers', [])
     $state, $log, store, $q, webq, gps) {
     $scope.$root.tabsHidden = '';
     $scope.$root.subMenuShown = false;
-    $scope.incoming = function(){
-        $ionicLoading.show({
-            template: 'not done yet ...',
-            duration: 1000
+    $scope.dashHeaderLeftBtn = false;
+    $scope.dashHeaderRightBtn = false;
+
+    // check if user is online
+    webq.checkUserOnlineByMapId().then(function(data){
+        // user is online
+        // trick point - handle sub menu
+        $scope.dashHeaderRightBtn = true;
+        // $apply and $digest 
+        // http://www.sitepoint.com/understanding-angulars-apply-digest/
+        $scope.$apply();
+    }, function(err){
+        // user is not online or can not get data
+        if(err && err.rc == 3){
+            $log.debug('user is not online');
+        }
+    });
+
+    $scope.stopSharingLocationDialog = function(){
+        var rtlsConfirmPopup = $ionicPopup.confirm({
+            title: '位置服务',
+            template: '您当前分享了位置信息，停止该分享?',
+            okText: '确定',
+            cancelText:'取消'
         });
-    };
+        rtlsConfirmPopup.then(function(res) {
+            if(res) {
+                // TODO post request to delete sharings
+                webq.stopSharingLocation().then(function(data){
+                    if(data && data.rc == 0){
+                        $scope.dashHeaderRightBtn = false;
+                    }
+                }, function(err){
+                    alert(JSON.stringify(err));
+                });
+            }
+        });
+    }
+
 
     $scope.scanQRCode = function(){
         gps.getCurrentPosition().then(function(pos){
@@ -185,6 +218,10 @@ angular.module('mobay.controllers', [])
                         status: res.status || 'TA什么也没说.',
                         duration: res.duration * 60000,
                         timestamp: new Date()
+                    }).then(function(){
+                        $scope.dashHeaderRightBtn = true;
+                    }, function(){
+                        $scope.dashHeaderRightBtn = false;
                     });
                 }
             });

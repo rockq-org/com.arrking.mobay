@@ -1,10 +1,19 @@
 <ion-view hide-nav-bar="true">
     <ion-header-bar class="bar-dark">
+      <div class="buttons">
+        <button class="button button-clear button-icon icon ion-grid" ng-show='dashHeaderLeftBtn'></button>
+      </div>
       <h1 class="title">
           Hello World Cafe
       </h1>
+      <div class="buttons">
+        <button class="button button-clear button-icon icon ion-radio-waves" ng-show='dashHeaderRightBtn' ng-click='stopSharingLocationDialog()'></button>
+      </div>
     </ion-header-bar>
-    <ion-content class="stable-bg padding-top" scroll="false">
+<!--     <ion-header-bar align-title="left" class="bar-subheader bar-positive">
+  <h1 class="title">Title!</h1>
+</ion-header-bar> -->
+    <ion-content class="stable-bg padding-top" scroll="false" >
       <button class="button button-full button-positive icon-left ion-qr-scanner"  ng-click="scanQRCode()">
         扫二维码
       </button>

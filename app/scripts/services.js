@@ -325,6 +325,7 @@ angular.module('mobay.services', ['config'])
 
     // this upload 
     this.uploadRTLSData = function(data){
+        var defer = $q.defer();
         $http.post('http://{0}/rtls/locin'.f(cfg.host), data, {
             headers: {
                 'Accept': 'application/json',
@@ -334,11 +335,17 @@ angular.module('mobay.services', ['config'])
         })
         .success(function(res, status){
             // {rc: 0, msg: visible event is published.}
-            $log.debug(res);
+            if(res && res.rc == 0){
+                defer.resolve();
+            }else{
+                defer.reject();
+            }
         })
         .error(function(err, status){
-            $log.debug(err);
+            $log.error(err);
+            defer.reject();
         });
+        return defer.promise;
     };
 
     // get online people for a specific mapId
@@ -360,6 +367,51 @@ angular.module('mobay.services', ['config'])
         });
         return defer.promise;
     }
+
+    // check whether the logged-in user is online by mapId
+    this.checkUserOnlineByMapId = function(mapId){
+        var defer = $q.defer();
+        // TODO hardcode the mapId with short name
+        $http.get( 'http://{0}/rtls/{1}/{2}'.f(cfg.host, 'hw', store.getUserId()), {
+            headers:{
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(data){
+            if(data.rc && data.rc == 2){
+                defer.resolve(data.msg);
+            }else{
+                defer.reject(data);
+            }
+        }).error(function(err){
+            defer.reject(err);
+        });
+        return defer.promise;
+    };
+
+    // stop sharing location
+    this.stopSharingLocation = function(mapId){
+        var defer = $q.defer();
+        // TODO this API is not securer as any user can post data with
+        // another user's email, a better choice is getting the 
+        // userId from server side, as the user is saved in req.user.
+        $http.post('http://{0}/rtls/locout'.f(cfg.host),{
+            // TODO hardcode mapId
+            mapId: 'HelloWorldCafe',
+            username: store.getUserId()
+        },
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).success(function(data){
+            defer.resolve(data);
+        }).error(function(err){
+            defer.reject(err);
+        });
+        return defer.promise;
+    };
 })
 
 .service('mbaas', function($q, $log, cfg, store, webq){
@@ -572,44 +624,4 @@ angular.module('mobay.services', ['config'])
     };
 })
 
-.directive('ionSearch', function() {
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                getData: '&source',
-                model: '=?',
-                search: '=?filter'
-            },
-            link: function(scope, element, attrs) {
-                attrs.minLength = attrs.minLength || 0;
-                scope.placeholder = attrs.placeholder || '';
-                scope.search = {value: ''};
- 
-                if (attrs.class)
-                    element.addClass(attrs.class);
- 
-                if (attrs.source) {
-                    scope.$watch('search.value', function (newValue, oldValue) {
-                        if (newValue.length > attrs.minLength) {
-                            scope.getData({str: newValue}).then(function (results) {
-                                scope.model = results;
-                            });
-                        } else {
-                            scope.model = [];
-                        }
-                    });
-                }
- 
-                scope.clearSearch = function() {
-                    scope.search.value = '';
-                };
-            },
-            template: '<div class="item-input-wrapper">' +
-                        '<i class="icon ion-android-search"></i>' +
-                        '<input type="search" placeholder="{{placeholder}}" ng-model="search.value">' +
-                        '<i ng-if="search.value.length > 0" ng-click="clearSearch()" class="icon ion-close"></i>' +
-                      '</div>'
-        };
-})
 ;
