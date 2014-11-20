@@ -209,12 +209,6 @@ angular.module('mobay.controllers', [])
         });
     };
 
-    $scope.openMapView = function(){
-    };
-
-    $scope.openPeopleView = function(){
-
-    };
 })
 
 .controller('MapCtrl', function($rootScope, $scope, $ionicModal, 
@@ -301,7 +295,19 @@ angular.module('mobay.controllers', [])
 
     window.MOBAY_DISPLAY = function(name){
         if($scope.markers[name]){
-            $scope.candidate = $scope.markers[name];
+            // set candidate personal information
+            var profile = $scope.markers[name].profile;
+            var edu = profile.educations._total > 0 ? profile.educations.values[0].schoolName:'';
+            var company = profile.positions._total >0 ? profile.positions.values[0].company.name:'';
+            var interests = profile.interests;
+            $scope.candidate = {
+                edu: edu,
+                company: company,
+                interests: interests,
+                picture: profile.pictureUrl,
+                displayName: $scope.markers[name].displayName,
+                status: $scope.markers[name].status
+            }
             if(!$scope.peopleDetail.isShown()){
                 $scope.peopleDetail.show();
             }
