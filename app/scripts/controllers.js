@@ -688,12 +688,13 @@ angular.module('mobay.controllers', [])
     });
 })
 
-.controller('ResetPwdCtrl', function($scope, $log, $ionicPopup, $timeout, webq, cfg, store){
+.controller('ResetPwdCtrl', function($state, $scope, $log, $ionicPopup, $timeout, webq, cfg, store){
     $scope.$root.tabsHidden = 'hide-tabs';
     $scope.title = '重置密码';
     $scope.data = {
         newPwd: '',
-        verifyCode: ''
+        verifyCode: '',
+        verifyCodePlsHolder:''
     };
 
     function _toast(msg){
@@ -705,16 +706,13 @@ angular.module('mobay.controllers', [])
     }
 
 
-    
-
-
     $scope.postNewPassword = function(){
         // TODO validate password 
         if($scope.data.newPwd){
             webq.resetPwd($scope.data.newPwd).then(function(){
                 // popup a dialog for input verify code
-                $ionicPopup.show({
-                    template: '<input type="text" ng-model="data.verifyCode" autocapitalize="off" maxlength="4" autocorrect="off" autocomplete="off">',
+                var verifyCodeDialog = $ionicPopup.show({
+                    template: '<input type="text" ng-model="data.verifyCode" placeholder="{{data.verifyCodePlsHolder}}" autocapitalize="off" maxlength="4" autocorrect="off" autocomplete="off">',
                     title: '验证码',
                     subTitle: '验证码已经发送到您的邮箱({0})，请注意查收。'.f(store.getUserId()),
                     scope: $scope,
@@ -724,30 +722,58 @@ angular.module('mobay.controllers', [])
                         text: '<b>确定</b>',
                         type: 'button-positive',
                         onTap: function(e) {
-                          if (!$scope.data.verifyCode) {
                             //don't allow the user to close unless he enters wifi password
+                            if ($scope.data.verifyCode) {
+                                webq.resetPwdVerify($scope.data.verifyCode).then(function(data){
+                                    // reset password successfully
+                                    // go to login page
+                                    verifyCodeDialog.close();
+                                    webq.logout();
+                                    $state.go('login.form');
+                                }, function(err){
+                                    // rc = 2 wrong code
+                                    // rc = 3 too many attempt
+                                    switch(err.rc){
+                                        case 2:
+                                            $scope.data.verifyCode = '';
+                                            $scope.data.verifyCodePlsHolder = '验证码错误 请重新输入';
+                                            break;
+                                        case 3:
+                                            $scope.data.verifyCode = '';
+                                            $scope.data.verifyCodePlsHolder = '验证次数超过限制';
+                                            $scope.data.newPwd = '';
+                                            $timeout(function(){
+                                                try{
+                                                    verifyCodeDialog.close();
+                                                }catch(error){
+                                                    alert(error);
+                                                }
+                                            }, 3000);
+                                            // close this dialog
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                });
+                            }
                             e.preventDefault();
-                          } else {
-                            return $scope.data.verifyCode;
-                          }
                         }
                       },
                     ]
-                }).then(function(res) {
-                    if(res){
-                        // sure
-                        webq.resetPwdVerify(res).then(function(data){
-
-                        }, function(err){
-
-                        });
-                    }else{
-                        // cancel
-                    }
                 });
             }, function(err){
-                if(err){
-                    alert(JSON.stringify(err));
+                alert(JSON.stringify(err));
+                if(typeof err == 'object' &&
+                    err.rc == 3){
+                    _toast('该用户不存在');
+                }else if(typeof err == 'object' &&
+                    err.rc == 4){
+                    $log.error('>> API RESPONSE {0} , LEAK PARAMETERS ?'.f(JSON.stringify(err)));
+                }else{
+                    $ionicPopup.alert({
+                        title: '未知错误',
+                        template: '通过(设置－用户反馈) 联系我们。'
+                    });
                 }
             });
         }else{

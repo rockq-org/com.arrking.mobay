@@ -233,7 +233,9 @@ angular.module('mobay.services', ['config'])
     this.logout = function(callback){
         $http.get('http://{0}/logout'.f(cfg.host)).finally(function(){
             store.deleteAccessToken();
-            callback();
+            if(callback){
+                callback();
+            }
         });
     };
 
@@ -416,10 +418,8 @@ angular.module('mobay.services', ['config'])
     // reset password from settings page
     this.resetPwd = function(newPwd){
         var defer = $q.defer();
-        $http.put('http://{0}/auth/local/signup'.f(cfg.host), {
-            username: store.getUserProfile().displayName,
-            password: newPwd,
-            email: store.getUserId()
+        $http.post('http://{0}/auth/local/reset'.f(cfg.host), {
+            password: newPwd
         }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -443,7 +443,27 @@ angular.module('mobay.services', ['config'])
     // verify code to reset pwd
     this.resetPwdVerify = function(code){
         var defer = $q.defer();
-        $http.post();
+        $http.post('http://{0}/auth/local/verify'.f(cfg.host), {
+            code: code,
+            email: store.getUserId()
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'            
+        }).success(function(data){
+            // data.rc = 6 succ
+            // data.rc = 2 wrong
+            // data.rc = 3 wrong and reach max attempt
+            if(data && data.rc == 6){
+                defer.resolve(data);
+            } else {
+                defer.reject(data);
+            }
+        }).error(function(err){
+            defer.reject(err);
+        });
         return defer.promise;
     };
 
