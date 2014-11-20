@@ -413,14 +413,38 @@ angular.module('mobay.services', ['config'])
         return defer.promise;
     };
 
-    // reset password
+    // reset password from settings page
     this.resetPwd = function(newPwd){
-        
+        var defer = $q.defer();
+        $http.put('http://{0}/auth/local/signup'.f(cfg.host), {
+            username: store.getUserProfile().displayName,
+            password: newPwd,
+            email: store.getUserId()
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(data){
+            if(data && data.rc == 1){
+                // verify code is sent out
+                defer.resolve();
+            }else{
+                defer.reject(data);
+            }
+        }).error(function(err){
+            defer.reject(err);
+        });
+
+        return defer.promise;
     };
 
     // verify code to reset pwd
     this.resetPwdVerify = function(code){
-
+        var defer = $q.defer();
+        $http.post();
+        return defer.promise;
     };
 
 })

@@ -688,11 +688,12 @@ angular.module('mobay.controllers', [])
     });
 })
 
-.controller('ResetPwdCtrl', function($scope, $log, $timeout, webq, cfg){
+.controller('ResetPwdCtrl', function($scope, $log, $ionicPopup, $timeout, webq, cfg, store){
     $scope.$root.tabsHidden = 'hide-tabs';
     $scope.title = '重置密码';
     $scope.data = {
-        newPwd: ''
+        newPwd: '',
+        verifyCode: ''
     };
 
     function _toast(msg){
@@ -703,11 +704,51 @@ angular.module('mobay.controllers', [])
         }, 2000);
     }
 
+
+    
+
+
     $scope.postNewPassword = function(){
         // TODO validate password 
         if($scope.data.newPwd){
-            webq.resetPwd($scope.data.newPwd).then(function(data){
+            webq.resetPwd($scope.data.newPwd).then(function(){
                 // popup a dialog for input verify code
+                $ionicPopup.show({
+                    template: '<input type="text" ng-model="data.verifyCode" autocapitalize="off" maxlength="4" autocorrect="off" autocomplete="off">',
+                    title: '验证码',
+                    subTitle: '验证码已经发送到您的邮箱({0})，请注意查收。'.f(store.getUserId()),
+                    scope: $scope,
+                    buttons: [
+                      { text: '取消' },
+                      {
+                        text: '<b>确定</b>',
+                        type: 'button-positive',
+                        onTap: function(e) {
+                          if (!$scope.data.verifyCode) {
+                            //don't allow the user to close unless he enters wifi password
+                            e.preventDefault();
+                          } else {
+                            return $scope.data.verifyCode;
+                          }
+                        }
+                      },
+                    ]
+                }).then(function(res) {
+                    if(res){
+                        // sure
+                        webq.resetPwdVerify(res).then(function(data){
+
+                        }, function(err){
+
+                        });
+                    }else{
+                        // cancel
+                    }
+                });
+            }, function(err){
+                if(err){
+                    alert(JSON.stringify(err));
+                }
             });
         }else{
             _toast('密码不能为空');
