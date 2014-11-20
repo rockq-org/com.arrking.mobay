@@ -686,4 +686,35 @@ angular.module('mobay.controllers', [])
     webq.getUserServiceAgreements().then(function(data){
         $scope.terms = data;
     });
-});
+})
+
+.controller('ResetPwdCtrl', function($scope, $log, $timeout, webq, cfg){
+    $scope.$root.tabsHidden = 'hide-tabs';
+    $scope.title = '重置密码';
+    $scope.data = {
+        newPwd: ''
+    };
+
+    function _toast(msg){
+        $scope.title = msg;
+        $timeout(function(){
+            $scope.title = '重置密码';
+            $scope.$apply();
+        }, 2000);
+    }
+
+    $scope.postNewPassword = function(){
+        // TODO validate password 
+        if($scope.data.newPwd){
+            webq.resetPwd($scope.data.newPwd).then(function(data){
+                // popup a dialog for input verify code
+            });
+        }else{
+            _toast('密码不能为空');
+        }
+    }
+
+
+})
+
+;

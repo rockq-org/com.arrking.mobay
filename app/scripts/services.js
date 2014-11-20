@@ -412,6 +412,17 @@ angular.module('mobay.services', ['config'])
         });
         return defer.promise;
     };
+
+    // reset password
+    this.resetPwd = function(newPwd){
+        
+    };
+
+    // verify code to reset pwd
+    this.resetPwdVerify = function(code){
+
+    };
+
 })
 
 .service('mbaas', function($q, $log, cfg, store, webq){

@@ -216,7 +216,18 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
                 controller: 'TermsCtrl'
             }
         }
-    });
+    })
+
+    .state('tab.settings-reset-pwd', {
+        url: '/settings/reset-pwd',
+        views: {
+            'tab-settings': {
+                templateUrl: 'templates/settings-reset-pwd.html',
+                controller: 'ResetPwdCtrl'
+            }
+        }
+    })
+    ;
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/tab/dash');

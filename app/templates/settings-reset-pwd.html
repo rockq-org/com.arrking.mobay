@@ -1,0 +1,13 @@
+<ion-view title="{{title}}" style="background: #292D30;" class="hide-tabs">
+    <ion-content has-header="true" style="background: #ffffff;">
+    	<div class="list list-inset">
+			<label class="item item-input">
+				<i class="icon ion-key placeholder-icon"></i>
+				<input type="password" ng-model="data.newPwd" placeholder="新密码">
+			</label>
+			<label class="item">
+				<button class="button button-block button-balanced" ng-click="postNewPassword()" type="submit">确定</button>
+			</label>
+		</div>
+    </ion-content>
+</ion-view>
