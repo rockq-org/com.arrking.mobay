@@ -10,6 +10,10 @@ angular.module('mobay.controllers', [])
     $scope.errMessage = false;
     $scope.loginData = {};
 
+    if (window.StatusBar) {
+        StatusBar.hide();
+    }
+
     $scope.doLogin = function(){
         if($scope.loginData.username &&
             $scope.loginData.password){
@@ -65,8 +69,37 @@ angular.module('mobay.controllers', [])
     };
 })
 
+.controller('SignupCtrl', function($scope, webq){
+
+    $scope.data = {
+        username: '',
+        password: '',
+        email: ''
+    }
+
+    // post request for creating accout
+    $scope.doReg = function(){
+        // TODO validate properties
+        if($scope.data.username && $scope.data.password
+            && $scope.data.email){
+            webq.signup($scope.data).then(function(res){
+
+            }, function(err){
+
+            });
+        } else {
+            $scope.errMessage = '用户名/密码/邮箱 不能为空';
+        }
+    };
+})
+
 .controller('DashCtrl', function($scope, $ionicPopup, $ionicLoading,
     $state, $log, store, $q, webq, gps) {
+
+    if (window.StatusBar) {
+        StatusBar.show();
+    }
+
     $scope.$root.tabsHidden = '';
     $scope.$root.subMenuShown = false;
     $scope.dashHeaderLeftBtn = false;

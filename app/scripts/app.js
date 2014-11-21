@@ -82,8 +82,34 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
     // https://github.com/angular-ui/ui-router/wiki/Nested-States-%26-Nested-Views
     .state('login-form', {
         url: '/login-form',
-        templateUrl: 'templates/login.html',
-        controller: 'LoginCtrl'
+        templateUrl: 'templates/login-form.html',
+        controller: 'LoginCtrl',
+        resolve: {
+            cordova: function($q, $log) {
+                var deferred = $q.defer();
+                ionic.Platform.ready(function() {
+                    $log.debug('ionic.Platform.ready');
+                    deferred.resolve();
+                });
+                return deferred.promise;
+            }
+        }
+    })
+
+    .state('login-signup', {
+        url: '/login-signup',
+        templateUrl: 'templates/login-signup.html',
+        controller: 'SignupCtrl',
+        resolve: {
+            cordova: function($q, $log) {
+                var deferred = $q.defer();
+                ionic.Platform.ready(function() {
+                    $log.debug('ionic.Platform.ready');
+                    deferred.resolve();
+                });
+                return deferred.promise;
+            }
+        }
     })
 
     // setup an abstract state for the tabs directive

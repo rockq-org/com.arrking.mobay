@@ -1,0 +1,37 @@
+<ion-view title="注册" hide-nav-bar="true">
+	<ion-header-bar>
+		<ion-nav-button class="button icon-left ion-ios7-arrow-left button-clear button-dark" ui-sref="login-form">返回</ion-nav-button>
+		<h1 class="title">移动港湾</h1>
+	</ion-header-bar>
+	<ion-content>
+		<div class="bar bar-error bar-energized" ng-if="errMessage" ng-bind="errMessage"></div>
+		<div ng-class="{'has-error': errMessage}">
+			<div class="list">
+		        <label class="item item-input">
+		          <span class="input-label">邮箱</span>
+		          <!-- TODO validate email, password, username in place -->
+		          <!-- for email, should be highly noticed at 
+			        Input type email doesn't update the model unless the email passes validation
+					https://github.com/driftyco/ionic/issues/1406
+		          -->
+		          <!-- <input type="email" ng-model="data.email"> -->
+		          <input type="text" ng-model="data.email">
+		        </label>
+		        <label class="item item-input">
+		          <span class="input-label">用户名</span>
+		          <input type="text" ng-model="data.username" autocapitalize="off" maxlength="20" autocorrect="off" autocomplete="off">
+		        </label>
+		        <label class="item item-input">
+		          <span class="input-label">密码</span>
+		          <input type="password" ng-model="data.password">
+		        </label>
+		    </div>
+			<div class="padding">
+				<button class="button button-block button-balanced" ng-click="doReg()"> 注册 </button>
+				<p class="text-center">
+					<a class="button button-clear icon icon-right ion-ios7-information-outline" on-click="popupUserServiceAgreements()">  点击「注册」按钮，代表你已阅读并同意《金矢moBay(移动港湾)软件许可及服务协议》 </a> 
+				</p> 
+			</div>
+		</div>
+	</ion-content>
+</ion-view>
