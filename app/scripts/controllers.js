@@ -179,6 +179,12 @@ angular.module('mobay.controllers', [])
     // show a modal for user service level agreements
     $scope.showUserTermsModal = function(){
         $scope.userTermsModal.show();
+        webq.getUserServiceAgreements().then(function(data){
+            $scope.terms = data;
+        }, function(err){
+            $scope.userTermsModal.hide();
+            $scope.errMessage = '网络错误，请稍候重试。';
+        });
     };
 
     $scope.hideUserTermsModal = function(){

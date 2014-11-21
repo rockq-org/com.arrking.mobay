@@ -4,6 +4,8 @@
       <a class="button button-icon icon ion-ios7-close-outline" ng-click="hideUserTermsModal()"></a>
     </ion-header-bar>
     <ion-content>
-
+        <div class="item text-center" style="border: 0;" ng-show="terms==null">加载中...</div>
+        <div ng-bind-html='terms'>
+        </div>
     </ion-content>
 </ion-modal-view>
