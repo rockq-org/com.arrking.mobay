@@ -1,14 +1,47 @@
 <ion-view title="登陆" hide-nav-bar="true">
-	<ion-header-bar>
-		<h1 class="title">登陆</h1>
-		<ion-nav-button class="button icon-right ion-ios7-arrow-right button-clear button-dark">注册</ion-nav-button>
-		<!-- <div class="buttons"> -->
-			<!-- <button class="" ng-click="regAccount()">注册</button> -->
-			<!-- <a class="button icon-right ion-chevron-right button-clear button-dark">注册</a> -->
-
-		<!-- </div> -->
-	</ion-header-bar>
-	<ion-content>
-		<ion-nav-view name="login-form"></ion-nav-view>
-	</ion-content>
+<ion-header-bar>
+<h1 class="title">移动港湾</h1>
+<ion-nav-button class="button icon-right ion-ios7-arrow-right button-clear button-dark" ui-sref="login-signup">注册</ion-nav-button>
+</ion-header-bar>
+<ion-content>
+<div class="bar bar-error bar-energized" ng-if="errMessage" ng-bind="errMessage">
+</div>
+<div ng-class="{'has-error': errMessage}">
+<!-- new -->
+<div class="list">
+            <label class="item item-input">
+              <span class="input-label">用户名</span>
+              <input type="text" ng-model="loginData.username">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">密码</span>
+              <input type="password" ng-model="loginData.password">
+            </label>
+          </div>
+          <div class="padding">
+            <button class="button button-block button-balanced" ng-click="doLogin()">
+              登录
+            </button>
+            <p class="text-center">
+            <a class="button button-clear icon icon-right ion-help-buoy" ui-sref="login-forgot-pwd">忘记密码</a>
+            </p>
+          </div>
+<!-- old --> 
+<!-- 	<form ng-submit="doLogin()">
+		<div class="list">
+			<label class="item item-input">
+				<span class="input-label">用户名：</span>
+				<input type="text" ng-model="loginData.username">
+			</label>
+			<label class="item item-input">
+				<span class="input-label">密码：</span>
+				<input type="password" ng-model="loginData.password">
+			</label>
+			<label class="item">
+				<button class="button button-block button-balanced" type="submit">登录</button>
+			</label>
+		</div>
+	</form> -->
+</div>
+</ion-content>
 </ion-view>

@@ -43,11 +43,11 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
                     // TODO 
                     // {1} no network, stays in dash
                     // {2} access token is expired, go to login 
-                    $state.go('login.form');
+                    $state.go('login-form');
                     navigator.splashscreen.hide();
                 });
             } else {
-                $state.go('login.form');
+                $state.go('login-form');
                 navigator.splashscreen.hide();
             }
         }
@@ -67,7 +67,8 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
         // Allow same origin resource loads.
         'self',
         // Allow loading from our assets domain.  Notice the difference between * and **.
-        'http://*.mybluemix.net/**'
+        'http://*.mybluemix.net/**',
+        'http://*.arrking.com'
     ]);
 
     // Ionic uses AngularUI Router which uses the concept of states
@@ -79,20 +80,10 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
 
     // abstract is used for nested states 
     // https://github.com/angular-ui/ui-router/wiki/Nested-States-%26-Nested-Views
-    .state('login', {
-        url: '/login',
-        abstract: true,
-        templateUrl: 'templates/login.html'
-    })
-
-    .state('login.form', {
-        url: '/form',
-        views: {
-            'login-form': {
-                templateUrl: 'templates/login-form.html',
-                controller: 'LoginCtrl'
-            }
-        }
+    .state('login-form', {
+        url: '/login-form',
+        templateUrl: 'templates/login.html',
+        controller: 'LoginCtrl'
     })
 
     // setup an abstract state for the tabs directive

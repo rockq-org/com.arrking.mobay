@@ -650,7 +650,7 @@ angular.module('mobay.controllers', [])
 
     $scope.logout = function(){
         webq.logout();
-        $state.go('login.form');
+        $state.go('login-form');
     };
 
     $scope.openFeedbackMailTemplate = function(){
@@ -729,7 +729,7 @@ angular.module('mobay.controllers', [])
                                     // go to login page
                                     verifyCodeDialog.close();
                                     webq.logout();
-                                    $state.go('login.form');
+                                    $state.go('login-form');
                                 }, function(err){
                                     // rc = 2 wrong code
                                     // rc = 3 too many attempt
