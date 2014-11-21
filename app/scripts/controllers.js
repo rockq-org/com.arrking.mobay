@@ -72,7 +72,7 @@ angular.module('mobay.controllers', [])
     };
 })
 
-.controller('SignupCtrl', function($state, $scope, $log, $ionicPopup, $timeout, webq){
+.controller('SignupCtrl', function($state, $scope, $log, $ionicModal, $ionicPopup, $timeout, webq){
 
     $scope.data = {
         username: '',
@@ -167,7 +167,33 @@ angular.module('mobay.controllers', [])
               }
             ]
         });
-    }
+    };
+
+    $ionicModal.fromTemplateUrl('templates/modal-terms.html', {
+        scope: $scope,
+        animation: 'fade-in'
+    }).then(function(modal) {
+        $scope.userTermsModal = modal;
+    });
+
+    // show a modal for user service level agreements
+    $scope.showUserTermsModal = function(){
+        $scope.userTermsModal.show();
+    };
+
+    $scope.hideUserTermsModal = function(){
+        $scope.userTermsModal.hide();
+    };
+
+    //Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+        try{
+            $scope.userTermsModal.remove();
+        }catch(e){
+            $log.error(e);
+        }
+    });
+
 })
 
 .controller('DashCtrl', function($scope, $ionicPopup, $ionicLoading,
