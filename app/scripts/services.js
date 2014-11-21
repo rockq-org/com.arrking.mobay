@@ -467,6 +467,29 @@ angular.module('mobay.services', ['config'])
         return defer.promise;
     };
 
+
+    // sign up new account
+    // parms {username, password, email}
+    this.signup = function(parms){
+        var defer = $q.defer();
+        $http.post('http://{0}/auth/local/signup'.f(cfg.host), parms, {
+            headers: {
+                'Content-Type' : 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(res){
+            if(res && res.rc == '1'){
+                defer.resolve();
+            }else{
+                defer.reject(res);
+            }
+        }).error(function(err){
+            defer.reject(err);
+        });
+        return defer.promise;
+    };
+
 })
 
 .service('mbaas', function($q, $log, cfg, store, webq){

@@ -83,9 +83,11 @@ angular.module('mobay.controllers', [])
         if($scope.data.username && $scope.data.password
             && $scope.data.email){
             webq.signup($scope.data).then(function(res){
-
+                // todo popup a dialog for activation
             }, function(err){
-
+                // todo err.rc = 3 - user is registered.
+                // err.rc = other, network wrong ?
+                // default - retry later
             });
         } else {
             $scope.errMessage = '用户名/密码/邮箱 不能为空';
