@@ -227,6 +227,27 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
             }
         }
     })
+
+    .state('about-app', {
+        url: '/about-app',
+        templateUrl: 'templates/about-app.html',
+        controller: 'AboutAppCtrl',
+                //  https://github.com/driftyco/ng-cordova/issues/8
+        //  use the resolve feature of the UI router to wait 
+        //  for ionic.Platform.ready signal before each state 
+        //  that might need a plugin
+        resolve: {
+            cordova: function($q, $log) {
+                var deferred = $q.defer();
+                ionic.Platform.ready(function() {
+                    $log.debug('ionic.Platform.ready');
+                    deferred.resolve();
+                });
+                return deferred.promise;
+            }
+        }
+    })
+
     ;
 
     // if none of the above states are matched, use this as the fallback
