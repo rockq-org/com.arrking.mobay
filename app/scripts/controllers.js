@@ -5,20 +5,23 @@
  */
 angular.module('mobay.controllers', [])
 
-.controller('LoginCtrl', function($scope, $state, $http, $log,
+.controller('LoginCtrl', function($scope, $state,  $stateParams, $http, $log,
     $ionicLoading, store, cfg, webq, mbaas, sse) {
-    $scope.errMessage = false;
-    $scope.loginData = {};
+    // msg and email can be passed after register account successfully
+    $scope.errMessage = $stateParams.msg;
+    $scope.loginData = {
+        email: $stateParams.email||''
+    };
 
     if (window.StatusBar) {
         StatusBar.hide();
     }
 
     $scope.doLogin = function(){
-        if($scope.loginData.username &&
+        if($scope.loginData.email &&
             $scope.loginData.password){
             $ionicLoading.show({template: '登录中 ...'});
-            webq.loginLocalPassport($scope.loginData.username,
+            webq.loginLocalPassport($scope.loginData.email,
                 $scope.loginData.password).then(function(token){
                 store.setAccessToken(token);
                 webq.getUserProfile().then(function(data){
@@ -39,7 +42,7 @@ angular.module('mobay.controllers', [])
                 // TODO show an error message
                 /*
                  * Possible Cause for login error 
-                 * (1) wrong username and password
+                 * (1) wrong email and password
                  * (2) no network
                  */
                 if(err.rc){
@@ -69,12 +72,13 @@ angular.module('mobay.controllers', [])
     };
 })
 
-.controller('SignupCtrl', function($scope, webq){
+.controller('SignupCtrl', function($state, $scope, $log, $ionicPopup, $timeout, webq){
 
     $scope.data = {
         username: '',
         password: '',
-        email: ''
+        email: '',
+        verifyCode: ''
     }
 
     // post request for creating accout
@@ -83,16 +87,87 @@ angular.module('mobay.controllers', [])
         if($scope.data.username && $scope.data.password
             && $scope.data.email){
             webq.signup($scope.data).then(function(res){
-                // todo popup a dialog for activation
+                _verify();
             }, function(err){
-                // todo err.rc = 3 - user is registered.
-                // err.rc = other, network wrong ?
-                // default - retry later
+                if(err && err.rc){
+                    switch(err.rc){
+                        case 3:
+                            $scope.data = {};
+                            $scope.errMessage = '该邮箱已经被注册。';
+                            break;
+                        default:
+                            $scope.data = {};
+                            $scope.errMessage = '请求错误, 请稍候再试。';
+                            break;
+                    }
+                }else{
+                    // unknown error
+                    $log.error(err);
+                    $scope.data = {};
+                    $scope.errMessage = '网络错误, 请稍候再试。';
+                }
             });
         } else {
             $scope.errMessage = '用户名/密码/邮箱 不能为空';
         }
     };
+
+    // verify code for signup request
+    function _verify(){
+        // popup a dialog for input verify code
+        var verifyCodeDialog = $ionicPopup.show({
+            template: '<input type="text" ng-model="data.verifyCode" placeholder="{{data.verifyCodePlsHolder}}" autocapitalize="off" maxlength="4" autocorrect="off" autocomplete="off">',
+            title: '验证码',
+            subTitle: '验证码已经发送到您的邮箱({0})，请注意查收。'.f($scope.data.email),
+            scope: $scope,
+            buttons: [
+              { text: '取消' },
+              {
+                text: '<b>确定</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                    //don't allow the user to close unless he enters wifi password
+                    if ($scope.data.verifyCode) {
+                        webq.localPassportVerify($scope.data.verifyCode, $scope.data.email).then(function(data){
+                            // reset password successfully
+                            // go to login page
+                            verifyCodeDialog.close();
+                            $state.go('login-form', {
+                                msg: '账号注册成功',
+                                email: $scope.data.email
+                            });
+                        }, function(err){
+                            // rc = 2 wrong code
+                            // rc = 3 too many attempt
+                            switch(err.rc){
+                                case 2:
+                                    $scope.data.verifyCode = '';
+                                    $scope.data.verifyCodePlsHolder = '验证码错误 请重新输入';
+                                    break;
+                                case 3:
+                                    $scope.data.verifyCode = '';
+                                    $scope.data.verifyCodePlsHolder = '验证次数超过限制';
+                                    $timeout(function(){
+                                        try{
+                                            verifyCodeDialog.close();
+                                            $scope.data = {};
+                                        }catch(error){
+                                            alert(error);
+                                        }
+                                    }, 3000);
+                                    // close this dialog
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+                    }
+                    e.preventDefault();
+                }
+              }
+            ]
+        });
+    }
 })
 
 .controller('DashCtrl', function($scope, $ionicPopup, $ionicLoading,
@@ -759,7 +834,7 @@ angular.module('mobay.controllers', [])
                         onTap: function(e) {
                             //don't allow the user to close unless he enters wifi password
                             if ($scope.data.verifyCode) {
-                                webq.resetPwdVerify($scope.data.verifyCode).then(function(data){
+                                webq.localPassportVerify($scope.data.verifyCode).then(function(data){
                                     // reset password successfully
                                     // go to login page
                                     verifyCodeDialog.close();
@@ -793,7 +868,7 @@ angular.module('mobay.controllers', [])
                             }
                             e.preventDefault();
                         }
-                      },
+                      }
                     ]
                 });
             }, function(err){

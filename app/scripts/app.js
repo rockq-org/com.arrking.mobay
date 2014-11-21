@@ -81,7 +81,7 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
     // abstract is used for nested states 
     // https://github.com/angular-ui/ui-router/wiki/Nested-States-%26-Nested-Views
     .state('login-form', {
-        url: '/login-form',
+        url: '/login-form/:msg/:email',
         templateUrl: 'templates/login-form.html',
         controller: 'LoginCtrl',
         resolve: {

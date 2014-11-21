@@ -441,11 +441,11 @@ angular.module('mobay.services', ['config'])
     };
 
     // verify code to reset pwd
-    this.resetPwdVerify = function(code){
+    this.localPassportVerify = function(code, email){
         var defer = $q.defer();
         $http.post('http://{0}/auth/local/verify'.f(cfg.host), {
             code: code,
-            email: store.getUserId()
+            email: email||store.getUserId()
         }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -453,10 +453,13 @@ angular.module('mobay.services', ['config'])
             },
             responseType: 'json'            
         }).success(function(data){
-            // data.rc = 6 succ
+            // data.rc = 6 succ for reset/(forget?) password
             // data.rc = 2 wrong
             // data.rc = 3 wrong and reach max attempt
+            // data.rc = 9 succ for sign up
             if(data && data.rc == 6){
+                defer.resolve(data);
+            } else if( data && data.rc == 9){
                 defer.resolve(data);
             } else {
                 defer.reject(data);
