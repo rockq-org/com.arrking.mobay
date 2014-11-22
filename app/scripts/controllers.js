@@ -722,9 +722,6 @@ angular.module('mobay.controllers', [])
         location.href='#/tab/profile';
     };
 
-    // take photo as avatar
-    $scope.updateAvatar = function(){
-    };
 })
 
 .controller('ProfileEditorCtrl', function($state, $scope, $log, $stateParams, store, webq){
@@ -800,7 +797,7 @@ angular.module('mobay.controllers', [])
     };
 })
 
-.controller('SettingsCtrl', function ($rootScope, $state, $scope, $log, $http, cfg, store, webq, mbaas) {
+.controller('SettingsCtrl', function ($rootScope, $state, $scope, $ionicModal, $log, $http, cfg, store, webq, mbaas) {
     $scope.$root.tabsHidden = '';
     $scope.title = '移动港湾';
     $scope.appVersion = cfg.version;
@@ -882,12 +879,35 @@ angular.module('mobay.controllers', [])
             $log.debug('no mail plugins');
         }
     };
-})
 
-.controller('TermsCtrl', function ($scope, $log, webq, cfg) {
-    $scope.$root.tabsHidden = 'hide-tabs';
-    webq.getUserServiceAgreements().then(function(data){
-        $scope.terms = data;
+    $ionicModal.fromTemplateUrl('templates/settings-terms.html', {
+        scope: $scope,
+        animation: 'fade-in'
+    }).then(function(modal) {
+        $scope.userTermsModal = modal;
+    });
+
+    // show a modal for user service level agreements
+    $scope.showUserTermsModal = function(){
+        $scope.userTermsModal.show();
+        webq.getUserServiceAgreements().then(function(data){
+            $scope.terms = data;
+        }, function(err){
+            $scope.terms = '<div class="item text-center" style="border: 0;">{0}</div>'.f('网络错误，请稍后重试。');
+        });
+    };
+
+    $scope.hideUserTermsModal = function(){
+        $scope.userTermsModal.hide();
+    };
+
+    //Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+        try{
+            $scope.userTermsModal.remove();
+        }catch(e){
+            $log.error(e);
+        }
     });
 })
 

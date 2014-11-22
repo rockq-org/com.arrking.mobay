@@ -219,16 +219,6 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
         }
     })
 
-    .state('tab.settings-terms', {
-        url: '/settings/terms',
-        views: {
-            'tab-settings': {
-                templateUrl: 'templates/settings-terms.html',
-                controller: 'TermsCtrl'
-            }
-        }
-    })
-
     .state('tab.settings-reset-pwd', {
         url: '/settings/reset-pwd',
         views: {

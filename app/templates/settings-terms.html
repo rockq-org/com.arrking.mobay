@@ -1,7 +1,11 @@
-<ion-view title="服务条款" style="background: #292D30;" class="hide-tabs">
-    <ion-content has-header="true" style="background: #ffffff;">
-		<div class="item text-center" style="border: 0;" ng-show="terms==null">加载中...</div>
-		<div ng-bind-html="terms">
-		</div>
+<ion-modal-view>
+    <ion-header-bar class="bar bar-header bar-dark">
+      <h1 class="title">服务协议 版权声明</h1>
+      <a class="button button-icon icon ion-ios7-close-outline" ng-click="hideUserTermsModal()"></a>
+    </ion-header-bar>
+    <ion-content>
+        <div class="item text-center" style="border: 0;" ng-show="terms==null">加载中...</div>
+        <div ng-bind-html='terms'>
+        </div>
     </ion-content>
-</ion-view>
+</ion-modal-view>
