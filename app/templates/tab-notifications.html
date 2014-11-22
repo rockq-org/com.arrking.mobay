@@ -11,7 +11,7 @@
 				<img ng-src="sample/noty-{{notifications[x].category}}.png" alt="">
 				<h2>{{notifications[x].title}}</h2>
 				<p>{{notifications[x].description}}</p>
-				<small>{{getDateString(notifications[x].date)}}</small>
+				<small>{{notifications[x].date | relativets }}</small>
 				</ion-item>
 		</ion-list>
 	</ion-content>

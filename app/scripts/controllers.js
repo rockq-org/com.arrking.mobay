@@ -673,32 +673,6 @@ angular.module('mobay.controllers', [])
 
 .controller('NotificationsCtrl', function($scope, store) {
     $scope.$root.tabsHidden = '';
-    $scope.getDateString = function(dateString) {
-        var date = dateString ? new Date(dateString) : new Date();
-        var yyyy = date.getFullYear();
-        var mm = date.getMonth() + 1; //January is 0!
-        var dd = date.getDate();
-        var hh = date.getHours();
-        var min = date.getMinutes();
-        var sec = date.getSeconds();
-
-        if (mm < 10) {
-            mm = '0' + mm;
-        }
-        if (dd < 10) {
-            dd = '0' + dd;
-        }
-        if (hh < 10) {
-            hh = '0' + hh;
-        }
-        if (min < 10) {
-            min = '0' + min;
-        }
-        if (sec < 10) {
-            sec = '0' + sec;
-        }
-        return '{0}/{1}/{2} {3}:{4}'.f(yyyy, mm, dd, hh, min);
-    };
     $scope.notifications = store.getNotifications();
     $scope.notificationKeys = _.keys($scope.notifications).sort().reverse();
 })
