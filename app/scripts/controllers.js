@@ -169,7 +169,7 @@ angular.module('mobay.controllers', [])
         });
     };
 
-    $ionicModal.fromTemplateUrl('templates/modal-terms.html', {
+    $ionicModal.fromTemplateUrl('templates/login-terms.html', {
         scope: $scope,
         animation: 'fade-in'
     }).then(function(modal) {
@@ -489,7 +489,7 @@ angular.module('mobay.controllers', [])
     $scope.$root.subMenuShown = true;
 
     // display online people list
-    $ionicModal.fromTemplateUrl('templates/people.html', {
+    $ionicModal.fromTemplateUrl('templates/dash-people.html', {
         scope: $scope,
         animation: 'fade-in'
     }).then(function(modal) {
@@ -497,7 +497,7 @@ angular.module('mobay.controllers', [])
     });
 
     // display a specific user profile in a card
-    $ionicModal.fromTemplateUrl('templates/people-detail.html', {
+    $ionicModal.fromTemplateUrl('templates/dash-people-detail.html', {
         scope: $scope,
         animation: 'fade-in'
     }).then(function(modal) {

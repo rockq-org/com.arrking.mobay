@@ -162,27 +162,8 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
         url: '/dash/map',
         views: {
             'tab-dash': {
-                templateUrl: 'templates/map.html',
+                templateUrl: 'templates/dash-map.html',
                 controller: 'MapCtrl'
-            }
-        }
-    })
-
-    .state('tab.dash-people', {
-        url: '/dash/people',
-        views: {
-            'tab-dash': {
-                templateUrl: 'templates/people.html',
-                controller: 'PeopleCtrl'
-            }
-        }
-    })
-
-    .state('tab.dash-people-detail', {
-        url: '/dash/people/:userid',
-        views: {
-            'tab-dash': {
-                templateUrl: 'templates/people-detail.html'
             }
         }
     })
