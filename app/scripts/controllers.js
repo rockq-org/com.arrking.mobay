@@ -182,8 +182,7 @@ angular.module('mobay.controllers', [])
         webq.getUserServiceAgreements().then(function(data){
             $scope.terms = data;
         }, function(err){
-            $scope.userTermsModal.hide();
-            $scope.errMessage = '网络错误，请稍候重试。';
+            $scope.terms = '<div class="item text-center" style="border: 0;">{0}</div>'.f('网络错误，请稍后重试。');
         });
     };
 
