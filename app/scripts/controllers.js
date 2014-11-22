@@ -695,8 +695,9 @@ angular.module('mobay.controllers', [])
     });
 })
 
-.controller('ProfileCtrl', function($scope, $log, store) {
+.controller('ProfileCtrl', function($scope, $ionicActionSheet, $ionicLoading, $timeout, $log, store, camera, webq) {
     $scope.$root.tabsHidden = '';
+    $scope.title = '个人信息';
     // show tabs
     var profile = store.getUserProfile();
     // TODO resolve the default avatar
@@ -717,10 +718,59 @@ angular.module('mobay.controllers', [])
     if (profile._json.interests){
         $scope.interests = profile._json.interests;
     }
-    $scope.save = function (){
-        $scope.school = '12345';
-        location.href='#/tab/profile';
+
+    function _processAvatarData(img){
+        $ionicLoading.show({
+          template: '<i class="icon ion-loading-a positive"></i>'
+        });
+        webq.uploadUserAvatar(img).then(function(url){
+            $scope.avatarUrl = url;
+            $scope.$apply();
+        }, function(err){
+            
+            $scope.title = '上传失败，请稍候重试。';
+            $scope.$apply();
+
+            $timeout(function(){
+                $scope.title = '个人信息';
+                $scope.$apply();
+            }, 3000);
+        }).finally(function(){
+            $ionicLoading.hide();
+        });
     };
+
+    $scope.takePhotoActionSheet = function(){
+        // Show the action sheet
+        $ionicActionSheet.show({
+            buttons: [
+                { text: '拍照' }, // index 0
+                { text: '相册' }  // index 1
+            ],
+            titleText: '更新头像',
+            cancelText: '取消',
+            cancel: function() {
+                  // add cancel code..
+            },
+            buttonClicked: function(index) {
+                switch(index){
+                    case 0:
+                        camera.takePhotoByCamera(function(imageData){
+                            _processAvatarData(imageData);
+                        });
+                        break;
+                    case 1:
+                        camera.takePhotoByLibrary(function(imageData){
+                            _processAvatarData(imageData);
+                        });
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+    }
 
 })
 

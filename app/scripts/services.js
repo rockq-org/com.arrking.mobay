@@ -415,6 +415,32 @@ angular.module('mobay.services', ['config'])
         return defer.promise;
     };
 
+    // upload Avatar 
+    this.uploadUserAvatar = function(data){
+        var defer = $q.defer();
+        $http.post('http://{0}/user/avatar'.f(cfg.host), {
+            base64: data
+        },{
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        })
+        .success(function(data){
+            if(data && data.rc == 3){
+                store.saveUserAvatar(data.url);
+                defer.resolve(data.url);
+            }else{
+                defer.reject();
+            }
+        })
+        .error(function(err){
+            defer.reject(err);
+        });
+        return defer.promise;
+    };
+
     // get online people for a specific mapId
     this.getRTLSDataByMapId = function(mapId){
         var defer = $q.defer();
@@ -796,6 +822,32 @@ angular.module('mobay.services', ['config'])
             }
         }, false);
     };
+})
+
+.service('camera', function(){
+    var cameraOptions = {
+      quality: 75,
+      destinationType: Camera.DestinationType.DATA_URL,
+      sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
+      allowEdit: true,
+      encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 180,
+      targetHeight: 180,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: false
+    };
+
+    this.takePhotoByCamera = function(succ, error){
+        cameraOptions.sourceType = Camera.PictureSourceType.CAMERA;
+        navigator.camera.getPicture(succ, error, cameraOptions);
+
+    };
+
+    this.takePhotoByLibrary = function(succ, error){
+        cameraOptions.sourceType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
+        navigator.camera.getPicture(succ, error, cameraOptions);
+    };
+
 })
 
 ;

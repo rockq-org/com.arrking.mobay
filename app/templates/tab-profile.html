@@ -1,7 +1,6 @@
 <ion-view title="个人信息" hide-nav-bar="true">
     <ion-header-bar class="bar-dark">
-        <h1 class="title">
-            个人信息
+        <h1 class="title" ng-bind='title'>
         </h1>
     </ion-header-bar>
 
@@ -10,7 +9,7 @@
         <div id="content">
             <div id="profile-info">
               <img id="profile-image" ng-src='{{avatarUrl}}'>
-              <button class="button button-clear button-balanced icon ion-ios7-camera-outline" ng-click="takePhotoSheet()"></button>
+              <button class="button button-clear button-balanced icon ion-ios7-camera-outline" ng-click="takePhotoActionSheet()"></button>
               <h3 id="profile-name">{{name}}</h3>
             </div>
             <ion-list>
