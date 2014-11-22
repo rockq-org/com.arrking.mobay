@@ -85,10 +85,9 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
         templateUrl: 'templates/login-form.html',
         controller: 'LoginCtrl',
         resolve: {
-            cordova: function($q, $log) {
+            cordova: function($q) {
                 var deferred = $q.defer();
                 ionic.Platform.ready(function() {
-                    $log.debug('ionic.Platform.ready');
                     deferred.resolve();
                 });
                 return deferred.promise;
@@ -101,14 +100,28 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
         templateUrl: 'templates/login-signup.html',
         controller: 'SignupCtrl',
         resolve: {
-            cordova: function($q, $log) {
+            cordova: function($q) {
                 var deferred = $q.defer();
                 ionic.Platform.ready(function() {
-                    $log.debug('ionic.Platform.ready');
                     deferred.resolve();
                 });
                 return deferred.promise;
             }
+        }
+    })
+
+    .state('login-forget-pwd', {
+        'url': '/login-forget-pwd',
+        'templateUrl': 'templates/login-forget-pwd.html',
+        controller: 'ForgetPwdCtrl',
+        resolve: {
+            cordova: function($q) {
+                var deferred = $q.defer();
+                ionic.Platform.ready(function() {
+                    deferred.resolve();
+                });
+                return deferred.promise;
+            }            
         }
     })
 

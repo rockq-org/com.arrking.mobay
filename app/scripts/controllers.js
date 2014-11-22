@@ -201,6 +201,11 @@ angular.module('mobay.controllers', [])
 
 })
 
+.controller('ForgetPwdCtrl', function($scope){
+    $scope.data = {};
+
+})
+
 .controller('DashCtrl', function($scope, $ionicPopup, $ionicLoading,
     $state, $log, store, $q, webq, gps) {
 
