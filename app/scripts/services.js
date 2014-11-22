@@ -440,6 +440,34 @@ angular.module('mobay.services', ['config'])
         return defer.promise;
     };
 
+    // forget password
+    this.forgetPwd = function(email, newPwd){
+        var defer = $q.defer();
+        $http.put('http://{0}/auth/local/signup'.f(cfg.host), {
+            email: email,
+            password: newPwd
+        }, {
+            headers:{
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(data){
+            // data.rc = 1 succ
+            // data.rc = 3 user does not exist
+            // data.rc = 4 not proper parameters
+            if(data && data.rc == 1){
+                defer.resolve();
+            } else {
+                defer.reject(data);
+            }
+        }).error(function(err){
+            defer.reject(err);
+        });
+
+        return defer.promise;
+    };
+
     // verify code to reset pwd
     this.localPassportVerify = function(code, email){
         var defer = $q.defer();

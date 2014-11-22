@@ -201,9 +201,92 @@ angular.module('mobay.controllers', [])
 
 })
 
-.controller('ForgetPwdCtrl', function($scope){
+.controller('ForgetPwdCtrl', function($scope, $state, $ionicPopup, webq){
     $scope.data = {};
 
+    // forget password
+    $scope.doResetPwd = function(){
+        if($scope.data.email && $scope.data.password){
+            webq.forgetPwd($scope.data.email, $scope.data.password)
+            .then(function(){
+                // verify code dialog
+                _verify();
+            }, function(err){
+                $scope.data = {};
+                if(typeof err == 'object' && err.rc){
+                   switch(err.rc){
+                    case 3:
+                        $scope.errMessage= '不存在该用户。';
+                        break;
+                    default: 
+                        $scope.errMessage= '服务错误，请稍后重试。';
+                        break;
+                   } 
+                } else {
+                    $scope.errMessage= '网络错误，请稍后重试。';
+                }
+            });
+        } else {
+            $scope.errMessage = '邮箱/密码 不能为空';            
+        }
+    };
+
+    // verify code for signup request
+    function _verify(){
+        // popup a dialog for input verify code
+        var verifyCodeDialog = $ionicPopup.show({
+            template: '<input type="text" ng-model="data.verifyCode" placeholder="{{data.verifyCodePlsHolder}}" autocapitalize="off" maxlength="4" autocorrect="off" autocomplete="off">',
+            title: '验证码',
+            subTitle: '验证码已经发送到您的邮箱({0})，请注意查收。'.f($scope.data.email),
+            scope: $scope,
+            buttons: [
+              { text: '取消' },
+              {
+                text: '<b>确定</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                    //don't allow the user to close unless he enters wifi password
+                    if ($scope.data.verifyCode) {
+                        webq.localPassportVerify($scope.data.verifyCode, $scope.data.email).then(function(data){
+                            // reset password successfully
+                            // go to login page
+                            verifyCodeDialog.close();
+                            $state.go('login-form', {
+                                msg: '密码更新成功',
+                                email: $scope.data.email
+                            });
+                        }, function(err){
+                            // rc = 2 wrong code
+                            // rc = 3 too many attempt
+                            switch(err.rc){
+                                case 2:
+                                    $scope.data.verifyCode = '';
+                                    $scope.data.verifyCodePlsHolder = '验证码错误 请重新输入';
+                                    break;
+                                case 3:
+                                    $scope.data.verifyCode = '';
+                                    $scope.data.verifyCodePlsHolder = '验证次数超过限制';
+                                    $timeout(function(){
+                                        try{
+                                            verifyCodeDialog.close();
+                                            $scope.data = {};
+                                        }catch(error){
+                                            alert(error);
+                                        }
+                                    }, 3000);
+                                    // close this dialog
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+                    }
+                    e.preventDefault();
+                }
+              }
+            ]
+        });
+    };
 })
 
 .controller('DashCtrl', function($scope, $ionicPopup, $ionicLoading,
