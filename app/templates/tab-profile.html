@@ -6,18 +6,18 @@
     </ion-header-bar>
 
     <ion-content class="padding-top stable-bg">
-        <div class="list">
-            <div class="list">
-                <ion-item class="item-thumbnail-right item-icon-right">
-                    <img ng-src="{{avatarUrl}}" on-click="updateAvatar()">
-                    <h2>{{name}}</h2>
-                    <p>{{email}}</p>
-                </ion-item>
+        <div id="profile-bg"></div>
+        <div id="content">
+            <div id="profile-info">
+              <img id="profile-image" ng-src='{{avatarUrl}}'>
+              <h3 id="profile-name">{{name}}</h3>
             </div>
-        </div>
-
-        <div class="list">
-            <div class="list">
+            <ion-list>
+                <ion-item class="item-icon-right">
+                    邮箱
+                    <span class="item-note">{{email}}</span>
+                    <i class="icon ion-ios7-email-outline positive"></i>
+                </ion-item>
                 <ion-item class="item-icon-right">
                     学校
                     <span class="item-note">{{school}}</span>
@@ -39,8 +39,7 @@
                         <i class="icon ion-ios7-arrow-right dark"></i>
                     </a>
                 </ion-item>
-                </a>
-            </div>
+            </ion-list>
         </div>
     </ion-content>
 </ion-view>
