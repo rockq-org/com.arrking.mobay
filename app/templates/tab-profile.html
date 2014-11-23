@@ -8,36 +8,30 @@
         <div id="profile-bg"></div>
         <div id="content">
             <div id="profile-info">
-              <img id="profile-image" ng-src='{{avatarUrl}}'>
+              <img id="profile-image" ng-src='{{avatarUrl}}' ng-click="takePhotoActionSheet()">
               <button class="button button-clear button-balanced icon ion-ios7-camera-outline" ng-click="takePhotoActionSheet()"></button>
               <h3 id="profile-name">{{name}}</h3>
             </div>
             <ion-list>
-                <ion-item class="item-icon-right">
+                <ion-item class="item-icon-right assertive">
                     邮箱
                     <span class="item-note">{{email}}</span>
-                    <i class="icon ion-ios7-email-outline positive"></i>
+                    <i class="icon ion-ios7-email-outline"></i>
                 </ion-item>
-                <ion-item class="item-icon-right">
+                <ion-item class="item-icon-right" ui-sref="tab.profile-editor({key: 'school', value: school})">
                     学校
                     <span class="item-note">{{school}}</span>
-                    <a ui-sref="tab.profile-editor({key: 'school', value: school})">
-                        <i class="icon ion-ios7-arrow-right dark"></i>
-                    </a>
+                    <i class="icon ion-ios7-arrow-right dark"></i>
                 </ion-item>
-                <ion-item class="item-icon-right">
+                <ion-item class="item-icon-right" ui-sref="tab.profile-editor({key: 'company', value: company})">
                     公司
                     <span class="item-note">{{company}}</span>
-                    <a ui-sref="tab.profile-editor({key: 'company', value: company})">
-                        <i class="icon ion-ios7-arrow-right dark"></i>
-                    </a>
+                    <i class="icon ion-ios7-arrow-right dark"></i>
                 </ion-item>
-                <ion-item class="item-icon-right">
+                <ion-item class="item-icon-right" ui-sref="tab.profile-editor({key: 'interests', value: interests})">
                     兴趣
                     <span class="item-note">{{interests}}</span>
-                    <a ui-sref="tab.profile-editor({key: 'interests', value: interests})">
-                        <i class="icon ion-ios7-arrow-right dark"></i>
-                    </a>
+                    <i class="icon ion-ios7-arrow-right dark"></i>
                 </ion-item>
             </ion-list>
         </div>
