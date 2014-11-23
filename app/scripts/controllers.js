@@ -1055,22 +1055,4 @@ angular.module('mobay.controllers', [])
     }
 })
 
-.controller('AboutAppCtrl', function($scope, $state){
-
-    if (window.StatusBar) {
-        StatusBar.hide();
-    }
-
-    // back to settings page
-    $scope.backToSettings = function(){
-        $state.go('tab.settings');
-    };
-
-    $scope.$on('$destroy', function() {
-        if (window.StatusBar) {
-            StatusBar.show();
-        }
-    });
-})
-
 ;
