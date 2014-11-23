@@ -10,9 +10,15 @@ angular.module('mobay.controllers', [])
     // msg and email can be passed after register account successfully
     $scope.errMessage = $stateParams.msg;
     $scope.activeSlideIndex = activeSlideIndex;
+
+    if($stateParams.activeSlideIndex){
+        $scope.activeSlideIndex = $stateParams.activeSlideIndex;
+    }
+
     $scope.loginData = {
         email: $stateParams.email||''
     };
+    
     if (window.StatusBar) {
         StatusBar.hide();
     }
@@ -134,7 +140,8 @@ angular.module('mobay.controllers', [])
                             verifyCodeDialog.close();
                             $state.go('login-form', {
                                 msg: '账号注册成功',
-                                email: $scope.data.email
+                                email: $scope.data.email,
+                                activeSlideIndex: 2
                             });
                         }, function(err){
                             // rc = 2 wrong code
@@ -253,7 +260,8 @@ angular.module('mobay.controllers', [])
                             verifyCodeDialog.close();
                             $state.go('login-form', {
                                 msg: '密码更新成功',
-                                email: $scope.data.email
+                                email: $scope.data.email,
+                                activeSlideIndex: 2
                             });
                         }, function(err){
                             // rc = 2 wrong code
