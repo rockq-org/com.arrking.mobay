@@ -1,46 +1,32 @@
 <ion-view hide-nav-bar="true">
-    <ion-header-bar class="bar-dark">
-      <div class="buttons">
-        <button class="button button-clear button-icon icon ion-grid" ng-show='dashHeaderLeftBtn'></button>
-      </div>
-      <h1 class="title">
-          Hello World Cafe
-      </h1>
-      <div class="buttons">
-        <button class="button button-clear button-icon icon ion-radio-waves" ng-show='dashHeaderRightBtn' ng-click='stopSharingLocationDialog()'></button>
-      </div>
-    </ion-header-bar>
-    <ion-content class="stable-bg padding-top" scroll="true" >
-      <div class="item-image" style="text-align:center;">
-        <img src="images/locate-in.png" ng-click="scanQRCode()">
-        <p style='color:red;'>扫二维码</p>
-      </div>
-      <div class="item-image" >
-          <img src="images/hw-ad.png">
-      </div>
-      <div class="row">
-          <div class="col"><button class="button button-clear icon-left ion-android-earth button-positive">
-  地图
-</button></div>
-      </div>
-      <div class="row">
-  <div class="col"><button class="button button-clear icon-left  ion-social-buffer-outline button-positive">
-  点餐记录
-</button></div>
-  <div class="col"><button class="button button-clear icon-left ion-card button-positive">
-  会员卡
-</button></div>
-
+<ion-header-bar class="bar-dark">
+<div class="buttons">
+  <button class="button button-clear button-icon icon ion-grid" ng-show='dashHeaderLeftBtn'></button>
 </div>
+<h1 class="title">
+  Hello World Cafe
+</h1>
+<div class="buttons">
+  <button class="button button-clear button-icon icon ion-radio-waves" ng-show='dashHeaderRightBtn' ng-click='stopSharingLocationDialog()'></button>
+</div>
+</ion-header-bar>
+<ion-content class="stable-bg padding-top" scroll="true" >
+  <div class="item-image assertive" style="text-align:center;">
+    <img src="images/locate-in.png" ng-click="scanQRCode()">
+    <p>扫二维码</p>
+  </div>
+  <div class="item-image" >
+    <img src="images/hw-ad.png">
+  </div>
 
-<!--       <button class="button button-clear button-positive">
-  Clear Button
-</button> -->
-<!--       <button class="button button-full button-positive icon-left ion-qr-scanner"  >
-        扫二维码
-      </button> 
-      <button class="button button-full button-positive icon-left ion-android-user-menu" ui-sref='tab.dash-map'>
-        圈子
-      </button> -->
-    </ion-content>
+  <button class="button button-full icon-left ion-android-earth button-assertive" ui-sref='tab.dash-map'>
+    地图
+  </button>
+<!--   <button class="button button-full icon-left ion-social-buffer-outline button-assertive">
+      点餐记录
+  </button>
+  <button class="button button-full icon-left ion-card button-assertive">
+      会员卡
+  </button> -->
+</ion-content>
 </ion-view>
