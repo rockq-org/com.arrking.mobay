@@ -1,27 +1,58 @@
-<ion-view title="登陆" hide-nav-bar="true">
+<ion-view id='about-app' hide-nav-bar="true">
+	<!-- http://ionicframework.com/docs/api/directive/ionSlideBox/ -->
+	<ion-slide-box active-slide='activeSlideIndex'>
+		<ion-slide>
+			<ion-scroll>
+				<div class="box list card">
+					<div class="item item-avatar">
+					<img src="images/about-app-1.jpg">
+					<h2>莫辞更坐弹一曲，</h2>
+					<p>为君翻作琵琶行。</p>
+					</div>
+					<div class="item item-icon-left assertive">
+						<i class="icon ion-ios7-people"> </i>
+						相逢便是缘分
+					</div>
+					<div class="item item-image">
+						<img src="images/about-app-2.jpg">
+					</div>
+				</div>
+			</ion-scroll>
+		</ion-slide>
+		<ion-slide>
+			<ion-scroll>
+			  	<div class="bar bar-header bar-light">
+				  	<h1 class="title">简单、快捷的商家服务</h1>
+				</div>
+			   	<embed src="images/icon-cloud-based.svg" style="padding-top:150px; margin-left:auto; margin-right: auto;" type="image/svg+xml" />
+			</ion-scroll>
+		</ion-slide>
+		<ion-slide>
 <ion-header-bar>
-	<h1 class="title">移动港湾</h1>
-	<ion-nav-button class="button icon-right ion-ios7-arrow-right button-clear button-dark" ui-sref="login-signup">注册</ion-nav-button>
+     <h1 class="title">移动港湾</h1>
+     <ion-nav-button class="button icon-right ion-ios7-arrow-right button-clear button-dark" ui-sref="login-signup">注册</ion-nav-button>
 </ion-header-bar>
 <ion-content>
-	<div class="bar bar-error bar-energized" ng-if="errMessage" ng-bind="errMessage"></div>
-	<div ng-class="{'has-error': errMessage}">
-		<div class="list">
-	        <label class="item item-input">
-	          <span class="input-label">邮箱</span>
-	          <input type="text" ng-model="loginData.email">
-	        </label>
-	        <label class="item item-input">
-	          <span class="input-label">密码</span>
-	          <input type="password" ng-model="loginData.password">
-	        </label>
-	    </div>
-		<div class="padding">
-			<button class="button button-block button-balanced" ng-click="doLogin()"> 登录 </button>
-			<p class="text-center">
-				<a class="button button-clear icon icon-right ion-help-buoy" ui-sref="login-forget-pwd">忘记密码</a>
-			</p>
-		</div>
-	</div>
+     <div class="bar bar-error bar-energized" ng-if="errMessage" ng-bind="errMessage"></div>
+     <div ng-class="{'has-error': errMessage}">
+          <div class="list">
+             <label class="item item-input">
+               <span class="input-label">邮箱</span>
+               <input type="text" ng-model="loginData.email">
+             </label>
+             <label class="item item-input">
+               <span class="input-label">密码</span>
+               <input type="password" ng-model="loginData.password">
+             </label>
+         </div>
+          <div class="padding">
+               <button class="button button-block button-balanced" ng-click="doLogin()"> 登录 </button>
+               <p class="text-center">
+                    <a class="button button-clear icon icon-right ion-help-buoy" ui-sref="login-forget-pwd">忘记密码</a>
+               </p>
+          </div>
+     </div>
 </ion-content>
+		</ion-slide>
+	</ion-slide-box>
 </ion-view>

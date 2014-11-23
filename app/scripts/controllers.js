@@ -6,13 +6,13 @@
 angular.module('mobay.controllers', [])
 
 .controller('LoginCtrl', function($scope, $state,  $stateParams, $http, $log,
-    $ionicLoading, store, cfg, webq, mbaas, sse) {
+    $ionicLoading, store, cfg, webq, mbaas, sse, activeSlideIndex) {
     // msg and email can be passed after register account successfully
     $scope.errMessage = $stateParams.msg;
+    $scope.activeSlideIndex = activeSlideIndex;
     $scope.loginData = {
         email: $stateParams.email||''
     };
-
     if (window.StatusBar) {
         StatusBar.hide();
     }
