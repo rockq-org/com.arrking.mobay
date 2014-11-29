@@ -533,6 +533,7 @@ angular.module('mobay.controllers', [])
 
     // bind users that already online
     function _loadMarkers(){
+        $scope.markers = {};
         webq.getRTLSDataByMapId(mapId).then(function(data){
             _.each(data, function(val, key, list){
                 try{
@@ -544,7 +545,13 @@ angular.module('mobay.controllers', [])
         })
     }
 
-    $scope.$on('$viewContentLoaded', function(event){
+    function _createMapView(){
+        // delete old map and its markers
+        if(self.map){
+            self.map.remove();
+            delete self.map;
+        }
+
         var mb = store.getMaps()[mapId].mapbox;
         L.mapbox.accessToken = mb.accessToken;
         var southWest = L.latLng(mb.southWest.lat, mb.southWest.lng),
@@ -567,6 +574,10 @@ angular.module('mobay.controllers', [])
         credits.addAttribution('© 北京金矢科技有限公司');
 
         _loadMarkers();
+    };
+
+    $scope.$on('$viewContentLoaded', function(event){
+        _createMapView();
     });
 
     window.MOBAY_DISPLAY = function(name){
@@ -619,8 +630,14 @@ angular.module('mobay.controllers', [])
     $scope.$on('ntm', function(event, type){
         switch(type){
             case 'online2offline':
+                // alert the user
+                $ionicPopup.alert({
+                    title: '无网络连接，无法更新地图。', // String (optional). The sub-title of the popup.
+                    okText: '关闭' // String (default: 'OK'). The text of the OK button.
+                });
                 break;
             case 'offline2online':
+                _createMapView();
                 break;
             default:
                 break;
