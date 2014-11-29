@@ -55,7 +55,7 @@ https://github.com/diegonetto/generator-ionic
 ### Install node modules 
 
 		cd com.arrking.mobay
-        mkdir {platforms,plugins}
+        mkdir {platforms,plugins,www}
 		npm install
 
 ### Install cordova plugins
