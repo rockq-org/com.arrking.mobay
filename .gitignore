@@ -11,3 +11,4 @@ www
 *sublime-*
 !mobay.sublime-project
 www-build
+.DS_Store

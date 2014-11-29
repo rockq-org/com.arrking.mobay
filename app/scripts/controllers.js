@@ -24,6 +24,8 @@ angular.module('mobay.controllers', [])
     }
 
     $scope.doLogin = function(){
+        // empty te errMessage
+        $scope.errMessage = '';
         if($scope.loginData.email &&
             $scope.loginData.password){
             $ionicLoading.show({template: '登录中 ...'});
