@@ -616,6 +616,17 @@ angular.module('mobay.controllers', [])
         }, 1000);
     };
 
+    $scope.$on('ntm', function(event, type){
+        switch(type){
+            case 'online2offline':
+                break;
+            case 'offline2online':
+                break;
+            default:
+                break;
+        };
+    })
+
     $scope.$on('sse:rtls', function(event, data){
         try{
             // alert(JSON.stringify(data));
@@ -1046,7 +1057,7 @@ angular.module('mobay.controllers', [])
                     ]
                 });
             }, function(err){
-                alert(JSON.stringify(err));
+                // alert(JSON.stringify(err));
                 if(typeof err == 'object' &&
                     err.rc == 3){
                     _toast('该用户不存在');
@@ -1065,5 +1076,4 @@ angular.module('mobay.controllers', [])
         }
     }
 })
-
 ;

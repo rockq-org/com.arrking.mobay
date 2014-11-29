@@ -5,7 +5,7 @@
 // 'mobay.services' is found in services.js
 // 'mobay.controllers' is found in controllers.js
 angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config'])
-.run(function($ionicPlatform, $log, $state, cfg, store, webq, mbaas, sse) {
+.run(function($ionicPlatform, $log, $state, cfg, store, webq, mbaas, sse, ntm) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -19,6 +19,12 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
             StatusBar.backgroundColorByName('white');
             // StatusBar.hide();
         }
+
+        // start network manager service
+        if(window.navigator.connection){
+            ntm.start();
+        }
+
         if(window.navigator.splashscreen){
             if (store.getAccessToken().access_token) {
                 webq.getUserProfile().then(function(data){

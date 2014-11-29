@@ -850,4 +850,81 @@ angular.module('mobay.services', ['config'])
 
 })
 
+/*
+ * network manager is only available after cordova plugins are loaded.
+ * if not, will get an error that says 'TypeError: undefined is not an object'
+ * https://github.com/apache/cordova-plugin-network-information/blob/master/doc/index.md
+ * iOS Quirks to support iPhone 5S, 
+ * iOS does not have specific info like WIFI, 3G ... just cellular or not
+ * Network Status Array
+ *   states[Connection.UNKNOWN] = 'Unknown connection';
+ *   states[Connection.ETHERNET] = 'Ethernet connection';
+ *   states[Connection.WIFI] = 'WiFi connection';
+ *   states[Connection.CELL_2G] = 'Cell 2G connection';
+ *   states[Connection.CELL_3G] = 'Cell 3G connection';
+ *   states[Connection.CELL_4G] = 'Cell 4G connection';
+ *   states[Connection.CELL] = 'Cell generic connection';
+ *   states[Connection.NONE] = 'No network connection';
+ */
+.service('ntm', function($rootScope, $log){
+
+    var self = this;
+    // start a agent process to run intervally
+    // monitor the network switch event, make sure to call this interface
+    // after cordova device ready event is fired.
+    this.start = function(){
+        var hasNetwork;
+        setInterval(function(){
+            try {
+                // $rootScope.$broadcast('ntm:', JSON.parse(e.data));
+                switch(self.getNetwork()){
+                    case -1:
+                        $log.debug('network manager is only available after cordova plugins are loaded.');
+                        break;
+                    case 0:
+                        if(typeof hasNetwork === 'undefined' ){
+                            hasNetwork = false;
+                        } else if(hasNetwork){
+                            hasNetwork = false;
+                            $rootScope.$broadcast('ntm', 'online2offline');
+                        } 
+                        break;
+                    case 1:
+                        if(typeof hasNetwork === 'undefined'){
+                            hasNetwork = true;
+                        }else if(!hasNetwork){
+                            hasNetwork = true;
+                            $rootScope.$broadcast('ntm', 'offline2online');
+                        }
+                        break;
+                    default:
+                        $log.error('UNKNOWN Network Status Type.');
+                        break;
+                }
+            } catch(e) {
+                alert(e);
+                $log.error(e);
+            }
+        }, 5000);
+    };
+
+    // current this method only supports iOS
+    // 1 - online
+    // 0 - offline
+    // -1 - plugin is not loaded
+    this.getNetwork = function(){
+        if(navigator.connection && navigator.connection.type){
+            if(_.indexOf([Connection.WIFI, Connection.CELL], navigator.connection.type) != -1){
+                // network is available
+                return 1;
+            } else {
+                // device is offline
+                return 0;
+            }
+        }else{
+            return -1;
+        }
+    };
+})
+
 ;
