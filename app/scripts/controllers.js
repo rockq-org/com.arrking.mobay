@@ -91,6 +91,7 @@ angular.module('mobay.controllers', [])
 
     // post request for creating accout
     $scope.doReg = function(){
+        $scope.errMessage = '';
         // TODO validate properties
         if($scope.data.username && $scope.data.password
             && $scope.data.email){
