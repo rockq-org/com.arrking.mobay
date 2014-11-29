@@ -46,10 +46,19 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
 
                     navigator.splashscreen.hide();
                 }, function(err){
-                    // TODO 
-                    // {1} no network, stays in dash
-                    // {2} access token is expired, go to login 
-                    $state.go('login-form');
+                    switch(ntm.getNetwork()){
+                        case 0:
+                            // no network, stays in dash
+                            break;
+                        case 1:
+                            // access token is expired, go to login
+                            $state.go('login-form');
+                            break;
+                        default:
+                            $log.debug('network plugin and status are not available.');
+                            break;
+
+                    }
                     navigator.splashscreen.hide();
                 });
             } else {
