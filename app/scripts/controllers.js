@@ -7,9 +7,12 @@ angular.module('mobay.controllers', [])
 
 .controller('LoginCtrl', function($scope, $state,  $stateParams, $http, $log,
     $ionicLoading, store, cfg, webq, mbaas, sse, activeSlideIndex) {
+    var emailRegex = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+        passwordRegex = /\S{6,20}/;
     // msg and email can be passed after register account successfully
     $scope.errMessage = $stateParams.msg;
     $scope.activeSlideIndex = activeSlideIndex;
+    $scope.enableLoginBtn = false;
 
     if($stateParams.activeSlideIndex){
         $scope.activeSlideIndex = $stateParams.activeSlideIndex;
@@ -22,6 +25,23 @@ angular.module('mobay.controllers', [])
     if (window.StatusBar) {
         StatusBar.hide();
     }
+
+    $scope.validateLoginData = function () {
+        var email = $scope.loginData.email || '',
+            password = $scope.loginData.password || '';
+
+        if(!emailRegex.test(email)) {
+            $scope.enableLoginBtn = false;
+            return false;
+        }
+
+        if(!passwordRegex.test(password)) {
+            $scope.enableLoginBtn = false;
+            return false;
+        }
+
+        $scope.enableLoginBtn = true;
+    };
 
     $scope.doLogin = function(){
         // empty te errMessage
@@ -55,16 +75,16 @@ angular.module('mobay.controllers', [])
                  */
                 if(err.rc){
                     switch(err.rc){
-                        case 2:
-                            $scope.errMessage = '不存在该用户';
-                            $scope.loginData = {};
-                            break;
-                        case 3:
-                            $scope.errMessage = '密码错误';
-                            $scope.loginData.password = '';
-                            break;
-                        default:
-                            $log.error(err);
+                    case 2:
+                        $scope.errMessage = '不存在该用户';
+                        break;
+                    case 3:
+                        $scope.errMessage = '密码错误';
+                        $scope.loginData.password = '';
+                        $scope.enableLoginBtn = false;
+                        break;
+                    default:
+                        $log.error(err);
                     }
                 }else{
                     $log.error('>> can not understand :');
@@ -81,33 +101,60 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('SignupCtrl', function($state, $scope, $log, $ionicModal, $ionicPopup, $timeout, webq){
+    var emailRegex = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+        usernameRegex = /\w{6,20}/,
+        passwordRegex = /\S{6,20}/;
+
+    $scope.enableSignupBtn = false;
 
     $scope.data = {
         username: '',
         password: '',
         email: '',
         verifyCode: ''
-    }
+    };
+
+    $scope.validateSignupData = function () {
+        var email = $scope.data.email || '',
+            username = $scope.data.username || '',
+            password = $scope.data.password || '';
+
+        if(!emailRegex.test(email)) {
+            $scope.enableSignupBtn = false;
+            return false;
+        }
+
+        if(!usernameRegex.test(username)) {
+            $scope.enableSignupBtn = false;
+            return false;
+        }
+
+        if(!passwordRegex.test(password)) {
+            $scope.enableSignupBtn = false;
+            return false;
+        }
+
+        $scope.enableSignupBtn = true;
+    };
 
     // post request for creating accout
     $scope.doReg = function(){
         $scope.errMessage = '';
         // TODO validate properties
-        if($scope.data.username && $scope.data.password
-            && $scope.data.email){
+        if($scope.data.username && $scope.data.password && $scope.data.email){
             webq.signup($scope.data).then(function(res){
                 _verify();
             }, function(err){
                 if(err && err.rc){
                     switch(err.rc){
-                        case 3:
-                            $scope.data = {};
-                            $scope.errMessage = '该邮箱已经被注册。';
-                            break;
-                        default:
-                            $scope.data = {};
-                            $scope.errMessage = '请求错误, 请稍候再试。';
-                            break;
+                    case 3:
+                        $scope.data.email = '';
+                        $scope.enableSignupBtn = false;
+                        $scope.errMessage = '该邮箱已经被注册。';
+                        break;
+                    default:
+                        $scope.errMessage = '请求错误, 请稍候再试。';
+                        break;
                     }
                 }else{
                     // unknown error
@@ -130,26 +177,26 @@ angular.module('mobay.controllers', [])
             subTitle: '验证码已经发送到您的邮箱({0})，请注意查收。'.f($scope.data.email),
             scope: $scope,
             buttons: [
-              { text: '取消' },
-              {
-                text: '<b>确定</b>',
-                type: 'button-positive',
-                onTap: function(e) {
-                    //don't allow the user to close unless he enters wifi password
-                    if ($scope.data.verifyCode) {
-                        webq.localPassportVerify($scope.data.verifyCode, $scope.data.email).then(function(data){
-                            // reset password successfully
-                            // go to login page
-                            verifyCodeDialog.close();
-                            $state.go('login-form', {
-                                msg: '账号注册成功',
-                                email: $scope.data.email,
-                                activeSlideIndex: 2
-                            });
-                        }, function(err){
-                            // rc = 2 wrong code
-                            // rc = 3 too many attempt
-                            switch(err.rc){
+                { text: '取消' },
+                {
+                    text: '<b>确定</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        //don't allow the user to close unless he enters wifi password
+                        if ($scope.data.verifyCode) {
+                            webq.localPassportVerify($scope.data.verifyCode, $scope.data.email).then(function(data){
+                                // reset password successfully
+                                // go to login page
+                                verifyCodeDialog.close();
+                                $state.go('login-form', {
+                                    msg: '账号注册成功',
+                                    email: $scope.data.email,
+                                    activeSlideIndex: 2
+                                });
+                            }, function(err){
+                                // rc = 2 wrong code
+                                // rc = 3 too many attempt
+                                switch(err.rc){
                                 case 2:
                                     $scope.data.verifyCode = '';
                                     $scope.data.verifyCodePlsHolder = '验证码错误 请重新输入';
@@ -169,15 +216,15 @@ angular.module('mobay.controllers', [])
                                     break;
                                 default:
                                     break;
-                            }
-                        });
+                                }
+                            });
+                        }
+                        e.preventDefault();
                     }
-                    e.preventDefault();
                 }
-              }
             ]
         });
-    };
+    }
 
     $ionicModal.fromTemplateUrl('templates/login-terms.html', {
         scope: $scope,
@@ -224,20 +271,20 @@ angular.module('mobay.controllers', [])
             }, function(err){
                 $scope.data = {};
                 if(typeof err == 'object' && err.rc){
-                   switch(err.rc){
+                    switch(err.rc){
                     case 3:
                         $scope.errMessage= '不存在该用户。';
                         break;
-                    default: 
+                    default:
                         $scope.errMessage= '服务错误，请稍后重试。';
                         break;
-                   } 
+                    }
                 } else {
                     $scope.errMessage= '网络错误，请稍后重试。';
                 }
             });
         } else {
-            $scope.errMessage = '邮箱/密码 不能为空';            
+            $scope.errMessage = '邮箱/密码 不能为空';
         }
     };
 
@@ -250,26 +297,26 @@ angular.module('mobay.controllers', [])
             subTitle: '验证码已经发送到您的邮箱({0})，请注意查收。'.f($scope.data.email),
             scope: $scope,
             buttons: [
-              { text: '取消' },
-              {
-                text: '<b>确定</b>',
-                type: 'button-positive',
-                onTap: function(e) {
-                    //don't allow the user to close unless he enters wifi password
-                    if ($scope.data.verifyCode) {
-                        webq.localPassportVerify($scope.data.verifyCode, $scope.data.email).then(function(data){
-                            // reset password successfully
-                            // go to login page
-                            verifyCodeDialog.close();
-                            $state.go('login-form', {
-                                msg: '密码更新成功',
-                                email: $scope.data.email,
-                                activeSlideIndex: 2
-                            });
-                        }, function(err){
-                            // rc = 2 wrong code
-                            // rc = 3 too many attempt
-                            switch(err.rc){
+                { text: '取消' },
+                {
+                    text: '<b>确定</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        //don't allow the user to close unless he enters wifi password
+                        if ($scope.data.verifyCode) {
+                            webq.localPassportVerify($scope.data.verifyCode, $scope.data.email).then(function(data){
+                                // reset password successfully
+                                // go to login page
+                                verifyCodeDialog.close();
+                                $state.go('login-form', {
+                                    msg: '密码更新成功',
+                                    email: $scope.data.email,
+                                    activeSlideIndex: 2
+                                });
+                            }, function(err){
+                                // rc = 2 wrong code
+                                // rc = 3 too many attempt
+                                switch(err.rc){
                                 case 2:
                                     $scope.data.verifyCode = '';
                                     $scope.data.verifyCodePlsHolder = '验证码错误 请重新输入';
@@ -289,15 +336,15 @@ angular.module('mobay.controllers', [])
                                     break;
                                 default:
                                     break;
-                            }
-                        });
+                                }
+                            });
+                        }
+                        e.preventDefault();
                     }
-                    e.preventDefault();
                 }
-              }
             ]
         });
-    };
+    }
 })
 
 .controller('DashCtrl', function($scope, $ionicPopup, $ionicLoading,
@@ -346,7 +393,7 @@ angular.module('mobay.controllers', [])
                 });
             }
         });
-    }
+    };
 
 
     $scope.scanQRCode = function(){
@@ -402,24 +449,24 @@ angular.module('mobay.controllers', [])
 
         }, function(err){
             switch(err.rc){
-                case 1:
-                    $ionicLoading.show({
-                        template: err.msg,
-                        duration: 1000
-                    });
-                    break;
-                case 2:
-                    $log.error(err);
-                    break;
-                case 3:
-                    $ionicLoading.show({
-                        template: err.msg,
-                        duration: 1000
-                    });
-                    break;
-                default:
-                    $log.error('UNKNOW ERROR.');
-                    break;
+            case 1:
+                $ionicLoading.show({
+                    template: err.msg,
+                    duration: 1000
+                });
+                break;
+            case 2:
+                $log.error(err);
+                break;
+            case 3:
+                $ionicLoading.show({
+                    template: err.msg,
+                    duration: 1000
+                });
+                break;
+            default:
+                $log.error('UNKNOW ERROR.');
+                break;
             }
         }).then(function(qr){
             $scope.data = {status: '', duration: 30 };
@@ -469,18 +516,18 @@ angular.module('mobay.controllers', [])
             $log.debug(err);
             if(typeof err === 'object' && err.rc){
                 switch(err.rc){
-                    case 1:
-                        $ionicLoading.show({
-                            template: err.msg,
-                            duration: 1000
-                        });
-                        break;
-                    case 2:
-                        $log.error(err);
-                        break;
-                    default:
-                        $log.error(err);
-                        break;
+                case 1:
+                    $ionicLoading.show({
+                        template: err.msg,
+                        duration: 1000
+                    });
+                    break;
+                case 2:
+                    $log.error(err);
+                    break;
+                default:
+                    $log.error(err);
+                    break;
                 }
             }
         });
@@ -488,7 +535,7 @@ angular.module('mobay.controllers', [])
 
 })
 
-.controller('MapCtrl', function($rootScope, $scope, $ionicModal, 
+.controller('MapCtrl', function($rootScope, $scope, $ionicModal,
     $ionicPopup, $log, $timeout, store, webq){
     var self = this;
     $scope.$root.tabsHidden = 'hide-tabs';
@@ -522,13 +569,13 @@ angular.module('mobay.controllers', [])
     $scope.closePeopleListModal = function(){
         if($scope.peopleList && $scope.peopleList.isShown()){
             $scope.peopleList.hide();
-        };
+        }
     };
 
     $scope.closePeopleDetailModal = function(){
         if($scope.peopleDetail && $scope.peopleDetail.isShown()){
             $scope.peopleDetail.hide();
-        };
+        }
     };
 
     // bind users that already online
@@ -542,7 +589,7 @@ angular.module('mobay.controllers', [])
                     $log.error(e);
                 }
             });
-        })
+        });
     }
 
     function _createMapView(){
@@ -574,7 +621,7 @@ angular.module('mobay.controllers', [])
         credits.addAttribution('© 北京金矢科技有限公司');
 
         _loadMarkers();
-    };
+    }
 
     $scope.$on('$viewContentLoaded', function(event){
         _createMapView();
@@ -594,17 +641,17 @@ angular.module('mobay.controllers', [])
                 picture: profile.pictureUrl,
                 displayName: $scope.markers[name].displayName,
                 status: $scope.markers[name].status
-            }
+            };
             if(!$scope.peopleDetail.isShown()){
                 $scope.peopleDetail.show();
             }
         }
-    }
+    };
     // display a user in map centrically
     $scope.locate = function(username){
         if($scope.peopleList && $scope.peopleList.isShown()){
             $scope.peopleList.hide();
-        };
+        }
         setTimeout(function() {
             try{
                 self.map.panTo($scope.markers[username].marker.getLatLng());
@@ -615,34 +662,34 @@ angular.module('mobay.controllers', [])
                 $log.error(e);
             }
         }, 1000);
-    }
+    };
 
     $scope.doRefresh = function() {
         $timeout( function() {
-          //simulate async response
-          // $scope.items.push('New Item ' + Math.floor(Math.random() * 1000) + 4);
-     
-          // //Stop the ion-refresher from spinning
-          $scope.$broadcast('scroll.refreshComplete');
+            //simulate async response
+            // $scope.items.push('New Item ' + Math.floor(Math.random() * 1000) + 4);
+
+            // //Stop the ion-refresher from spinning
+            $scope.$broadcast('scroll.refreshComplete');
         }, 1000);
     };
 
     $scope.$on('ntm', function(event, type){
         switch(type){
-            case 'online2offline':
-                // alert the user
-                $ionicPopup.alert({
-                    title: '无网络连接，无法更新地图。', // String (optional). The sub-title of the popup.
-                    okText: '关闭' // String (default: 'OK'). The text of the OK button.
-                });
-                break;
-            case 'offline2online':
-                _createMapView();
-                break;
-            default:
-                break;
-        };
-    })
+        case 'online2offline':
+            // alert the user
+            $ionicPopup.alert({
+                title: '无网络连接，无法更新地图。', // String (optional). The sub-title of the popup.
+                okText: '关闭' // String (default: 'OK'). The text of the OK button.
+            });
+            break;
+        case 'offline2online':
+            _createMapView();
+            break;
+        default:
+            break;
+        }
+    });
 
     $scope.$on('sse:rtls', function(event, data){
         try{
@@ -651,43 +698,43 @@ angular.module('mobay.controllers', [])
             if(data.mapId === mapId){
                 var markerKeys = _.keys($scope.markers);
                 switch(data.type){
-                    case 'visible':
-                        if(_.indexOf(markerKeys, data.username) == -1){
-                            var m = L.marker([data.lat,data.lng])
-                                .addTo(self.map)
-                                .bindPopup('<img width="50px" height="50px" ' +
-                                    'src="{0}" onclick="javascript:MOBAY_DISPLAY(\'{1}\')"></img>'.f(data.profile.pictureUrl, data.username))
+                case 'visible':
+                    if(_.indexOf(markerKeys, data.username) == -1){
+                        var m = L.marker([data.lat,data.lng])
+                            .addTo(self.map)
+                            .bindPopup('<img width="50px" height="50px" ' +
+                                'src="{0}" onclick="javascript:MOBAY_DISPLAY(\'{1}\')"></img>'.f(data.profile.pictureUrl, data.username))
+                            .openPopup();
+                        $scope.markers[data.username] = {
+                            picture: data.profile.pictureUrl,
+                            displayName: data.displayName,
+                            status: data.status,
+                            marker: m,
+                            profile: data.profile,
+                            passport: data.passport
+                        };
+                    }else{
+                        $scope.markers[data.username].marker.setLatLng([data.lat,data.lng]);
+                        $scope.markers[data.username].marker.update();
+                        $scope.markers[data.username].marker.bindPopup('<img width="50px" height="50px" ' +
+                                'src="{0}" onclick="javascript:MOBAY_DISPLAY(\'{1}\')"></img>'.f(data.profile.pictureUrl, data.username))
                                 .openPopup();
-                            $scope.markers[data.username] = {
-                                picture: data.profile.pictureUrl,
-                                displayName: data.displayName,
-                                status: data.status,
-                                marker: m,
-                                profile: data.profile,
-                                passport: data.passport
-                            };
-                        }else{
-                            $scope.markers[data.username].marker.setLatLng([data.lat,data.lng]);
-                            $scope.markers[data.username].marker.update();
-                            $scope.markers[data.username].marker.bindPopup('<img width="50px" height="50px" ' +
-                                    'src="{0}" onclick="javascript:MOBAY_DISPLAY(\'{1}\')"></img>'.f(data.profile.pictureUrl, data.username))
-                                    .openPopup();
-                            $scope.markers[data.username].picture = data.profile.pictureUrl;
-                            $scope.markers[data.username].status = data.status;
-                            $scope.markers[data.username].displayName= data.displayName;
-                            $scope.markers[data.username].profile= data.profile;
-                            $scope.markers[data.username].passport= data.passport;
+                        $scope.markers[data.username].picture = data.profile.pictureUrl;
+                        $scope.markers[data.username].status = data.status;
+                        $scope.markers[data.username].displayName= data.displayName;
+                        $scope.markers[data.username].profile= data.profile;
+                        $scope.markers[data.username].passport= data.passport;
 
-                        }
-                        break;
-                    case 'invisible':
-                        if($scope.markers[data.username]){
-                            self.map.removeLayer($scope.markers[data.username].marker);
-                            delete $scope.markers[data.username];
-                        }
-                        break;
-                    default:
-                        break;
+                    }
+                    break;
+                case 'invisible':
+                    if($scope.markers[data.username]){
+                        self.map.removeLayer($scope.markers[data.username].marker);
+                        delete $scope.markers[data.username];
+                    }
+                    break;
+                default:
+                    break;
                 }
             }else{
                 $log.debug('>> get event for {0} .'.f(data.mapId));
@@ -760,7 +807,7 @@ angular.module('mobay.controllers', [])
 
     function _processAvatarData(img){
         $ionicLoading.show({
-          template: '<i class="icon ion-loading-a positive"></i>'
+            template: '<i class="icon ion-loading-a positive"></i>'
         });
         webq.uploadUserAvatar(img).then(function(url){
             $scope.avatarUrl = url;
@@ -777,7 +824,7 @@ angular.module('mobay.controllers', [])
         }).finally(function(){
             $ionicLoading.hide();
         });
-    };
+    }
 
     $scope.takePhotoActionSheet = function(){
         // Show the action sheet
@@ -793,23 +840,23 @@ angular.module('mobay.controllers', [])
             },
             buttonClicked: function(index) {
                 switch(index){
-                    case 0:
-                        camera.takePhotoByCamera(function(imageData){
-                            _processAvatarData(imageData);
-                        });
-                        break;
-                    case 1:
-                        camera.takePhotoByLibrary(function(imageData){
-                            _processAvatarData(imageData);
-                        });
-                        break;
-                    default:
-                        break;
+                case 0:
+                    camera.takePhotoByCamera(function(imageData){
+                        _processAvatarData(imageData);
+                    });
+                    break;
+                case 1:
+                    camera.takePhotoByLibrary(function(imageData){
+                        _processAvatarData(imageData);
+                    });
+                    break;
+                default:
+                    break;
                 }
                 return true;
             }
         });
-    }
+    };
 
 })
 
@@ -819,20 +866,20 @@ angular.module('mobay.controllers', [])
     $log.debug($stateParams);
     $scope.data = {};
     switch($stateParams.key){
-        case 'company':
-            $scope.data.title = '公司';
-            $scope.data.placeholder = '请输入公司/单位';
-            break;
-        case 'interests':
-            $scope.data.title = '兴趣';
-            $scope.data.placeholder = '请输入兴趣爱好';
-            break;
-        case 'school':
-            $scope.data.title = '学校';
-            $scope.data.placeholder = '请输入(曾经)就读学校';
-            break;
-        default:
-            break;
+    case 'company':
+        $scope.data.title = '公司';
+        $scope.data.placeholder = '请输入公司/单位';
+        break;
+    case 'interests':
+        $scope.data.title = '兴趣';
+        $scope.data.placeholder = '请输入兴趣爱好';
+        break;
+    case 'school':
+        $scope.data.title = '学校';
+        $scope.data.placeholder = '请输入(曾经)就读学校';
+        break;
+    default:
+        break;
     }
     $scope.data.value = $stateParams.value;
 
@@ -842,38 +889,38 @@ angular.module('mobay.controllers', [])
             // TODO save that value from webq
             var profile = store.getUserProfile();
             switch($stateParams.key){
-                case 'company':
-                    if ($scope.data.value) {
-                        profile._json.positions._total = 1;
-                        profile._json.positions.values[0] = {
-                            isCurrent: true,
-                            company: {
-                                name: $scope.data.value
-                            }
-                        };
-                    } else {
-                        profile._json.positions._total = 0;
-                        profile._json.positions.values = {};
-                    }
-                    break;
-                case 'interests':
-                    if ($scope.data.value) {
-                        profile._json.interests = $scope.data.value;
-                    }
-                    break;
-                case 'school':
-                    if ($scope.data.value) {
-                        profile._json.educations._total = 1;
-                        profile._json.educations.values[0] = {
-                            schoolName: $scope.data.value
-                        };
-                    } else {
-                        profile._json.educations._total = 0;
-                        profile._json.educations.values = [];
-                    }
-                    break;
-                default:
-                    break;
+            case 'company':
+                if ($scope.data.value) {
+                    profile._json.positions._total = 1;
+                    profile._json.positions.values[0] = {
+                        isCurrent: true,
+                        company: {
+                            name: $scope.data.value
+                        }
+                    };
+                } else {
+                    profile._json.positions._total = 0;
+                    profile._json.positions.values = {};
+                }
+                break;
+            case 'interests':
+                if ($scope.data.value) {
+                    profile._json.interests = $scope.data.value;
+                }
+                break;
+            case 'school':
+                if ($scope.data.value) {
+                    profile._json.educations._total = 1;
+                    profile._json.educations.values[0] = {
+                        schoolName: $scope.data.value
+                    };
+                } else {
+                    profile._json.educations._total = 0;
+                    profile._json.educations.values = [];
+                }
+                break;
+            default:
+                break;
             }
             webq.saveUserProfile(profile).then(function(data){
                 $log.debug(data);
@@ -1029,23 +1076,23 @@ angular.module('mobay.controllers', [])
                     subTitle: '验证码已经发送到您的邮箱({0})，请注意查收。'.f(store.getUserId()),
                     scope: $scope,
                     buttons: [
-                      { text: '取消' },
-                      {
-                        text: '<b>确定</b>',
-                        type: 'button-positive',
-                        onTap: function(e) {
-                            //don't allow the user to close unless he enters wifi password
-                            if ($scope.data.verifyCode) {
-                                webq.localPassportVerify($scope.data.verifyCode).then(function(data){
-                                    // reset password successfully
-                                    // go to login page
-                                    verifyCodeDialog.close();
-                                    webq.logout();
-                                    $state.go('login-form');
-                                }, function(err){
-                                    // rc = 2 wrong code
-                                    // rc = 3 too many attempt
-                                    switch(err.rc){
+                        { text: '取消' },
+                        {
+                            text: '<b>确定</b>',
+                            type: 'button-positive',
+                            onTap: function(e) {
+                                //don't allow the user to close unless he enters wifi password
+                                if ($scope.data.verifyCode) {
+                                    webq.localPassportVerify($scope.data.verifyCode).then(function(data){
+                                        // reset password successfully
+                                        // go to login page
+                                        verifyCodeDialog.close();
+                                        webq.logout();
+                                        $state.go('login-form');
+                                    }, function(err){
+                                        // rc = 2 wrong code
+                                        // rc = 3 too many attempt
+                                        switch(err.rc){
                                         case 2:
                                             $scope.data.verifyCode = '';
                                             $scope.data.verifyCodePlsHolder = '验证码错误 请重新输入';
@@ -1065,12 +1112,12 @@ angular.module('mobay.controllers', [])
                                             break;
                                         default:
                                             break;
-                                    }
-                                });
+                                        }
+                                    });
+                                }
+                                e.preventDefault();
                             }
-                            e.preventDefault();
                         }
-                      }
                     ]
                 });
             }, function(err){
@@ -1091,6 +1138,6 @@ angular.module('mobay.controllers', [])
         }else{
             _toast('密码不能为空');
         }
-    }
+    };
 })
 ;

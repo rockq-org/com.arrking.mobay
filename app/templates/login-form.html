@@ -48,15 +48,16 @@
           <div class="list">
              <label class="item item-input">
                <span class="input-label">邮箱</span>
-               <input type="text" ng-model="loginData.email">
+               <input type="text" ng-model="loginData.email" ng-change="validateLoginData()">
              </label>
              <label class="item item-input">
                <span class="input-label">密码</span>
-               <input type="password" ng-model="loginData.password">
+               <input type="password" ng-model="loginData.password" ng-change="validateLoginData()">
              </label>
          </div>
           <div class="padding">
-               <button class="button button-block button-balanced" ng-click="doLogin()"> 登录 </button>
+               	<button ng-if="enableLoginBtn" class="button button-block button-balanced" ng-click="doLogin()"> 登录 </button>
+              	<button ng-if="!enableLoginBtn" class="button button-block button-balanced disabled" disabled> 登录 </button>
                <p class="text-center">
                     <a class="button button-clear icon icon-right ion-help-buoy" ui-sref="login-forget-pwd">忘记密码</a>
                </p>

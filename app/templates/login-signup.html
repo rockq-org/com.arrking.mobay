@@ -15,19 +15,20 @@
 					https://github.com/driftyco/ionic/issues/1406
 		          -->
 		          <!-- <input type="email" ng-model="data.email"> -->
-		          <input type="text" ng-model="data.email" autocapitalize="off" autocorrect="off" autocomplete="off">
+		          <input type="text" ng-model="data.email" ng-change="validateSignupData()" autocapitalize="off" autocorrect="off" autocomplete="off">
 		        </label>
 		        <label class="item item-input">
 		          <span class="input-label">用户名</span>
-		          <input type="text" ng-model="data.username" autocapitalize="off" maxlength="20" autocorrect="off" autocomplete="off">
+		          <input type="text" ng-model="data.username" ng-change="validateSignupData()" autocapitalize="off" maxlength="20" autocorrect="off" autocomplete="off">
 		        </label>
 		        <label class="item item-input">
 		          <span class="input-label">密码</span>
-		          <input type="password" ng-model="data.password">
+		          <input type="password" ng-model="data.password" ng-change="validateSignupData()">
 		        </label>
 		    </div>
 			<div class="padding">
-				<button class="button button-block button-balanced" ng-click="doReg()"> 注册 </button>
+				<button ng-if="enableSignupBtn" class="button button-block button-balanced" ng-click="doReg()"> 注册 </button>
+				<button ng-if="!enableSignupBtn" class="button button-block button-balanced disabled" disabled> 注册 </button>
 				<p class="text-center">
 					<a class="button button-clear icon icon-right ion-ios7-information" ng-click="showUserTermsModal()">  点击「注册」按钮，代表你已阅读并同意《金矢moBay(移动港湾)软件许可及服务协议》 </a> 
 				</p> 
