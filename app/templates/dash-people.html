@@ -1,26 +1,24 @@
 <ion-modal-view>
     <ion-header-bar class="bar bar-header bar-dark">
-      <h1 class="title">HelloWorld Cafe 在线</h1>
-      <a class="button button-icon icon ion-ios7-close-outline" ng-click="closePeopleListModal()"></a>
+        <h1 class="title">HelloWorld Cafe 在线</h1>
+        <a class="button button-icon icon ion-ios7-close-outline" ng-click="closePeopleListModal()"></a>
     </ion-header-bar>
     <ion-content>
-      <ion-refresher on-refresh="doRefresh()"
-                     pulling-text="下拉刷新..."
-                     refreshing-icon="ion-loading-c">
-      </ion-refresher>
-      <ion-list class="list-inset">
-        <label class="item item-input">
-            <i class="icon ion-search placeholder-icon"></i>
-            <input type="text" placeholder="搜索 ..." autocapitalize="off" maxlength="20" autocorrect="off" autocomplete="off">
-        </label>
-        <ion-item ng-repeat="(key, item) in markers" 
-                  ng-click="locate(key)"
-                  class="item item-thumbnail-left">
-          <img ng-src="{{ item.picture }}">
-          <h2>{{ item.displayName }}</h2>
-          <h4>{{ item.status }}</h4>
-        </ion-item>
-      </ion-list>
-
+        <ion-refresher on-refresh="doRefresh()" pulling-text="下拉刷新..." refreshing-icon="ion-loading-c">
+        </ion-refresher>
+        <ion-list>
+            <ion-item class="item item-input item-icon-right">
+                <label>
+                    <input type="text" placeholder="搜索你感兴趣的人" autocapitalize="off" maxlength="20" autocorrect="off" autocomplete="off" ng-model="search.value" ng-init="doSearch()" ng-change="doSearch()">
+                </label>
+                <i ng-if="search.value.length > 0" class="icon ion-ios7-close" ng-click="clearSearch()"></i>
+                <i ng-if="search.value.length == 0" class="icon ion-ios7-search placeholder-icon"></i>
+            </ion-item>
+            <ion-item ng-repeat="(key, item) in results" ng-click="locate(key)" class="item item-thumbnail-left">
+                <img ng-src="{{ item.picture }}">
+                <h2>{{ item.displayName }}</h2>
+                <h4>{{ item.status }}</h4>
+            </ion-item>
+        </ion-list>
     </ion-content>
 </ion-modal-view>

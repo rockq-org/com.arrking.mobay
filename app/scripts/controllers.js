@@ -578,6 +578,39 @@ angular.module('mobay.controllers', [])
         }
     };
 
+    $scope.search = {
+        value: ''
+    };
+
+    $scope.doSearch = function () {
+        var keyword = $scope.search.value.toLowerCase(),
+            displayName,
+            results = {};
+
+        // better use _.pick instead, will be fixed in underscore 1.7.0
+        // $scope.results = _.pick($scope.markers, function (value, key, object) {
+
+        //     if(keyword.length === 0) {
+        //         return true;
+        //     }
+
+        //     return value.displayName.toLowerCase().indexOf(keyword) > -1;
+        // });
+        
+        for(var attr in $scope.markers) {
+            displayName = $scope.markers[attr].displayName.toLowerCase();
+            if(displayName.indexOf(keyword) > -1 || keyword.length === 0) {
+                results[attr] = $scope.markers[attr];
+            }
+        }
+
+        $scope.results = results;
+    };
+
+    $scope.clearSearch = function () {
+        $scope.search.value ='';
+    };
+
     // bind users that already online
     function _loadMarkers(){
         $scope.markers = {};

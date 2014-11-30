@@ -139,7 +139,7 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
                     deferred.resolve();
                 });
                 return deferred.promise;
-            }            
+            }
         }
     })
 
