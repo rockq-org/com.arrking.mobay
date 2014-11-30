@@ -546,13 +546,6 @@ angular.module('mobay.controllers', [])
     $scope.$root.subMenuIcon = 'ion-ios7-people-outline';
     $scope.$root.subMenuShown = true;
 
-    // display online people list
-    $ionicModal.fromTemplateUrl('templates/dash-people.html', {
-        scope: $scope,
-        animation: 'fade-in'
-    }).then(function(modal) {
-        $scope.peopleList = modal;
-    });
 
     // display a specific user profile in a card
     $ionicModal.fromTemplateUrl('templates/dash-people-detail.html', {
@@ -563,7 +556,14 @@ angular.module('mobay.controllers', [])
     });
 
     $scope.$root.subMenu = function(){
-        $scope.peopleList.show();
+        // display online people list
+        $ionicModal.fromTemplateUrl('templates/dash-people.html', {
+            scope: $scope,
+            animation: 'fade-in'
+        }).then(function(modal) {
+            $scope.peopleList = modal;
+            $scope.peopleList.show();
+        });
     };
 
     $scope.closePeopleListModal = function(){
@@ -599,7 +599,7 @@ angular.module('mobay.controllers', [])
         
         for(var attr in $scope.markers) {
             displayName = $scope.markers[attr].displayName.toLowerCase();
-            if(displayName.indexOf(keyword) > -1 || keyword.length === 0) {
+            if(keyword.length === 0 || displayName.indexOf(keyword) > -1 ) {
                 results[attr] = $scope.markers[attr];
             }
         }
@@ -609,6 +609,7 @@ angular.module('mobay.controllers', [])
 
     $scope.clearSearch = function () {
         $scope.search.value ='';
+        $scope.doSearch();
     };
 
     // bind users that already online
@@ -781,7 +782,9 @@ angular.module('mobay.controllers', [])
     $scope.$on('$destroy', function() {
         try{
             $scope.peopleDetail.remove();
-            $scope.peopleList.remove();
+            if($scope.peopleList){
+                $scope.peopleList.remove();
+            }
             delete window.MOBAY_DISPLAY;
         }catch(e){
             $log.error(e);
