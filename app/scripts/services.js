@@ -506,10 +506,9 @@ angular.module('mobay.services', ['config'])
         // TODO this API is not securer as any user can post data with
         // another user's email, a better choice is getting the 
         // userId from server side, as the user is saved in req.user.
-        $http.post('http://{0}/rtls/locout'.f(cfg.host),{
+        $http.post('http://{0}/rtls/locout'.f(cfg.host), {
             // TODO hardcode mapId
-            mapId: 'HelloWorldCafe',
-            username: store.getUserId(),
+            mapId: mapId,
             lat: lat,
             lng: lng,
             timestamp: timestamp

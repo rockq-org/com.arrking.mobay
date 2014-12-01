@@ -390,9 +390,11 @@ angular.module('mobay.controllers', [])
                     webq.stopSharingLocation('HelloWorldCafe', d.lat, d.lng, d.timestamp).then(function(data){
                         if(data && data.rc == 0){
                             $scope.dashHeaderRightBtn = false;
+                        }else{
+                            $log.error(data);
                         }
                     }, function(err){
-                        alert(JSON.stringify(err));
+                            $log.error(err);
                     });
                 }else{
                     $log.error('user is not online.')
