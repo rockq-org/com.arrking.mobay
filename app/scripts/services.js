@@ -830,7 +830,7 @@ angular.module('mobay.services', ['config'])
 .service('sse', function($rootScope, $log, store, cfg){
 
     this.start = function(){
-        var source = new EventSource('http://{0}/sse/out/activity?access_token={1}'.f(cfg.ssehost, store.getAccessToken()));
+        var source = new EventSource('http://{0}/sse/out/activity?access_token={1}'.f(cfg.ssehost, store.getAccessToken().access_token));
         source.addEventListener('message', function(e) {
             // emit event
             try{
