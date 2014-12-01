@@ -360,7 +360,7 @@ angular.module('mobay.controllers', [])
     $scope.dashHeaderRightBtn = false;
 
     // check if user is online
-    webq.checkUserOnlineByMapId().then(function(data){
+    webq.checkUserOnlineByMapId('HelloWorldCafe').then(function(data){
         // user is online
         // trick point - handle sub menu
         store.setUserOnlineData(data);

@@ -483,7 +483,7 @@ angular.module('mobay.services', ['config'])
     this.checkUserOnlineByMapId = function(mapId){
         var defer = $q.defer();
         // TODO hardcode the mapId with short name
-        $http.get( 'http://{0}/rtls/{1}/{2}'.f(cfg.host, 'hw', store.getUserId()), {
+        $http.get( 'http://{0}/rtls/{1}/{2}'.f(cfg.host, mapId, store.getUserId()), {
             headers:{
                 'Accept': 'application/json'
             },
