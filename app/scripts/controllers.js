@@ -734,6 +734,7 @@ angular.module('mobay.controllers', [])
             // $scope.items.push('New Item ' + Math.floor(Math.random() * 1000) + 4);
 
             // //Stop the ion-refresher from spinning
+            $scope.doSearch();
             $scope.$broadcast('scroll.refreshComplete');
         }, 1000);
     };
