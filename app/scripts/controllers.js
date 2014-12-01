@@ -258,8 +258,10 @@ angular.module('mobay.controllers', [])
 
 })
 
-.controller('ForgetPwdCtrl', function($scope, $state, $ionicPopup, webq){
-    $scope.data = {};
+.controller('ForgetPwdCtrl', function($scope, $state, $ionicPopup, webq, store){
+    $scope.data = {
+        email: store.getUserId()||''
+    };
 
     // forget password
     $scope.doResetPwd = function(){
@@ -1154,7 +1156,11 @@ angular.module('mobay.controllers', [])
                                         // go to login page
                                         verifyCodeDialog.close();
                                         webq.logout();
-                                        $state.go('login-form');
+                                        $state.go('login-form', {
+                                            msg: '密码更新成功',
+                                            email: store.getUserId(),
+                                            activeSlideIndex: 2
+                                        });
                                     }, function(err){
                                         // rc = 2 wrong code
                                         // rc = 3 too many attempt
