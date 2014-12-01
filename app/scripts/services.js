@@ -422,6 +422,7 @@ angular.module('mobay.services', ['config'])
             if(res && res.rc == 0){
                 defer.resolve();
             }else{
+                $log.error(res);
                 defer.reject();
             }
         })
@@ -461,7 +462,7 @@ angular.module('mobay.services', ['config'])
     // get online people for a specific mapId
     this.getRTLSDataByMapId = function(mapId){
         var defer = $q.defer();
-        $http.get('http://{0}/rtls/hw'.f(cfg.host), {
+        $http.get('http://{0}/rtls/{1}'.f(cfg.host, mapId), {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
