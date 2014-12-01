@@ -732,7 +732,7 @@ angular.module('mobay.controllers', [])
             if(data.mapId === mapId){
                 var markerKeys = _.keys($scope.markers);
                 switch(data.type){
-                case 'visible':
+                case 'locin':
                     if(_.indexOf(markerKeys, data.username) == -1){
                         var m = L.marker([data.lat,data.lng])
                             .addTo(self.map)
@@ -761,7 +761,7 @@ angular.module('mobay.controllers', [])
 
                     }
                     break;
-                case 'invisible':
+                case 'locout':
                     if($scope.markers[data.username]){
                         self.map.removeLayer($scope.markers[data.username].marker);
                         delete $scope.markers[data.username];
