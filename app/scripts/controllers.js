@@ -263,6 +263,25 @@ angular.module('mobay.controllers', [])
         email: store.getUserId()||''
     };
 
+    // check the new password
+    $scope.enableSubmitBtn = false;
+    var emailRegex = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+    var passwordRegex = /\S{6,20}/;
+    $scope.validate = function(){
+
+        if(!emailRegex.test($scope.data.email)) {
+            $scope.enableSignupBtn = false;
+            return false;
+        }
+
+        if(!passwordRegex.test($scope.data.password)) {
+            $scope.enableSubmitBtn = false;
+            return false;
+        }
+
+        $scope.enableSubmitBtn = true;
+    }
+
     // forget password
     $scope.doResetPwd = function(){
         if($scope.data.email && $scope.data.password){
