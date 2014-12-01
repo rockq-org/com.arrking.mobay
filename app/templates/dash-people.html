@@ -11,7 +11,7 @@
                 <label>
                     <input type="text" placeholder="搜索你感兴趣的人" autocapitalize="off" maxlength="20" autocorrect="off" autocomplete="off" ng-model="search.value" ng-init="doSearch()" ng-change="doSearch()">
                 </label>
-                <i ng-if="search.value.length > 0" class="icon ion-ios7-close" ng-click="clearSearch()"></i>
+                <i ng-if="search.value.length > 0" class="icon ion-arrow-return-left" ng-click="clearSearch()"></i>
                 <i ng-if="search.value.length == 0" class="icon ion-ios7-search placeholder-icon"></i>
             </ion-item>
             <ion-item ng-repeat="(key, item) in results" ng-click="locate(key)" class="item item-thumbnail-left">
