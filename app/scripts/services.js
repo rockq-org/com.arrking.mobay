@@ -175,6 +175,23 @@ angular.module('mobay.services', ['config'])
         return JSON.parse(window.localStorage.getItem('{0}-MUSA_USER_PROFILE'.f(this.getUserId())));
     };
 
+    this.setUserOnlineData = function(data){
+        window.sessionStorage.setItem('{0}-RTLS_ONLINE_DATA'.f(this.getUserId()), data);
+    }
+
+    this.getUserOnlineData = function(){
+        var data = window.sessionStorage.getItem('{0}-RTLS_ONLINE_DATA'.f(this.getUserId()));
+        if(data){
+            try{
+                return JSON.parse(data);
+            }catch(e){
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
     this.setNotificationAsRead = function(id) {
         var json = this.getNotifications()[id];
         json.isRead = true;
@@ -483,7 +500,7 @@ angular.module('mobay.services', ['config'])
     };
 
     // stop sharing location
-    this.stopSharingLocation = function(mapId){
+    this.stopSharingLocation = function(mapId, lat, lng, timestamp){
         var defer = $q.defer();
         // TODO this API is not securer as any user can post data with
         // another user's email, a better choice is getting the 
@@ -491,7 +508,10 @@ angular.module('mobay.services', ['config'])
         $http.post('http://{0}/rtls/locout'.f(cfg.host),{
             // TODO hardcode mapId
             mapId: 'HelloWorldCafe',
-            username: store.getUserId()
+            username: store.getUserId(),
+            lat: lat,
+            lng: lng,
+            timestamp: timestamp
         },
         {
             headers: {

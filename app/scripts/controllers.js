@@ -363,6 +363,7 @@ angular.module('mobay.controllers', [])
     webq.checkUserOnlineByMapId().then(function(data){
         // user is online
         // trick point - handle sub menu
+        store.setUserOnlineData(data);
         $scope.dashHeaderRightBtn = true;
         // $apply and $digest 
         // http://www.sitepoint.com/understanding-angulars-apply-digest/
@@ -384,13 +385,18 @@ angular.module('mobay.controllers', [])
         rtlsConfirmPopup.then(function(res) {
             if(res) {
                 // TODO post request to delete sharings
-                webq.stopSharingLocation().then(function(data){
-                    if(data && data.rc == 0){
-                        $scope.dashHeaderRightBtn = false;
-                    }
-                }, function(err){
-                    alert(JSON.stringify(err));
-                });
+                var d = store.getUserOnlineData();
+                if(d){
+                    webq.stopSharingLocation('HelloWorldCafe', d.lat, d.lng, d.timestamp).then(function(data){
+                        if(data && data.rc == 0){
+                            $scope.dashHeaderRightBtn = false;
+                        }
+                    }, function(err){
+                        alert(JSON.stringify(err));
+                    });
+                }else{
+                    $log.error('user is not online.')
+                }
             }
         });
     };
@@ -498,14 +504,16 @@ angular.module('mobay.controllers', [])
             myStatusPopup.then(function(res) {
                 // res == $scope.data.status
                 if(res){
-                    webq.uploadRTLSData({
+                    var d = {
                         mapId: 'HelloWorldCafe',
                         lat: qr.lat,
                         lng: qr.lng,
                         status: res.status || 'TA什么也没说.',
                         duration: res.duration * 60000,
                         timestamp: new Date()
-                    }).then(function(){
+                    }
+                    webq.uploadRTLSData(d).then(function(){
+                        store.setUserOnlineData(JSON.stringify(d));
                         $scope.dashHeaderRightBtn = true;
                     }, function(){
                         $scope.dashHeaderRightBtn = false;
