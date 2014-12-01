@@ -1106,6 +1106,7 @@ angular.module('mobay.controllers', [])
 .controller('ResetPwdCtrl', function($state, $scope, $log, $ionicPopup, $timeout, webq, cfg, store){
     $scope.$root.tabsHidden = 'hide-tabs';
     $scope.title = '重置密码';
+    $scope.enableSubmitBtn = false;
     $scope.data = {
         newPwd: '',
         verifyCode: '',
@@ -1120,6 +1121,15 @@ angular.module('mobay.controllers', [])
         }, 2000);
     }
 
+    // check the new password
+    var passwordRegex = /\S{6,20}/;
+    $scope.validate = function(){
+        if(!passwordRegex.test($scope.data.newPwd)) {
+            $scope.enableSubmitBtn = false;
+            return false;
+        }
+        $scope.enableSubmitBtn = true;
+    }
 
     $scope.postNewPassword = function(){
         // TODO validate password 

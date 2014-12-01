@@ -3,10 +3,11 @@
     	<div class="list list-inset">
 			<label class="item item-input">
 				<i class="icon ion-key placeholder-icon"></i>
-				<input type="password" ng-model="data.newPwd" placeholder="新密码">
+				<input type="password" ng-model="data.newPwd" placeholder="6位数字和字母组成的新密码" ng-change="validate()">
 			</label>
 			<label class="item">
-				<button class="button button-block button-balanced" ng-click="postNewPassword()" type="submit">确定</button>
+				<button ng-if="enableSubmitBtn" class="button button-block button-balanced" ng-click="postNewPassword()"> 确定 </button>
+				<button ng-if="!enableSubmitBtn" class="button button-block button-balanced disabled" disabled> 确定 </button>
 			</label>
 		</div>
     </ion-content>
