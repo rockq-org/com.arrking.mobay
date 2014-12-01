@@ -401,7 +401,6 @@ angular.module('mobay.controllers', [])
         });
     };
 
-
     $scope.scanQRCode = function(){
         gps.getCurrentPosition().then(function(pos){
             // resolve -> in premise
@@ -742,6 +741,18 @@ angular.module('mobay.controllers', [])
                 switch(data.type){
                 case 'locin':
                     if(_.indexOf(markerKeys, data.username) == -1){
+                        // check if it is loc shift event
+                        // a loc shift event means two user happens to scan the same seat in a period
+                        // this may happens when a user leaves his seat without stop loc sharing
+                        // so, the pre user should be deleted at this timie
+                        if(data.preUser){
+                            // delete preUser at first
+                            if($scope.markers[data.preUser]){
+                                self.map.removeLayer($scope.markers[data.preUser].marker);
+                                delete $scope.markers[data.preUser];
+                            }
+                        }
+
                         var m = L.marker([data.lat,data.lng])
                             .addTo(self.map)
                             .bindPopup('<img width="50px" height="50px" ' +
@@ -766,7 +777,6 @@ angular.module('mobay.controllers', [])
                         $scope.markers[data.username].displayName= data.displayName;
                         $scope.markers[data.username].profile= data.profile;
                         $scope.markers[data.username].passport= data.passport;
-
                     }
                     break;
                 case 'locout':
