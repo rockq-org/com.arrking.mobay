@@ -730,11 +730,10 @@ angular.module('mobay.controllers', [])
 
     $scope.doRefresh = function() {
         $timeout( function() {
-            //simulate async response
-            // $scope.items.push('New Item ' + Math.floor(Math.random() * 1000) + 4);
-
-            // //Stop the ion-refresher from spinning
+            // doSearch always uses real-time markers
             $scope.doSearch();
+
+            //Stop the ion-refresher from spinning
             $scope.$broadcast('scroll.refreshComplete');
         }, 1000);
     };
