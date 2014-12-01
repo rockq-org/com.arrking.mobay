@@ -733,7 +733,8 @@ angular.module('mobay.controllers', [])
             // doSearch always uses real-time markers
             $scope.doSearch();
 
-            //Stop the ion-refresher from spinning
+            // Stop the ion-refresher from spinning
+            // http://ionicframework.com/docs/api/directive/ionRefresher/
             $scope.$broadcast('scroll.refreshComplete');
         }, 1000);
     };
