@@ -514,7 +514,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('init', [
         'clean',
-        'ngconstant:development',
+        'ngconstant:production',
         'wiredep',
         'concurrent:server',
         'autoprefixer',

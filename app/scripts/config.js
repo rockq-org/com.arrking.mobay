@@ -5,12 +5,12 @@
 .constant("cfg", {
   "version": "0.0.2",
   "host": "mobay.mybluemix.net",
-  "debug": true,
+  "debug": false,
   "ssehost": "mobaysse.mybluemix.net",
   "linkedinOauth": "/mobile/auth/linkedin",
-  "pushAppId": "ce4f3de5-e09c-4fc1-9c76-b70ff66cbcac",
+  "pushAppId": "cd4d801a-923b-4e47-beca-174a0b1dbd26",
   "pushAppRoute": "mobay.mybluemix.net",
-  "pushAppSecret": "32ee827761803e99e0164d30560aa0a6603bafcb"
+  "pushAppSecret": "d42d7078a870479f902cec88df4757d4b7955582"
 })
 
 ;
