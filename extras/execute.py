@@ -7,7 +7,6 @@ def print_usage():
 plugins = ['com.ibm.mobile.cordova.ibmbluemix',
         'com.ibm.mobile.cordova.ibmpush',
         'org.apache.cordova.console',
-        'org.apache.cordova.inappbrowser',
         'org.apache.cordova.splashscreen',
         'org.apache.cordova.device',
         'org.apache.cordova.statusbar',
@@ -16,8 +15,6 @@ plugins = ['com.ibm.mobile.cordova.ibmbluemix',
         'org.apache.cordova.network-information',
         'org.apache.cordova.geolocation',
         'org.apache.cordova.camera',
-        'org.apache.cordova.vibration',
-        'org.apache.cordova.globalization',
         'https://git.oschina.net/ubiware/cordova-ios-emailcomposer.git'
         ]
 
