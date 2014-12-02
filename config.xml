@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.arrking.mobay" version="0.0.2" ios-CFBundleVersion="201412012104" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>moBay</name>
+<widget id="com.arrking.mobilebay" version="0.0.2" ios-CFBundleVersion="201412021529" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>移动港湾</name>
   <description>
-      Mobilb Bay, show real time matrix for Cafe, Bar, Salon, etc.
+      Mobilb Bay, a real-time matrix for Cafe, Bar, Salon, etc, provide socail network and business services.
   </description>
   <author email="mobay@arrking.com" href="http://mobay.arrking.com">
-    Hai Liang Wang, Jian Fei Zhao, Kang Xin Yang
+    Mobile Team of Beijing Arrking Tech Ltd, co.
   </author>
   <content src="index.html"/>
   <access origin="*"/>
