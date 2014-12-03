@@ -60,7 +60,6 @@
     "org.apache.cordova.camera",
     "https://git.oschina.net/ubiware/cordova-ios-emailcomposer.git",
     "com.ionic.keyboard",
-    "org.apache.cordova.statusbar",
-    "org.apache.cordova.inappbrowser"
+    "org.apache.cordova.statusbar"
   ]
 }
