@@ -496,6 +496,9 @@ angular.module('mobay.controllers', [])
                 $log.error('UNKNOW ERROR.');
                 break;
             }
+            // break following promise by throwing an error
+            throw new Error("maybe user is not in the premise.");
+
         }).then(function(qr){
             $scope.data = {status: '', duration: 30 };
             // upload postition and status data
