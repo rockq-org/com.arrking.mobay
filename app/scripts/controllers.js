@@ -838,7 +838,128 @@ angular.module('mobay.controllers', [])
 
 })
 
-.controller('NotificationsCtrl', function($scope, store) {
+.controller('OrderCtrl', function (store, $http, $scope, $ionicLoading, $ionicModal) {
+
+    $ionicModal.fromTemplateUrl('templates/modal-ordered.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.modal = modal;
+    });
+
+    $scope.menu = {};
+    $scope.cost = 0;
+    $scope.ordered = [];
+    $scope.submenu = [];
+    $scope.selected = '';
+    $scope.changeSelected = function () {
+        $scope.selected = this.category;
+    };
+
+    $scope.countPlus = function (item) {
+        item.count = item.count || 0;
+        item.count++;
+        reCost();
+    };
+
+    $scope.countMinus = function (item) {
+        item.count = item.count || 0;
+
+        if(item.count === 0) {
+            return false;
+        }
+
+        item.count--;
+        reCost();
+    };
+
+    $scope.showOrdered = function () {
+        $scope.modal.show();
+    };
+
+    $scope.$watch('selected', function (newValue, oldValue) {
+        $scope.submenu = $scope.menu[$scope.selected];
+    });
+
+    function reCost () {
+
+        var cost = 0;
+
+        $scope.ordered = [];
+
+        for(var category in $scope.menu) {
+
+            if($scope.menu[category].length > 0) {
+                $scope.menu[category].forEach(function (item) {
+
+                    if(item.count && item.count > 0) {
+                        $scope.ordered.push(item);
+                    }
+
+                });
+            }
+
+        }
+
+        $scope.ordered.forEach(function (item) {
+            item.price = item.price || 0;
+            cost += item.price * item.count;
+        });
+
+        $scope.cost = cost;
+    }
+
+    $http.get('http://mobay.mybluemix.net/ofo/menu/hw', {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer {0}'.f(store.getAccessToken().access_token)
+    }).success(function (data, status, headers, config) {
+        if(status === 401) {
+            $ionicLoading.show({
+                template: '用户认证失败，请重新登录！'
+            });
+            return false;
+        }
+
+        if(status === 200 && data.rc === 2) {
+            $scope.menu = data.menu;
+
+            for(var category in $scope.menu) {
+
+                if($scope.menu[category].length > 0) {
+                    $scope.menu[category].forEach(function (item) {
+
+                        if(item.subclass && item.subclass.length > 0) {
+                            item.current = {
+                                type: item.subclass[0].type
+                            };
+                            item.price = item.subclass[0].price;
+                        }
+
+                    });
+                }
+
+            }
+
+            if(!$scope.selected) {
+                for(var category in $scope.menu) {
+                    $scope.selected = category;
+                    break;
+                }
+            }
+
+            $scope.submenu = $scope.menu[$scope.selected];
+        } else {
+            $ionicLoading.show({
+                template: '网络错误，请稍后重试！'
+            });
+            return false;
+        }
+
+    });
+
+})
+
+.controller('NotificationsCtrl', function ($scope, store) {
     $scope.$root.tabsHidden = '';
     $scope.notifications = store.getNotifications();
     $scope.notificationKeys = _.keys($scope.notifications).sort().reverse();
@@ -941,7 +1062,7 @@ angular.module('mobay.controllers', [])
 
 })
 
-.controller('ProfileEditorCtrl', function($state, $scope, $log, $stateParams, store, webq){
+.controller('ProfileEditorCtrl', function ($state, $scope, $log, $stateParams, store, webq){
     $scope.$root.tabsHidden = 'hide-tabs';
     // hide tabs
     $log.debug($stateParams);

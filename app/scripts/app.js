@@ -47,16 +47,16 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
                     navigator.splashscreen.hide();
                 }, function(err){
                     switch(ntm.getNetwork()){
-                        case 0:
-                            // no network, stays in dash
-                            break;
-                        case 1:
-                            // access token is expired, go to login
-                            $state.go('login-form');
-                            break;
-                        default:
-                            $log.debug('network plugin and status are not available.');
-                            break;
+                    case 0:
+                        // no network, stays in dash
+                        break;
+                    case 1:
+                        // access token is expired, go to login
+                        $state.go('login-form');
+                        break;
+                    default:
+                        $log.debug('network plugin and status are not available.');
+                        break;
 
                     }
                     navigator.splashscreen.hide();
@@ -182,6 +182,25 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
             'tab-dash': {
                 templateUrl: 'templates/dash-map.html',
                 controller: 'MapCtrl'
+            }
+        }
+    })
+
+    .state('tab.dash-order', {
+        url: '/dash/order',
+        views: {
+            'tab-dash': {
+                templateUrl: 'templates/dash-order.html',
+                controller: 'OrderCtrl'
+            }
+        }
+    })
+
+    .state('modal.ordered', {
+        url: '/modal/ordered',
+        views: {
+            'modal': {
+                templateUrl: 'template/moda-ordered.html'
             }
         }
     })

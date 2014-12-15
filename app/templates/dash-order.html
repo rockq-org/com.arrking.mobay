@@ -1,0 +1,62 @@
+<ion-side-menus>
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-dark">
+      <h1 class="title">点餐</h1>
+      <div class="buttons">
+        <button class="button button-icon ion-navicon" menu-toggle="right"></button>
+      </div>
+    </ion-nav-bar>
+    <ion-view>
+      <ion-content>
+        <h1 class="title order-title stable-bg">{{selected}}</h1>
+        <ion-list>
+          <ion-item class="item-thumbnail-left" ng-repeat="item in submenu">
+            <!-- #TODO:image url -->
+            <img src="http://i3.meishichina.com/attachment/recipe/2012/12/17/20121217160924724755949.jpg">
+            <h2>{{item.name}}</h2>
+            <p>￥{{item.price}} / {{item.unit}}</p>
+            <div class="row">
+              <div class="col col-50">
+                <ion-list ng-if="item.subclass.length > 0">
+                  <ion-item class="item-input item-select">
+                    <select ng-repeat="sub in item.subclass" ng-binding="item.current.type">
+                      <option value="{{sub.type}}" ng-change="changeType(item)">{{sub.type}}</option>
+                    </select>
+                  </ion-item>
+                </ion-list>
+              </div>
+            </div>
+            <div class="button-bar order-bar">
+              <a class="button icon ion-minus button-assertive" ng-click="countMinus(item)"></a>
+              <a class="button stable-bg">{{item.count || 0}}</a>
+              <a class="button icon ion-plus button-assertive" ng-click="countPlus(item)"></a>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+      <ion-footer-bar align-title="middle" class="bar-positive">
+        <div class="buttons">
+          <button class="button" ng-click="modal.show()">已点</button>
+        </div>
+        <h1 class="title">{{cost | currency: "￥"}}</h1>
+        <div class="buttons" ng-click="doSomething()">
+          <button class="button">下单</button>
+        </div>
+      </ion-footer-bar>
+    </ion-view>
+  </ion-side-menu-content>
+  <ion-side-menu side="right" width="240">
+    <ion-header-bar class="bar-positive">
+      <h1 class="title">分类</h1>
+    </ion-header-bar>
+    <ion-content>
+      <ion-list>
+        <ion-item class="item item-icon-left positive {{selected==category?'stable-bg':''}}" ng-repeat="(category,submenu) in menu" menu-close ng-click="changeSelected()">
+          <i class="icon ion-ios7-arrow-left positive" ng-if="category==selected"></i>
+          {{category}}
+          <span class="badge badge-positive">{{submenu.length}}</span>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

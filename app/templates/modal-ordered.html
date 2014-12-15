@@ -1,0 +1,23 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-positive">
+    <h1 class="title">已点餐品</h1>
+    <div class="buttons">
+      <button class="button button-icon ion-ios7-close-outline" ng-click="modal.hide()"></button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-icon-left calm" ng-if="ordered.length === 0">
+        <i class="icon ion-ios7-cart-outline"></i>
+        <span>您的已点餐品为空</span>
+      </ion-item>
+      <ion-item class="item-icon-left item-icon-right" ng-repeat="item in ordered">
+        <i class="icon ion-ios7-minus-outline" ng-click="countMinus(item)"></i>
+        <span>{{item.name}} x {{item.count}}</span>
+        <i class="icon ion-ios7-plus-outline" ng-click="countPlus(item)"></i>
+      </ion-item>
+      <ion-item class="item-divider">总价：{{cost | currency: "￥"}}</ion-item>
+    </ion-list>
+    <button class="button button-block button-assertive" ng-click="order()" ng-if="ordered.length > 0">确定并下单</button>
+  </ion-content>
+</ion-modal-view>
