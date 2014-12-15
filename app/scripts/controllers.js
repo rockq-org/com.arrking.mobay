@@ -838,7 +838,7 @@ angular.module('mobay.controllers', [])
 
 })
 
-.controller('OrderCtrl', function (store, $http, $scope, $ionicLoading, $ionicModal) {
+.controller('OrderCtrl', function (store, $http, $scope, $ionicLoading, $ionicModal, $ionicPopup) {
 
     $ionicModal.fromTemplateUrl('templates/modal-ordered.html', {
         scope: $scope,
@@ -846,6 +846,8 @@ angular.module('mobay.controllers', [])
     }).then(function(modal) {
         $scope.modal = modal;
     });
+
+
 
     $scope.menu = {};
     $scope.cost = 0;
@@ -880,6 +882,37 @@ angular.module('mobay.controllers', [])
     $scope.$watch('selected', function (newValue, oldValue) {
         $scope.submenu = $scope.menu[$scope.selected];
     });
+
+    $scope.popupSelect = function (scope) {
+        var popup = $ionicPopup.show({
+            title: '类型',
+            templateUrl: 'templates/popup-select.html',
+            scope: scope.$parent.$parent,
+            buttons: [{
+                text: '<b>确定</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                    popup.close();
+                }
+            }]
+        });
+    };
+
+    $scope.changeType = function (item) {
+        var currentType = item.current.type,
+            currentPrice = 0;
+
+        item.subclass.forEach(function (sub) {
+
+            if(sub.type === currentType) {
+                currentPrice = sub.price;
+                return false;
+            }
+        });
+
+        item.price = currentPrice;
+        reCost();
+    };
 
     function reCost () {
 
@@ -929,10 +962,20 @@ angular.module('mobay.controllers', [])
                     $scope.menu[category].forEach(function (item) {
 
                         if(item.subclass && item.subclass.length > 0) {
-                            item.current = {
-                                type: item.subclass[0].type
-                            };
+                            item.current = {};
                             item.price = item.subclass[0].price;
+                            item.params = [];
+
+                            for(var param in item.subclass[0]) {
+
+                                if(param === 'price') {
+                                    continue;
+                                }
+
+                                item.params.push(param);
+                                item.current[param] = item.subclass[0][param];
+                            }
+
                         }
 
                     });

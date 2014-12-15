@@ -13,11 +13,17 @@
       </ion-item>
       <ion-item class="item-icon-left item-icon-right" ng-repeat="item in ordered">
         <i class="icon ion-ios7-minus-outline" ng-click="countMinus(item)"></i>
-        <span>{{item.name}} x {{item.count}}</span>
+        <span>
+          <span>{{item.name}}</span>
+          <span class="ml5 mr5" ng-if="item.subclass">/ {{item.current.type}}</span>
+          <span>x {{item.count}}</span>
+        </span>
         <i class="icon ion-ios7-plus-outline" ng-click="countPlus(item)"></i>
       </ion-item>
       <ion-item class="item-divider">总价：{{cost | currency: "￥"}}</ion-item>
     </ion-list>
-    <button class="button button-block button-assertive" ng-click="order()" ng-if="ordered.length > 0">确定并下单</button>
+    <div class="padding">
+      <button class="button button-block button-assertive" ng-click="order()" ng-if="ordered.length > 0">确定并下单</button>
+    </div>
   </ion-content>
 </ion-modal-view>

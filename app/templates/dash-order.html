@@ -7,30 +7,25 @@
       </div>
     </ion-nav-bar>
     <ion-view>
-      <ion-content>
+      <ion-content id="order">
         <h1 class="title order-title stable-bg">{{selected}}</h1>
         <ion-list>
           <ion-item class="item-thumbnail-left" ng-repeat="item in submenu">
             <!-- #TODO:image url -->
             <img src="http://i3.meishichina.com/attachment/recipe/2012/12/17/20121217160924724755949.jpg">
-            <h2>{{item.name}}</h2>
+            <h2>
+              <span>{{item.name}}</span>
+              <span class="balanced-bg stable ml5 pl5 pr5" ng-click="popupSelect(this)" ng-if="item.subclass && item.subclass.length > 0">
+                <span>{{item.current.type}}</span>
+                <i class="icon ion-arrow-down-b ml5"></i>
+              </span>
+            </h2>
             <p>￥{{item.price}} / {{item.unit}}</p>
-            <div class="row">
-              <div class="col col-50">
-                <ion-list ng-if="item.subclass.length > 0">
-                  <ion-item class="item-input item-select">
-                    <select ng-repeat="sub in item.subclass" ng-binding="item.current.type">
-                      <option value="{{sub.type}}" ng-change="changeType(item)">{{sub.type}}</option>
-                    </select>
-                  </ion-item>
-                </ion-list>
-              </div>
-            </div>
-            <div class="button-bar order-bar">
-              <a class="button icon ion-minus button-assertive" ng-click="countMinus(item)"></a>
-              <a class="button stable-bg">{{item.count || 0}}</a>
-              <a class="button icon ion-plus button-assertive" ng-click="countPlus(item)"></a>
-            </div>
+            <ion-item class="item-icon-left item-icon-right tac assertive order-bar stable-bg">
+              <i class="icon ion-ios7-minus" ng-click="countMinus(item)"></i>
+              <span>{{item.count || 0}}</span>
+              <i class="icon ion-ios7-plus" ng-click="countPlus(item)"></i>
+            </ion-item>
           </ion-item>
         </ion-list>
       </ion-content>
