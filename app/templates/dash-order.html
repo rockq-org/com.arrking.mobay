@@ -8,7 +8,7 @@
       </div>
     </ion-nav-bar>
     <ion-view>
-      <ion-content id="order">
+      <ion-content id="order" style="bottom: 0px;">
         <h1 class="title order-title stable-bg">{{selected}}</h1>
         <ion-list>
           <ion-item class="item-thumbnail-left" ng-repeat="item in submenu">
@@ -30,7 +30,7 @@
           </ion-item>
         </ion-list>
       </ion-content>
-      <ion-footer-bar align-title="middle" class="bar-positive">
+      <ion-footer-bar align-title="middle" class="bar-positive" style="bottom: 0px;">
         <div class="buttons">
           <button class="button" ng-click="modal.show()">已点</button>
         </div>
