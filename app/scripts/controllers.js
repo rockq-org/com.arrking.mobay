@@ -842,9 +842,9 @@ angular.module('mobay.controllers', [])
 
 })
 
-.controller('OrderCtrl', function(store, $http, $scope, $ionicLoading, $ionicModal, $ionicPopup, webq) {
+.controller('OrderCtrl', function(store, $log, $scope, $ionicLoading, $ionicModal, $ionicPopup, webq) {
     // hidden the tabs when ordering
-    $scope.$root.tabsHidden = 'hide-tabs';
+    // $scope.$root.tabsHidden = 'hide-tabs';
     $ionicModal.fromTemplateUrl('templates/modal-ordered.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -921,32 +921,32 @@ angular.module('mobay.controllers', [])
 
     function reCost() {
 
-        var cost = 0;
+            var cost = 0;
 
-        $scope.ordered = [];
+            $scope.ordered = [];
 
-        for (var category in $scope.menu) {
+            for (var category in $scope.menu) {
 
-            if ($scope.menu[category].length > 0) {
-                $scope.menu[category].forEach(function(item) {
+                if ($scope.menu[category].length > 0) {
+                    $scope.menu[category].forEach(function(item) {
 
-                    if (item.count && item.count > 0) {
-                        $scope.ordered.push(item);
-                    }
+                        if (item.count && item.count > 0) {
+                            $scope.ordered.push(item);
+                        }
 
-                });
+                    });
+                }
+
             }
 
+            $scope.ordered.forEach(function(item) {
+                item.price = item.price || 0;
+                cost += item.price * item.count;
+            });
+
+            $scope.cost = cost;
         }
-
-        $scope.ordered.forEach(function(item) {
-            item.price = item.price || 0;
-            cost += item.price * item.count;
-        });
-
-        $scope.cost = cost;
-    }
-    // TODO add serviceProvider param in this request
+        // TODO add serviceProvider param in this request
     webq.getOfoMenuByServiceProvider().then(function(data) {
         $scope.menu = data.menu;
 
@@ -1004,6 +1004,16 @@ angular.module('mobay.controllers', [])
                     });
                     break;
             }
+        }
+    });
+    //Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+        try {
+            // hidden the tabs when ordering
+            // $scope.$root.tabsHidden = '';
+            $scope.modal.remove();
+        } catch (e) {
+            $log.error(e);
         }
     });
 })
