@@ -842,17 +842,15 @@ angular.module('mobay.controllers', [])
 
 })
 
-.controller('OrderCtrl', function(store, $log, $scope, $ionicLoading, $ionicModal, $ionicPopup, webq) {
+.controller('OrderCtrl', function(store, $state, $log, $scope, $ionicLoading, $ionicModal, $ionicPopup, webq) {
     // hidden the tabs when ordering
-    // $scope.$root.tabsHidden = 'hide-tabs';
+    $scope.$root.tabsHidden = 'hide-tabs';
     $ionicModal.fromTemplateUrl('templates/modal-ordered.html', {
         scope: $scope,
         animation: 'slide-in-up'
     }).then(function(modal) {
         $scope.modal = modal;
     });
-
-
 
     $scope.menu = {};
     $scope.cost = 0;
@@ -1006,11 +1004,18 @@ angular.module('mobay.controllers', [])
             }
         }
     });
+
+    // close the order page
+    $scope.goBackToDashHome = function() {
+        // $ionicViewService.nextAnimation = 'nav-title-slide-ios7';
+        $state.go('tab.dash');
+    }
+
     //Cleanup the modal when we're done with it!
     $scope.$on('$destroy', function() {
         try {
             // hidden the tabs when ordering
-            // $scope.$root.tabsHidden = '';
+            $scope.$root.tabsHidden = '';
             $scope.modal.remove();
         } catch (e) {
             $log.error(e);
