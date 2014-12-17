@@ -12,3 +12,4 @@ www
 !mobay.sublime-project
 www-build
 .DS_Store
+app/scripts/config.js
