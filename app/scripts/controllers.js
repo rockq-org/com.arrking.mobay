@@ -1016,7 +1016,8 @@ angular.module('mobay.controllers', [])
             // get the orderId
             // [Debug] placeOrder successfully: {"rc":3,"msg":{"ok":true,"id":"75b844884628dbd08fa670b79d501bd3","rev":"1-d9916782e326591566d47febf2c46160"}}
             $log.debug('placeOrder successfully: ' + JSON.stringify(data));
-            var ref = window.open('http://{0}/?cost={1}&&orderId={2}'.f(cfg.payment_gateway_host ,$scope.cost, data.msg.id), '_blank', 'toolbar=no');
+            // hard code the cost for testing, the actual value is $scope.cost
+            var ref = window.open('http://{0}/?cost={1}&&orderId={2}'.f(cfg.payment_gateway_host ,'0.01', data.msg.id), '_blank', 'toolbar=no');
             ref.addEventListener('loadstart', function(inAppBrowserEvent){
                 $log.debug('inAppBrowserEvent: ' + JSON.stringify(inAppBrowserEvent));
                 var toUrl = inAppBrowserEvent.url;
@@ -1024,16 +1025,21 @@ angular.module('mobay.controllers', [])
                     // pay is done
                     $timeout(function(){
                         ref.close();
-                        alert('done:' + toUrl);
+                        var qs = URI(toUrl).query(true);
+                        // qs = {"out_trade_no":"897c3b1e4c554342de27445ff74da316","request_token":"requestToken","result":"success","trade_no":"2014122938606562","sign":"940ab4771eb811b94d8ecc361ade27a1","sign_type":"MD5"}
+                        $log.debug('get paid: ' + JSON.stringify(qs));
                     }, 1000);
-                }else if(toUrl.startsWith('http://arrking-gateway.mybluemix.net/back_to_app_with_err.jsp')){
+                }else if(toUrl.startsWith('http://arrking-gateway.mybluemix.net/back_to_app_with_error.jsp')){
                     // get error or user cancel the order
                     $timeout(function(){
                         ref.close();
-                        alert('fail ' + toUrl);
+                        var qs = URI(toUrl).query(true);
+                        $log.debug('not paid: ' + JSON.stringify(qs));
                     }, 1000);
                 }
             });
+
+            // TODO handle loaderror event
         }, function(err){
             // get an error
             $log.error(err);
