@@ -654,6 +654,40 @@ angular.module('mobay.services', ['config'])
         return defer.promise;
     }
 
+    // place order
+    this.placeOrder = function(foods, cost){
+        var defer = $q.defer();
+        // TODO resolve mapId, seatLat, seatLng by QR Codes
+        // current hard coded them
+        var mapId = 'HelloWorldCafe',
+            seatLat = '75.0',
+            seatLng = '25.0';
+        var parms = {
+            mapId: mapId,
+            seatLat: seatLat,
+            seatLng: seatLng,
+            discount: 1,
+            billing: cost,
+            foods: foods
+        };
+        $http.post('http://{0}/ofo/order'.f(cfg.host), parms, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(data){
+            if(typeof data == 'object' && data.rc && data.rc === 3){
+                defer.resolve(data);
+            } else {
+                defer.reject(data);
+            }
+        }).error(function(err){
+            defer.reject(err);
+        });
+        return defer.promise;
+    }
+
 })
 
 .service('mbaas', function($q, $log, cfg, store, webq) {

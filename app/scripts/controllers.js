@@ -987,23 +987,44 @@ angular.module('mobay.controllers', [])
             switch (err.rc) {
                 case 0:
                     $ionicLoading.show({
-                        template: '用户认证失败，请重新登录！'
+                        template: '用户认证失败，请重新登录！',
+                        duration: 2000
                     });
                     break;
                 case 1:
                     $ionicLoading.show({
-                        template: '升级移动港湾到最新版本！'
+                        template: '升级移动港湾到最新版本！',
+                        duration: 2000
                     });
 
                     break;
                 default:
                     $ionicLoading.show({
-                        template: '网络错误，请稍后重试！'
+                        template: '网络错误，请稍后重试！',
+                        duration: 2000
                     });
                     break;
             }
         }
     });
+
+    // place order
+    $scope.placeOrder = function(){
+        $log.debug('ordered: ' + JSON.stringify($scope.ordered));
+        $log.debug('cost: ' + $scope.cost);
+        webq.placeOrder($scope.ordered, $scope.cost).then(function(data){
+            // get the orderId
+            $log.debug('placeOrder successfully: ' + JSON.stringify(data));
+        }, function(err){
+            // get an error
+            $log.error(err);
+            // popup a notification and go back to dash home
+            $ionicLoading.show({
+                emplate: '该服务当前不可用！',
+                duration: 2000
+            });
+        });
+    }
 
     // close the order page
     $scope.goBackToDashHome = function() {
