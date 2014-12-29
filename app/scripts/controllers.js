@@ -842,7 +842,7 @@ angular.module('mobay.controllers', [])
 
 })
 
-.controller('OrderCtrl', function(store, $state, $log, $scope, $ionicLoading, $ionicModal, $ionicPopup, webq) {
+.controller('OrderCtrl', function(store, $state, $timeout, $log, $scope, $ionicLoading, $ionicModal, $ionicPopup, webq, cfg) {
     // hidden the tabs when ordering
     $scope.$root.tabsHidden = 'hide-tabs';
     $ionicModal.fromTemplateUrl('templates/modal-ordered.html', {
@@ -1014,7 +1014,26 @@ angular.module('mobay.controllers', [])
         $log.debug('cost: ' + $scope.cost);
         webq.placeOrder($scope.ordered, $scope.cost).then(function(data){
             // get the orderId
+            // [Debug] placeOrder successfully: {"rc":3,"msg":{"ok":true,"id":"75b844884628dbd08fa670b79d501bd3","rev":"1-d9916782e326591566d47febf2c46160"}}
             $log.debug('placeOrder successfully: ' + JSON.stringify(data));
+            var ref = window.open('http://{0}/?cost={1}&&orderId={2}'.f(cfg.payment_gateway_host ,$scope.cost, data.msg.id), '_blank', 'toolbar=no');
+            ref.addEventListener('loadstart', function(inAppBrowserEvent){
+                $log.debug('inAppBrowserEvent: ' + JSON.stringify(inAppBrowserEvent));
+                var toUrl = inAppBrowserEvent.url;
+                if(toUrl.startsWith('http://arrking-gateway.mybluemix.net/back_to_app_with_succ.jsp')){
+                    // pay is done
+                    $timeout(function(){
+                        ref.close();
+                        alert('done:' + toUrl);
+                    }, 1000);
+                }else if(toUrl.startsWith('http://arrking-gateway.mybluemix.net/back_to_app_with_err.jsp')){
+                    // get error or user cancel the order
+                    $timeout(function(){
+                        ref.close();
+                        alert('fail ' + toUrl);
+                    }, 1000);
+                }
+            });
         }, function(err){
             // get an error
             $log.error(err);
