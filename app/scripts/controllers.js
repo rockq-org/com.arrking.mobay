@@ -1021,7 +1021,7 @@ angular.module('mobay.controllers', [])
             ref.addEventListener('loadstart', function(inAppBrowserEvent){
                 $log.debug('inAppBrowserEvent: ' + JSON.stringify(inAppBrowserEvent));
                 var toUrl = inAppBrowserEvent.url;
-                if(toUrl.startsWith('http://arrking-gateway.mybluemix.net/back_to_app_with_succ.jsp')){
+                if(toUrl.startsWith('http://{0}/back_to_app_with_succ.jsp'.f(cfg.payment_gateway_host))){
                     // pay is done
                     $timeout(function(){
                         ref.close();
@@ -1029,7 +1029,7 @@ angular.module('mobay.controllers', [])
                         // qs = {"out_trade_no":"897c3b1e4c554342de27445ff74da316","request_token":"requestToken","result":"success","trade_no":"2014122938606562","sign":"940ab4771eb811b94d8ecc361ade27a1","sign_type":"MD5"}
                         $log.debug('get paid: ' + JSON.stringify(qs));
                     }, 1000);
-                }else if(toUrl.startsWith('http://arrking-gateway.mybluemix.net/back_to_app_with_error.jsp')){
+                }else if(toUrl.startsWith('http://{0}/back_to_app_with_error.jsp'.f(cfg.payment_gateway_host))){
                     // get error or user cancel the order
                     $timeout(function(){
                         ref.close();
