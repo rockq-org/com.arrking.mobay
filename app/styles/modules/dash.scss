@@ -1,0 +1,87 @@
+.grid-menu
+{
+    table
+    {
+        width: 100%;
+        tr:first-child td
+        {
+            border-top: none;
+        }
+        td
+        {
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+            &:first-child
+            {
+                border-left: none;
+            }
+            &:last-child
+            {
+                border-right: none;
+            }
+            >a,>p
+            {
+                display: block;
+                position: relative;
+                color: #ef4e3a;
+                font-size: 12px;
+                line-height: 40px;
+                padding-left: 40px;
+                margin: 0;
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.mobay_icon
+{
+    display: block;
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    top: 7px;
+    left: 7px;
+    background-size: contain!important;
+}
+
+.icon_earth
+{
+    background: url(../images/icon_earth.png);
+}
+
+.icon_record
+{
+    background: url(../images/icon_record.png);
+}
+
+.icon_card
+{
+    background: url(../images/icon_card.png);
+}
+
+.icon_edit
+{
+    background: url(../images/icon_edit.png);
+}
+
+.btn-order
+{
+    position: absolute;
+    width: 60px;
+    height: 19px;
+    outline: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    right: 10px;
+    top: 10px;
+    color: #fff;
+    font-size: 10px;
+    line-height: 19px;
+    text-decoration: none;
+    text-align: center;
+    background: url(../images/btn_order.png);
+    background-size: 101px auto;
+    background-position: -18px -12px;
+}

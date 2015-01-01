@@ -23,7 +23,7 @@
       <ion-item class="item-divider">总价：{{cost | currency: "￥"}}</ion-item>
     </ion-list>
     <div class="padding">
-      <button class="button button-block button-assertive" ng-click="order()" ng-if="ordered.length > 0">确定并下单</button>
+      <button class="button button-block button-assertive" ng-click="placeOrder()" ng-if="ordered.length > 0">下单</button>
     </div>
   </ion-content>
 </ion-modal-view>

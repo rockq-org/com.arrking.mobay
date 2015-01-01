@@ -6,5 +6,6 @@
     "linkedinOauth": "/mobile/auth/linkedin",
     "pushAppId": "cd4d801a-923b-4e47-beca-174a0b1dbd26",
     "pushAppRoute": "mobay.mybluemix.net",
-    "pushAppSecret": "d42d7078a870479f902cec88df4757d4b7955582"
+    "pushAppSecret": "d42d7078a870479f902cec88df4757d4b7955582",
+    "payment_gateway_host": "alipay.arrking.com"
 }

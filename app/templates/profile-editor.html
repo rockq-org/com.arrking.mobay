@@ -1,14 +1,12 @@
 <ion-view title="{{data.title}}" style="background: #292D30;" class="hide-tabs">
-    <ion-content has-header="true" style="background: #ffffff;">
-        <ion-list type="list-inset">
-            <ion-item class="item-input">
-                <input type="text" placeholder="{{data.placeholder}}" ng-model="data.value">
-            </ion-item>
-        </ion-list>
-        <div class="padding">
-            <button class="button button-block button-positive" ng-click="save()">
-                保存
-            </button>
-        </div>
-    </ion-content>
+  <ion-content has-header="true" style="background: #ffffff;">
+    <ion-list type="list-inset">
+      <ion-item class="item-input">
+        <input type="text" placeholder="{{data.placeholder}}" ng-model="data.value">
+      </ion-item>
+    </ion-list>
+    <div class="padding">
+      <button class="button button-block button-positive" ng-click="save()">保存</button>
+    </div>
+  </ion-content>
 </ion-view>

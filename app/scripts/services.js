@@ -13,10 +13,10 @@ angular.module('mobay.services', ['config'])
     var minute = 60000;
     var hour = 3600000;
     var day = 86400000;
-    var year =  31536000000;
+    var year = 31536000000;
     var month = 2592000000;
 
-    function _formatDateString(val){
+    function _formatDateString(val) {
         var date = new Date(val);
         var yyyy = date.getFullYear();
         var mm = date.getMonth() + 1; //January is 0!
@@ -47,20 +47,20 @@ angular.module('mobay.services', ['config'])
         var diff = new Date() - new Date(value);
         var unit = day;
         var unitStr = '分钟前';
-        if(diff > year || diff > month || diff > day) {
+        if (diff > year || diff > month || diff > day) {
             // big gap, just return the absolute time
             return _formatDateString(value);
-        } else if(diff > hour) {
-          unit = hour;
-          unitStr = '小时前';
-        } else if(diff > minute) {
-          unit = minute;
-          unitStr = '分钟前';
+        } else if (diff > hour) {
+            unit = hour;
+            unitStr = '小时前';
+        } else if (diff > minute) {
+            unit = minute;
+            unitStr = '分钟前';
         } else {
-          unit = second;
-          unitStr = '秒前';
+            unit = second;
+            unitStr = '秒前';
         }
- 
+
         var amt = Math.ceil(diff / unit);
         return amt + '' + unitStr;
     }
@@ -175,19 +175,19 @@ angular.module('mobay.services', ['config'])
         return JSON.parse(window.localStorage.getItem('{0}-MUSA_USER_PROFILE'.f(this.getUserId())));
     };
 
-    this.setUserOnlineData = function(data){
+    this.setUserOnlineData = function(data) {
         window.sessionStorage.setItem('{0}-RTLS_ONLINE_DATA'.f(this.getUserId()), data);
     }
 
-    this.getUserOnlineData = function(){
+    this.getUserOnlineData = function() {
         var data = window.sessionStorage.getItem('{0}-RTLS_ONLINE_DATA'.f(this.getUserId()));
-        if(data){
-            try{
+        if (data) {
+            try {
                 return JSON.parse(data);
-            }catch(e){
+            } catch (e) {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
     }
@@ -227,24 +227,25 @@ angular.module('mobay.services', ['config'])
 })
 
 //https://docs.angularjs.org/api/ng/service/$http#interceptors
-.service('accessTokenHttpInterceptor', function($q, $log, store){
+.service('accessTokenHttpInterceptor', function($q, $log, store) {
     var noAccessTokenUrls = ['/public/md/user-service-agreements.md',
-        '/auth/local'];
+        '/auth/local'
+    ];
     return {
-        request: function(cfg){
+        request: function(cfg) {
             // add exceptions for Authorization header
-            if(cfg.url.startsWith('templates')){
+            if (cfg.url.startsWith('templates')) {
                 // load load local templates
                 // do nothing
-            } else if(_.find(noAccessTokenUrls, function(x){
-                return cfg.url.endsWith(x);
-            })){
+            } else if (_.find(noAccessTokenUrls, function(x) {
+                    return cfg.url.endsWith(x);
+                })) {
                 // a list of urls that post no 
                 // Authorization Token
-            }else if(store.getAccessToken().access_token){
-                if(cfg.headers){
-                    cfg.headers.Authorization =  'Bearer {0}'.f(store.getAccessToken().access_token);
-                }else{
+            } else if (store.getAccessToken().access_token) {
+                if (cfg.headers) {
+                    cfg.headers.Authorization = 'Bearer {0}'.f(store.getAccessToken().access_token);
+                } else {
                     cfg.headers = {
                         'Authorization': 'Bearer {0}'.f(store.getAccessToken().access_token)
                     };
@@ -261,21 +262,21 @@ angular.module('mobay.services', ['config'])
     // retrieve user profile information
     this.getUserProfile = function() {
         var defer = $q.defer();
-        $http.get('http://{0}/user/me'.f(cfg.host),{
-            headers:{
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        })
-        .success(function(data) {
-            $log.debug(data);
-            defer.resolve(data);
-        })
-        .error(function(err) {
-            // keep at the login page
-            $log.error(err);
-            defer.reject(err);
-        });
+        $http.get('http://{0}/user/me'.f(cfg.host), {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .success(function(data) {
+                $log.debug(data);
+                defer.resolve(data);
+            })
+            .error(function(err) {
+                // keep at the login page
+                $log.error(err);
+                defer.reject(err);
+            });
 
         return defer.promise;
     };
@@ -296,9 +297,9 @@ angular.module('mobay.services', ['config'])
         }).
         success(function(data, status, headers) {
             $log.debug('login api response: ' + JSON.stringify(data));
-            if(data.access_token){
+            if (data.access_token) {
                 defer.resolve(data);
-            }else{
+            } else {
                 defer.reject(data);
             }
         }).
@@ -312,31 +313,31 @@ angular.module('mobay.services', ['config'])
     };
 
     // logout user
-    this.logout = function(callback){
-        $http.get('http://{0}/logout'.f(cfg.host)).finally(function(){
+    this.logout = function(callback) {
+        $http.get('http://{0}/logout'.f(cfg.host)).finally(function() {
             store.deleteAccessToken();
-            if(callback){
+            if (callback) {
                 callback();
             }
         });
     };
 
     // get user service agreements in markdown format
-    this.getUserServiceAgreements = function(){
+    this.getUserServiceAgreements = function() {
         var defer = $q.defer();
         $http({
             method: 'GET',
             url: 'http://' + cfg.host + '/public/md/user-service-agreements.md'
         }).success(function(data, status, headers, config) {
-            try{
+            try {
                 $log.debug(data);
                 var converter = new Showdown.converter();
                 defer.resolve(converter.makeHtml(data));
-            }catch(e){
+            } catch (e) {
                 $log.error(e);
                 defer.reject(e);
             }
-        }).error(function(err, status){
+        }).error(function(err, status) {
             $log.error('Can not get /public/md/user-service-agreements.md from server.');
             defer.reject(err);
         });
@@ -344,54 +345,53 @@ angular.module('mobay.services', ['config'])
     };
 
     // save user profile properties
-    this.saveUserProfile = function(profile){
+    this.saveUserProfile = function(profile) {
         var defer = $q.defer();
-        $http.put('http://{0}/user/me'.f(cfg.host) , {
+        $http.put('http://{0}/user/me'.f(cfg.host), {
             profile: profile
-        },
-        {
-            headers:{
+        }, {
+            headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
             responseType: 'json'
-        }).success(function(data, status){
+        }).success(function(data, status) {
             defer.resolve(data);
-        }).error(function(data, status){
+        }).error(function(data, status) {
             defer.reject(data);
         });
         return defer.promise;
     };
 
     // get notifications from remote server
-    this.getNotifications = function(){
+    this.getNotifications = function() {
         var defer = $q.defer();
         $http.get('http://{0}/user/notifications'.f(cfg.host), {
             headers: {
                 accept: 'application/json'
             }
-        }).success(function(data){
+        }).success(function(data) {
             defer.resolve(data);
         }).
-        error(function(err){
+        error(function(err) {
             defer.reject(err);
         });
         return defer.promise;
     };
 
     // get notification detail
-    this.getNotificationDetail = function(msgId){
+    this.getNotificationDetail = function(msgId) {
         return $http.get('http://{0}/cms/post/{1}'.f(cfg.host, msgId), {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                responseType: 'json'
-            });
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        });
     };
 
     // get maps data from CafeServer
-    this.getMapdata = function(){
+    this.getMapdata = function() {
         var defer = $q.defer();
         $http.get('http://{0}/rtls/maps'.f(cfg.host), {
             headers: {
@@ -399,68 +399,68 @@ angular.module('mobay.services', ['config'])
                 'Accept': 'application/json'
             },
             responseType: 'json'
-        }).success(function(data, status){
+        }).success(function(data, status) {
             defer.resolve(data);
-        }).error(function(data, status){
+        }).error(function(data, status) {
             defer.reject(data);
         });
         return defer.promise;
     };
 
     // this upload 
-    this.uploadRTLSData = function(data){
+    this.uploadRTLSData = function(data) {
         var defer = $q.defer();
         $http.post('http://{0}/rtls/locin'.f(cfg.host), data, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            responseType: 'json'
-        })
-        .success(function(res, status){
-            // {rc: 0, msg: visible event is published.}
-            if(res && res.rc == 0){
-                defer.resolve();
-            }else{
-                $log.error(res);
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                responseType: 'json'
+            })
+            .success(function(res, status) {
+                // {rc: 0, msg: visible event is published.}
+                if (res && res.rc == 0) {
+                    defer.resolve();
+                } else {
+                    $log.error(res);
+                    defer.reject();
+                }
+            })
+            .error(function(err, status) {
+                $log.error(err);
                 defer.reject();
-            }
-        })
-        .error(function(err, status){
-            $log.error(err);
-            defer.reject();
-        });
+            });
         return defer.promise;
     };
 
     // upload Avatar 
-    this.uploadUserAvatar = function(data){
+    this.uploadUserAvatar = function(data) {
         var defer = $q.defer();
         $http.post('http://{0}/user/avatar'.f(cfg.host), {
-            base64: data
-        },{
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            responseType: 'json'
-        })
-        .success(function(data){
-            if(data && data.rc == 3){
-                store.saveUserAvatar(data.url);
-                defer.resolve(data.url);
-            }else{
-                defer.reject();
-            }
-        })
-        .error(function(err){
-            defer.reject(err);
-        });
+                base64: data
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                responseType: 'json'
+            })
+            .success(function(data) {
+                if (data && data.rc == 3) {
+                    store.saveUserAvatar(data.url);
+                    defer.resolve(data.url);
+                } else {
+                    defer.reject();
+                }
+            })
+            .error(function(err) {
+                defer.reject(err);
+            });
         return defer.promise;
     };
 
     // get online people for a specific mapId
-    this.getRTLSDataByMapId = function(mapId){
+    this.getRTLSDataByMapId = function(mapId) {
         var defer = $q.defer();
         $http.get('http://{0}/rtls/{1}'.f(cfg.host, mapId), {
             headers: {
@@ -468,9 +468,9 @@ angular.module('mobay.services', ['config'])
                 'Content-Type': 'application/json'
             },
             responseType: 'json'
-        }).success(function(data){
+        }).success(function(data) {
             defer.resolve(data);
-        }).error(function(err, status){
+        }).error(function(err, status) {
             defer.reject({
                 error: err,
                 status: status
@@ -480,28 +480,28 @@ angular.module('mobay.services', ['config'])
     }
 
     // check whether the logged-in user is online by mapId
-    this.checkUserOnlineByMapId = function(mapId){
+    this.checkUserOnlineByMapId = function(mapId) {
         var defer = $q.defer();
         // TODO hardcode the mapId with short name
-        $http.get( 'http://{0}/rtls/{1}/{2}'.f(cfg.host, mapId, store.getUserId()), {
-            headers:{
+        $http.get('http://{0}/rtls/{1}/{2}'.f(cfg.host, mapId, store.getUserId()), {
+            headers: {
                 'Accept': 'application/json'
             },
             responseType: 'json'
-        }).success(function(data){
-            if(data.rc && data.rc == 2){
+        }).success(function(data) {
+            if (data.rc && data.rc == 2) {
                 defer.resolve(data.msg);
-            }else{
+            } else {
                 defer.reject(data);
             }
-        }).error(function(err){
+        }).error(function(err) {
             defer.reject(err);
         });
         return defer.promise;
     };
 
     // stop sharing location
-    this.stopSharingLocation = function(mapId, lat, lng, timestamp){
+    this.stopSharingLocation = function(mapId, lat, lng, timestamp) {
         var defer = $q.defer();
         // TODO this API is not securer as any user can post data with
         // another user's email, a better choice is getting the 
@@ -512,22 +512,21 @@ angular.module('mobay.services', ['config'])
             lat: lat,
             lng: lng,
             timestamp: timestamp
-        },
-        {
+        }, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
-        }).success(function(data){
+        }).success(function(data) {
             defer.resolve(data);
-        }).error(function(err){
+        }).error(function(err) {
             defer.reject(err);
         });
         return defer.promise;
     };
 
     // reset password from settings page
-    this.resetPwd = function(newPwd){
+    this.resetPwd = function(newPwd) {
         var defer = $q.defer();
         $http.post('http://{0}/auth/local/reset'.f(cfg.host), {
             password: newPwd
@@ -537,14 +536,14 @@ angular.module('mobay.services', ['config'])
                 'Accept': 'application/json'
             },
             responseType: 'json'
-        }).success(function(data){
-            if(data && data.rc == 1){
+        }).success(function(data) {
+            if (data && data.rc == 1) {
                 // verify code is sent out
                 defer.resolve();
-            }else{
+            } else {
                 defer.reject(data);
             }
-        }).error(function(err){
+        }).error(function(err) {
             defer.reject(err);
         });
 
@@ -552,27 +551,27 @@ angular.module('mobay.services', ['config'])
     };
 
     // forget password
-    this.forgetPwd = function(email, newPwd){
+    this.forgetPwd = function(email, newPwd) {
         var defer = $q.defer();
         $http.put('http://{0}/auth/local/signup'.f(cfg.host), {
             email: email,
             password: newPwd
         }, {
-            headers:{
+            headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
             responseType: 'json'
-        }).success(function(data){
+        }).success(function(data) {
             // data.rc = 1 succ
             // data.rc = 3 user does not exist
             // data.rc = 4 not proper parameters
-            if(data && data.rc == 1){
+            if (data && data.rc == 1) {
                 defer.resolve();
             } else {
                 defer.reject(data);
             }
-        }).error(function(err){
+        }).error(function(err) {
             defer.reject(err);
         });
 
@@ -580,30 +579,30 @@ angular.module('mobay.services', ['config'])
     };
 
     // verify code to reset pwd
-    this.localPassportVerify = function(code, email){
+    this.localPassportVerify = function(code, email) {
         var defer = $q.defer();
         $http.post('http://{0}/auth/local/verify'.f(cfg.host), {
             code: code,
-            email: email||store.getUserId()
+            email: email || store.getUserId()
         }, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            responseType: 'json'            
-        }).success(function(data){
+            responseType: 'json'
+        }).success(function(data) {
             // data.rc = 6 succ for reset/(forget?) password
             // data.rc = 2 wrong
             // data.rc = 3 wrong and reach max attempt
             // data.rc = 9 succ for sign up
-            if(data && data.rc == 6){
+            if (data && data.rc == 6) {
                 defer.resolve(data);
-            } else if( data && data.rc == 9){
+            } else if (data && data.rc == 9) {
                 defer.resolve(data);
             } else {
                 defer.reject(data);
             }
-        }).error(function(err){
+        }).error(function(err) {
             defer.reject(err);
         });
         return defer.promise;
@@ -612,32 +611,89 @@ angular.module('mobay.services', ['config'])
 
     // sign up new account
     // parms {username, password, email}
-    this.signup = function(parms){
+    this.signup = function(parms) {
         var defer = $q.defer();
         $http.post('http://{0}/auth/local/signup'.f(cfg.host), parms, {
             headers: {
-                'Content-Type' : 'application/json',
+                'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
             responseType: 'json'
-        }).success(function(res){
-            if(res && res.rc == '1'){
+        }).success(function(res) {
+            if (res && res.rc == '1') {
                 defer.resolve();
-            }else{
+            } else {
                 defer.reject(res);
             }
-        }).error(function(err){
+        }).error(function(err) {
             defer.reject(err);
         });
         return defer.promise;
     };
 
+    // get online food orders by provider id
+    this.getOfoMenuByServiceProvider = function(serviceProvider) {
+        var defer = $q.defer();
+        // TODO {1} should be serviceProvider, hardcode for now.
+        $http.get('http://{0}/ofo/menu/{1}'.f(cfg.host, 'hw'), {
+            'Accept': 'application/json'
+        }).success(function(data, status, headers, config) {
+            // data.rc == 0 fail, need login
+            // data.rc == 1 fail, need more parameters
+            // data.rc == 2 succ, check out data.menu
+            if (status === 200 && data.rc === 2) {
+                defer.resolve(data);
+            } else if (status === 401) {
+                defer.reject(data);
+            } else {
+                defer.reject(data);
+            }
+        }).error(function(data, status) {
+            defer.reject(data);
+        })
+        return defer.promise;
+    }
+
+    // place order
+    this.placeOrder = function(foods, cost){
+        var defer = $q.defer();
+        // TODO resolve mapId, seatLat, seatLng by QR Codes
+        // current hard coded them
+        var mapId = 'HelloWorldCafe',
+            seatLat = '75.0',
+            seatLng = '25.0';
+        var parms = {
+            mapId: mapId,
+            seatLat: seatLat,
+            seatLng: seatLng,
+            discount: 1,
+            billing: cost,
+            foods: foods
+        };
+        $http.post('http://{0}/ofo/order'.f(cfg.host), parms, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(data){
+            if(typeof data == 'object' && data.rc && data.rc === 3){
+                defer.resolve(data);
+            } else {
+                defer.reject(data);
+            }
+        }).error(function(err){
+            defer.reject(err);
+        });
+        return defer.promise;
+    }
+
 })
 
-.service('mbaas', function($q, $log, cfg, store, webq){
+.service('mbaas', function($q, $log, cfg, store, webq) {
     var _push;
 
-    function _registerDevice(username){
+    function _registerDevice(username) {
         _push.registerDevice(device.uuid, username, '(function(msg){setTimeout(window.handleApplePushNotificationArrival(msg),5000);})').then(
             function(response) {
                 $log.debug('bluemix push registered device ' + JSON.stringify(response));
@@ -663,8 +719,8 @@ angular.module('mobay.services', ['config'])
          * but close-foreground still does not work.
          * the message arrives, but when the app wake up, the cordova method does not called.
          */
-        if(!window.handleApplePushNotificationArrival){
-            window.handleApplePushNotificationArrival = function(msg){
+        if (!window.handleApplePushNotificationArrival) {
+            window.handleApplePushNotificationArrival = function(msg) {
                 // msg = { alert, payload:{}}
                 webq.getNotifications().then(function(data) {
                     if (_.isObject(data.notifications)) {
@@ -690,7 +746,7 @@ angular.module('mobay.services', ['config'])
         }
 
         // initialize IBM Bluemix Mobile SDK
-        if(window.IBMBluemix){
+        if (window.IBMBluemix) {
             IBMBluemix.hybrid.initialize({
                 applicationId: cfg.pushAppId,
                 applicationRoute: cfg.pushAppRoute,
@@ -707,18 +763,18 @@ angular.module('mobay.services', ['config'])
                         $log.error('Error initializing the Push SDK');
                     });
             });
-        }else{
+        } else {
             $log.error('>> can not start mbaas due to IBMBluemix.hybrid unavailable.');
         }
     };
 
     // check the mbaas service is running
-    this.isRunning = function(){
-        return _push?true:false;
+    this.isRunning = function() {
+        return _push ? true : false;
     };
 
     // sub a tag
-    this.subTag = function(tagName){
+    this.subTag = function(tagName) {
         var defer = $q.defer();
         if (_push) {
             _push.subscribeTag(tagName).done(function(response) {
@@ -741,7 +797,7 @@ angular.module('mobay.services', ['config'])
     };
 
     // unsub a tag
-    this.unSubTag = function(tagName){
+    this.unSubTag = function(tagName) {
         var defer = $q.defer();
         if (_push) {
             _push.unsubscribeTag(tagName).done(function(response) {
@@ -764,7 +820,7 @@ angular.module('mobay.services', ['config'])
     };
 })
 
-.service('gps', function($q, $log, store){
+.service('gps', function($q, $log, store) {
     // get current position by gps plugin
     this.getCurrentPosition = function() {
         var defer = $q.defer();
@@ -799,16 +855,16 @@ angular.module('mobay.services', ['config'])
         if (mapData) {
             $log.debug('center ' + JSON.stringify(mapData[premise].circle));
             $log.debug('point ' + JSON.stringify(point));
-            try{
-                if(geolib.isPointInCircle(point, mapData[premise].circle.center, mapData[premise].circle.radius)){
+            try {
+                if (geolib.isPointInCircle(point, mapData[premise].circle.center, mapData[premise].circle.radius)) {
                     defer.resolve();
-                }else{
+                } else {
                     defer.reject({
                         rc: 1,
                         msg: '您当前不在{0} '.f(mapData[premise].name)
                     });
                 }
-            }catch(e){
+            } catch (e) {
                 $log.error(e);
                 defer.reject({
                     rc: 2,
@@ -827,43 +883,43 @@ angular.module('mobay.services', ['config'])
 
 })
 
-.service('sse', function($rootScope, $log, store, cfg){
+.service('sse', function($rootScope, $log, store, cfg) {
 
-    this.start = function(){
+    this.start = function() {
         var source = new EventSource('http://{0}/sse/out/activity?access_token={1}'.f(cfg.ssehost, store.getAccessToken().access_token));
         source.addEventListener('message', function(e) {
             // emit event
-            try{
+            try {
                 // alert(typeof e.data);
                 // alert(JSON.stringify(JSON.parse(e.data)));
                 $rootScope.$broadcast('sse:rtls', JSON.parse(e.data));
-            }catch(err){
+            } catch (err) {
                 $log.error(err);
             }
         }, false);
     };
 })
 
-.service('camera', function(){
+.service('camera', function() {
     var cameraOptions = {
-      quality: 75,
-      destinationType: Camera.DestinationType.DATA_URL,
-      sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
-      allowEdit: true,
-      encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 180,
-      targetHeight: 180,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: false
+        quality: 75,
+        destinationType: Camera.DestinationType.DATA_URL,
+        sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
+        allowEdit: true,
+        encodingType: Camera.EncodingType.JPEG,
+        targetWidth: 180,
+        targetHeight: 180,
+        popoverOptions: CameraPopoverOptions,
+        saveToPhotoAlbum: false
     };
 
-    this.takePhotoByCamera = function(succ, error){
+    this.takePhotoByCamera = function(succ, error) {
         cameraOptions.sourceType = Camera.PictureSourceType.CAMERA;
         navigator.camera.getPicture(succ, error, cameraOptions);
 
     };
 
-    this.takePhotoByLibrary = function(succ, error){
+    this.takePhotoByLibrary = function(succ, error) {
         cameraOptions.sourceType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
         navigator.camera.getPicture(succ, error, cameraOptions);
     };
@@ -874,7 +930,7 @@ angular.module('mobay.services', ['config'])
  * network manager is only available after cordova plugins are loaded.
  * if not, will get an error that says 'TypeError: undefined is not an object'
  * https://github.com/apache/cordova-plugin-network-information/blob/master/doc/index.md
- * iOS Quirks to support iPhone 5S, 
+ * iOS Quirks to support iPhone 5S,
  * iOS does not have specific info like WIFI, 3G ... just cellular or not
  * Network Status Array
  *   states[Connection.UNKNOWN] = 'Unknown connection';
@@ -886,33 +942,33 @@ angular.module('mobay.services', ['config'])
  *   states[Connection.CELL] = 'Cell generic connection';
  *   states[Connection.NONE] = 'No network connection';
  */
-.service('ntm', function($rootScope, $log){
+.service('ntm', function($rootScope, $log) {
 
     var self = this;
     // start a agent process to run intervally
     // monitor the network switch event, make sure to call this interface
     // after cordova device ready event is fired.
-    this.start = function(){
+    this.start = function() {
         var hasNetwork;
-        setInterval(function(){
+        setInterval(function() {
             try {
                 // $rootScope.$broadcast('ntm:', JSON.parse(e.data));
-                switch(self.getNetwork()){
+                switch (self.getNetwork()) {
                     case -1:
                         $log.debug('network manager is only available after cordova plugins are loaded.');
                         break;
                     case 0:
-                        if(typeof hasNetwork === 'undefined' ){
+                        if (typeof hasNetwork === 'undefined') {
                             hasNetwork = false;
-                        } else if(hasNetwork){
+                        } else if (hasNetwork) {
                             hasNetwork = false;
                             $rootScope.$broadcast('ntm', 'online2offline');
-                        } 
+                        }
                         break;
                     case 1:
-                        if(typeof hasNetwork === 'undefined'){
+                        if (typeof hasNetwork === 'undefined') {
                             hasNetwork = true;
-                        }else if(!hasNetwork){
+                        } else if (!hasNetwork) {
                             hasNetwork = true;
                             $rootScope.$broadcast('ntm', 'offline2online');
                         }
@@ -921,7 +977,7 @@ angular.module('mobay.services', ['config'])
                         $log.error('UNKNOWN Network Status Type.');
                         break;
                 }
-            } catch(e) {
+            } catch (e) {
                 alert(e);
                 $log.error(e);
             }
@@ -932,16 +988,16 @@ angular.module('mobay.services', ['config'])
     // 1 - online
     // 0 - offline
     // -1 - plugin is not loaded
-    this.getNetwork = function(){
-        if(navigator.connection && navigator.connection.type){
-            if(_.indexOf([Connection.WIFI, Connection.CELL], navigator.connection.type) != -1){
+    this.getNetwork = function() {
+        if (navigator.connection && navigator.connection.type) {
+            if (_.indexOf([Connection.WIFI, Connection.CELL], navigator.connection.type) != -1) {
                 // network is available
                 return 1;
             } else {
                 // device is offline
                 return 0;
             }
-        }else{
+        } else {
             return -1;
         }
     };
