@@ -23,7 +23,7 @@
             <p>￥{{item.price}} / {{item.unit}}</p>
             <ion-item class="item-icon-left item-icon-right tac assertive order-bar stable-bg">
               <i class="icon ion-ios7-minus" ng-click="countMinus(item)"></i>
-              <span>{{item.count || 0}}</span>
+              <strong ng-class="!item.count || item.count == 0 ? 'gray' : ''">{{item.count || 0}}</strong>
               <i class="icon ion-ios7-plus" ng-click="countPlus(item)"></i>
             </ion-item>
           </ion-item>
