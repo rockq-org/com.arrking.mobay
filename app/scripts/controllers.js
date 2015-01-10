@@ -1075,7 +1075,24 @@ angular.module('mobay.controllers', [])
     $scope.notificationKeys = _.keys($scope.notifications).sort().reverse();
 })
 
-.controller('NotificationDetailCtrl', function($scope, $stateParams, $log, webq) {
+.controller('HistoryCtrl', function ($scope, $ionicLoading, webq) {
+    $scope.orders = null;
+
+    webq.getOfoOrders().then(function (data) {
+        $scope.orders = data.data.docs;
+        $scope.orders.forEach(function (item) {
+            item.orderDate = new Date(item.orderDate);
+        })
+    }, function (err) {
+        // fail to get orders
+        $ionicLoading.show({
+            template: '获取订单失败，请检查网络连接',
+            duration: 1000
+        });
+    });
+})
+
+.controller('NotificationDetailCtrl', function ($scope, $stateParams, $log, webq) {
     $scope.$root.tabsHidden = 'hide-tabs';
     // $log.debug('>> open message id ' + $stateParams.msgId);
     $scope.title = $stateParams.title;

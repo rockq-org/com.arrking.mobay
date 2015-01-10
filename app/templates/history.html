@@ -1,0 +1,23 @@
+<ion-view title="历史订单">
+  <ion-content class="stable-bg">
+    <ion-list type="card" ng-if="orders.length > 0" ng-repeat="order in orders">
+      <ion-item class="item-divider">
+        <span class="item-note {{order.status|orderStatus:'color'}}">{{order.status|orderStatus}}</span>
+        <p>订单编号：{{order.alipayOrderId}}</p>
+      </ion-item>
+      <ion-item>
+        <p class="assertive-bg light padding-top padding-bottom" ng-if="order.status == 0">拒绝原因：<strong>{{order.rejectedReason}}</strong></p>
+        <h4 ng-repeat="food in order.foods">{{food.name}}<strong class="calm-bg stable badge-count ml5">{{food.count}}</strong></h4>
+      </ion-item>
+      <ion-item class="item-divider" ng-if="order.status > 1">
+        <span class="item-note calm">{{order.orderDate|date:'yyyy-MM-dd HH:mm'}}</span>
+        <p class="assertive">总价：<strong class="assertive">{{order.billing | currency: "￥"}}</strong></p>
+      </ion-item>
+    </ion-list>
+    <ion-list type="card" ng-if="orders.length === 0">
+      <ion-item>
+        <p>没有订单</p>    
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

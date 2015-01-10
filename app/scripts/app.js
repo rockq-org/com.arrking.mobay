@@ -4,7 +4,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'mobay.services' is found in services.js
 // 'mobay.controllers' is found in controllers.js
-angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config'])
+angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'mobay.filters', 'config'])
 .run(function($ionicPlatform, $log, $state, cfg, store, webq, mbaas, sse, ntm) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -196,11 +196,21 @@ angular.module('mobay', ['ionic', 'mobay.controllers', 'mobay.services', 'config
         }
     })
 
+    .state('tab.dash-history', {
+        url: '/dash/history',
+        views: {
+            'tab-dash': {
+                templateUrl: 'templates/history.html',
+                controller: 'HistoryCtrl'
+            }
+        }
+    })
+
     .state('modal.ordered', {
         url: '/modal/ordered',
         views: {
             'modal': {
-                templateUrl: 'template/moda-ordered.html'
+                templateUrl: 'template/modal-ordered.html'
             }
         }
     })

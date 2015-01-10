@@ -1,18 +1,18 @@
 <ion-view title="Notifications" hide-nav-bar="true">
-	<ion-header-bar class="bar-dark">
+    <ion-header-bar class="bar-dark">
         <h1 class="title">
             通知
         </h1>
     </ion-header-bar>
 
-	<ion-content class="stable-bg">
-		<ion-list>
-			<ion-item ng-repeat="x in notificationKeys" type="item-text-wrap" href="#/tab/notification/{{x}}/{{notifications[x].title}}" class="item-thumbnail-left">
-				<img ng-src="sample/noty-{{notifications[x].category}}.png" alt="">
-				<h2>{{notifications[x].title}}</h2>
-				<p>{{notifications[x].description}}</p>
-				<small>{{notifications[x].date | relativets }}</small>
-				</ion-item>
-		</ion-list>
-	</ion-content>
+    <ion-content class="stable-bg">
+        <ion-list>
+            <ion-item ng-repeat="x in notificationKeys" type="item-text-wrap" href="#/tab/notification/{{x}}/{{notifications[x].title}}" class="item-thumbnail-left">
+                <img ng-src="sample/noty-{{notifications[x].category}}.png" alt="">
+                <h2>{{notifications[x].title}}</h2>
+                <p>{{notifications[x].description}}</p>
+                <small>{{notifications[x].date | relativets }}</small>
+                </ion-item>
+        </ion-list>
+    </ion-content>
 </ion-view>

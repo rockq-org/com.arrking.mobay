@@ -1,71 +1,6 @@
 'use strict';
 angular.module('mobay.services', ['config'])
 
-/**
- * A simple relative timestamp filter
- * http://codepen.io/Samurais/pen/PwwLPK
- * https://gist.github.com/Samurais/0c9e81eb18c3d60db46c
- */
-.filter('relativets', function() {
-
-    // ms units
-    var second = 1000;
-    var minute = 60000;
-    var hour = 3600000;
-    var day = 86400000;
-    var year = 31536000000;
-    var month = 2592000000;
-
-    function _formatDateString(val) {
-        var date = new Date(val);
-        var yyyy = date.getFullYear();
-        var mm = date.getMonth() + 1; //January is 0!
-        var dd = date.getDate();
-        var hh = date.getHours();
-        var min = date.getMinutes();
-        var sec = date.getSeconds();
-
-        if (mm < 10) {
-            mm = '0' + mm;
-        }
-        if (dd < 10) {
-            dd = '0' + dd;
-        }
-        if (hh < 10) {
-            hh = '0' + hh;
-        }
-        if (min < 10) {
-            min = '0' + min;
-        }
-        if (sec < 10) {
-            sec = '0' + sec;
-        }
-        return '{0}/{1}/{2} {3}:{4}'.f(yyyy, mm, dd, hh, min);
-    };
-
-    return function(value) {
-        var diff = new Date() - new Date(value);
-        var unit = day;
-        var unitStr = '分钟前';
-        if (diff > year || diff > month || diff > day) {
-            // big gap, just return the absolute time
-            return _formatDateString(value);
-        } else if (diff > hour) {
-            unit = hour;
-            unitStr = '小时前';
-        } else if (diff > minute) {
-            unit = minute;
-            unitStr = '分钟前';
-        } else {
-            unit = second;
-            unitStr = '秒前';
-        }
-
-        var amt = Math.ceil(diff / unit);
-        return amt + '' + unitStr;
-    }
-})
-
 /** 
  * Persistence Object Manager
  * depends on understore
@@ -676,7 +611,7 @@ angular.module('mobay.services', ['config'])
                 'Accept': 'application/json'
             },
             responseType: 'json'
-        }).success(function(data){
+        }).success(function (data){
             if(typeof data == 'object' && data.rc && data.rc === 3){
                 defer.resolve(data);
             } else {
@@ -685,6 +620,37 @@ angular.module('mobay.services', ['config'])
         }).error(function(err){
             defer.reject(err);
         });
+        return defer.promise;
+    }
+
+    this.getOfoOrders = function (mapId, status) {
+        var defer = $q.defer(),
+            params = {
+                'mapId': mapId || 'HelloWorldCafe',
+                'status': status
+            };
+
+        $http.post('http://{0}/ofo/orders'.f(cfg.host), params, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(data, status, headers, config) {
+            // data.rc == 0 fail, need login
+            // data.rc == 1 fail, service error
+            // data.rc == 2 success
+            if (status === 200 && data.rc === 2) {
+                defer.resolve(data);
+            } else if (status === 401) {
+                defer.reject(data);
+            } else {
+                defer.reject(data);
+            }
+        }).error(function(data, status) {
+            defer.reject(data);
+        });
+
         return defer.promise;
     }
 
