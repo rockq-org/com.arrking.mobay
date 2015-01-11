@@ -84,6 +84,10 @@ angular.module('mobay.filters', ['config'])
 		'3': {
 			text: '成功',
 			color: 'balanced'
+		},
+		'4': {
+			text: '已支付',
+			color: 'calm'
 		}
 	};
 

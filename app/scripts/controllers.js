@@ -919,32 +919,32 @@ angular.module('mobay.controllers', [])
 
     function reCost() {
 
-            var cost = 0;
+        var cost = 0;
 
-            $scope.ordered = [];
+        $scope.ordered = [];
 
-            for (var category in $scope.menu) {
+        for (var category in $scope.menu) {
 
-                if ($scope.menu[category].length > 0) {
-                    $scope.menu[category].forEach(function(item) {
+            if ($scope.menu[category].length > 0) {
+                $scope.menu[category].forEach(function(item) {
 
-                        if (item.count && item.count > 0) {
-                            $scope.ordered.push(item);
-                        }
+                    if (item.count && item.count > 0) {
+                        $scope.ordered.push(item);
+                    }
 
-                    });
-                }
-
+                });
             }
 
-            $scope.ordered.forEach(function(item) {
-                item.price = item.price || 0;
-                cost += item.price * item.count;
-            });
-
-            $scope.cost = cost;
         }
-        // TODO add serviceProvider param in this request
+
+        $scope.ordered.forEach(function(item) {
+            item.price = item.price || 0;
+            cost += item.price * item.count;
+        });
+
+        $scope.cost = cost;
+    }
+    // TODO add serviceProvider param in this request
     webq.getOfoMenuByServiceProvider().then(function(data) {
         $scope.menu = data.menu;
 
@@ -1010,6 +1010,7 @@ angular.module('mobay.controllers', [])
 
     // place order
     $scope.placeOrder = function(){
+        var mapId = 'HelloWorldCafe';
 
         if($scope.ordered.length === 0) {
             $ionicLoading.show({
@@ -1033,13 +1034,32 @@ angular.module('mobay.controllers', [])
                 $log.debug('inAppBrowserEvent: ' + JSON.stringify(inAppBrowserEvent));
                 var toUrl = inAppBrowserEvent.url;
                 if(toUrl.startsWith('http://{0}/back_to_app_with_succ.jsp'.f(cfg.payment_gateway_host))){
-                    // pay is done
-                    $timeout(function(){
-                        ref.close();
-                        var qs = URI(toUrl).query(true);
-                        // qs = {"out_trade_no":"897c3b1e4c554342de27445ff74da316","request_token":"requestToken","result":"success","trade_no":"2014122938606562","sign":"940ab4771eb811b94d8ecc361ade27a1","sign_type":"MD5"}
-                        $log.debug('get paid: ' + JSON.stringify(qs));
-                    }, 1000);
+
+                    weq.changeOrderStatus(mapId, data.msg.id).then(function (data) {
+                        // pay is done
+                        $timeout(function(){
+                            ref.close();
+                            var qs = URI(toUrl).query(true);
+                            // qs = {"out_trade_no":"897c3b1e4c554342de27445ff74da316","request_token":"requestToken","result":"success","trade_no":"2014122938606562","sign":"940ab4771eb811b94d8ecc361ade27a1","sign_type":"MD5"}
+                            $log.debug('get paid: ' + JSON.stringify(qs));
+                        }, 1000);
+
+                    }, function (err) {
+                        // pay is done
+                        $timeout(function(){
+                            ref.close();
+
+                            $ionicLoading.show({
+                                emplate: '更新订单状态出错，请稍后重新查询历史订单',
+                                duration: 2000
+                            });
+
+                            var qs = URI(toUrl).query(true);
+                            // qs = {"out_trade_no":"897c3b1e4c554342de27445ff74da316","request_token":"requestToken","result":"success","trade_no":"2014122938606562","sign":"940ab4771eb811b94d8ecc361ade27a1","sign_type":"MD5"}
+                            $log.debug('get paid: ' + JSON.stringify(qs));
+                        }, 1000);
+                    });
+                    
                 }else if(toUrl.startsWith('http://{0}/back_to_app_with_error.jsp'.f(cfg.payment_gateway_host))){
                     // get error or user cancel the order
                     $timeout(function(){
@@ -1086,14 +1106,17 @@ angular.module('mobay.controllers', [])
     $scope.notificationKeys = _.keys($scope.notifications).sort().reverse();
 })
 
-.controller('HistoryCtrl', function ($scope, $ionicLoading, webq) {
+.controller('HistoryCtrl', function ($scope, $ionicLoading, webq, $timeout) {
+    var timer,
+        mapId = 'HelloWorldCafe';
+
     $scope.orders = null;
 
     webq.getOfoOrders().then(function (data) {
         $scope.orders = data.data.docs;
         $scope.orders.forEach(function (item) {
             item.orderDate = new Date(item.orderDate);
-        })
+        });
     }, function (err) {
         // fail to get orders
         $ionicLoading.show({
@@ -1101,6 +1124,7 @@ angular.module('mobay.controllers', [])
             duration: 1000
         });
     });
+
 })
 
 .controller('NotificationDetailCtrl', function ($scope, $stateParams, $log, webq) {

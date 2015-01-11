@@ -587,7 +587,7 @@ angular.module('mobay.services', ['config'])
             defer.reject(data);
         })
         return defer.promise;
-    }
+    };
 
     // place order
     this.placeOrder = function(foods, cost){
@@ -621,7 +621,7 @@ angular.module('mobay.services', ['config'])
             defer.reject(err);
         });
         return defer.promise;
-    }
+    };
 
     this.getOfoOrders = function (mapId, status) {
         var defer = $q.defer(),
@@ -652,7 +652,65 @@ angular.module('mobay.services', ['config'])
         });
 
         return defer.promise;
-    }
+    };
+
+    this.confirmOrders = function (mapId, orderIds) {
+        var defer = $q.defer(),
+            params = {
+                mapId: mapId,
+                orderIds: orderIds
+            };
+
+        $http.post('http://{0}/ofo/tbc-orders'.f(cfg.host), params, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(data, status, headers, config) {
+            // data.rc == 2 success
+            if (status === 200 && data.rc === 2) {
+                defer.resolve(data);
+            } else if (status === 401) {
+                defer.reject(data);
+            } else {
+                defer.reject(data);
+            }
+        }).error(function(data, status) {
+            defer.reject(data);
+        });
+
+        return defer.promise;
+    };
+
+    this.changeOrderStatus = function (mapId, orderId) {
+        var defer = $q.defer(),
+            params = {
+                mapId: mapId,
+                orderId: orderId
+            };
+
+        $http.post('http://{0}/ofo/tbc-order'.f(cfg.host), params, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            responseType: 'json'
+        }).success(function(data, status, headers, config) {
+            // data.rc == 2 success
+            if (status === 200 && data.rc === 2) {
+                defer.resolve(data);
+            } else if (status === 401) {
+                defer.reject(data);
+            } else {
+                defer.reject(data);
+            }
+        }).error(function(data, status) {
+            defer.reject(data);
+        });
+
+        return defer.promise;
+    };
 
 })
 
