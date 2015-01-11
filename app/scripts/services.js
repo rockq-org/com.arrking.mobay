@@ -920,28 +920,28 @@ angular.module('mobay.services', ['config'])
             try {
                 // $rootScope.$broadcast('ntm:', JSON.parse(e.data));
                 switch (self.getNetwork()) {
-                    case -1:
-                        $log.debug('network manager is only available after cordova plugins are loaded.');
-                        break;
-                    case 0:
-                        if (typeof hasNetwork === 'undefined') {
-                            hasNetwork = false;
-                        } else if (hasNetwork) {
-                            hasNetwork = false;
-                            $rootScope.$broadcast('ntm', 'online2offline');
-                        }
-                        break;
-                    case 1:
-                        if (typeof hasNetwork === 'undefined') {
-                            hasNetwork = true;
-                        } else if (!hasNetwork) {
-                            hasNetwork = true;
-                            $rootScope.$broadcast('ntm', 'offline2online');
-                        }
-                        break;
-                    default:
-                        $log.error('UNKNOWN Network Status Type.');
-                        break;
+                case -1:
+                    $log.debug('network manager is only available after cordova plugins are loaded.');
+                    break;
+                case 0:
+                    if (typeof hasNetwork === 'undefined') {
+                        hasNetwork = false;
+                    } else if (hasNetwork) {
+                        hasNetwork = false;
+                        $rootScope.$broadcast('ntm', 'online2offline');
+                    }
+                    break;
+                case 1:
+                    if (typeof hasNetwork === 'undefined') {
+                        hasNetwork = true;
+                    } else if (!hasNetwork) {
+                        hasNetwork = true;
+                        $rootScope.$broadcast('ntm', 'offline2online');
+                    }
+                    break;
+                default:
+                    $log.error('UNKNOWN Network Status Type.');
+                    break;
                 }
             } catch (e) {
                 alert(e);

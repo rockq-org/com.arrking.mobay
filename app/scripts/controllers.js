@@ -1010,6 +1010,16 @@ angular.module('mobay.controllers', [])
 
     // place order
     $scope.placeOrder = function(){
+
+        if($scope.ordered.length === 0) {
+            $ionicLoading.show({
+                template: '请点餐后进行下单！',
+                duration: 1000
+            });
+
+            return false;
+        }
+
         $log.debug('ordered: ' + JSON.stringify($scope.ordered));
         $log.debug('cost: ' + $scope.cost);
         webq.placeOrder($scope.ordered, $scope.cost).then(function(data){

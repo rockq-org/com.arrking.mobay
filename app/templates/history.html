@@ -1,6 +1,6 @@
 <ion-view title="历史订单">
   <ion-content class="stable-bg">
-    <ion-list type="card" ng-if="orders.length > 0" ng-repeat="order in orders">
+    <ion-list type="card" ng-if="orders.length > 0 && order.status != 1" ng-repeat="order in orders">
       <ion-item class="item-divider">
         <span class="item-note {{order.status|orderStatus:'color'}}">{{order.status|orderStatus}}</span>
         <p>订单编号：{{order.alipayOrderId}}</p>
