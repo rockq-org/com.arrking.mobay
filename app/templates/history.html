@@ -1,5 +1,6 @@
 <ion-view title="历史订单" class="hide-tabs">
   <ion-content class="stable-bg">
+    <div class="text-center" style="border: 0; padding-top:70px;" ng-show="orders == null">加载中...</div>
     <ion-list type="card" ng-if="orders.length > 0 && order.status != 1" ng-repeat="order in orders">
       <ion-item class="item-divider">
         <span class="item-note {{order.status|orderStatus:'color'}}">{{order.status|orderStatus}}</span>
