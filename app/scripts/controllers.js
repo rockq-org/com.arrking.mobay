@@ -1035,7 +1035,7 @@ angular.module('mobay.controllers', [])
                 var toUrl = inAppBrowserEvent.url;
                 if(toUrl.startsWith('http://{0}/back_to_app_with_succ.jsp'.f(cfg.payment_gateway_host))){
 
-                    weq.changeOrderStatus(mapId, data.msg.id).then(function (data) {
+                    webq.changeOrderStatus(mapId, data.msg.id).then(function (data) {
                         // pay is done
                         $timeout(function(){
                             ref.close();
@@ -1113,7 +1113,9 @@ angular.module('mobay.controllers', [])
     $scope.orders = null;
 
     webq.getOfoOrders().then(function (data) {
-        $scope.orders = data.data.docs;
+        $scope.orders = _.sortBy(data.data.docs, function (doc) {
+            return doc.alipayOrderId;
+        }).reverse();
         $scope.orders.forEach(function (item) {
             item.orderDate = new Date(item.orderDate);
         });
