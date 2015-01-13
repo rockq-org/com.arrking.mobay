@@ -568,6 +568,9 @@ angular.module('mobay.controllers', [])
         });
     };
 
+    $scope.changeToDashOrder = function () {
+        $state.go('tab.dash-order');
+    }
 })
 
 .controller('MapCtrl', function($rootScope, $scope, $ionicModal,

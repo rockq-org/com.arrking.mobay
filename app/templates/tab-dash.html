@@ -30,13 +30,13 @@
           <td>
             <a ui-sref="tab.dash-history"><i class="mobay_icon icon_record"></i>点餐记录</a>          
           </td>
-          <td>
+<!--           <td>
             <a href="#/dash"><i class="mobay_icon icon_card"></i>会员卡</a>
           </td>
-        </tr>
+        </tr> -->
         <tr>
           <td colspan="2">
-            <p><i class="mobay_icon icon_edit"></i>Hello World Cafe<a ui-sref="tab.dash-order" class="btn-order">点餐</a></p>          
+            <p ng-click="changeToDashOrder()"><i class="mobay_icon icon_edit"></i>Hello World Cafe<a ui-sref="tab.dash-order" class="btn-order">点餐</a></p>          
           </td>
         </tr>
       </tbody>
