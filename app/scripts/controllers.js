@@ -1110,6 +1110,7 @@ angular.module('mobay.controllers', [])
 })
 
 .controller('HistoryCtrl', function ($scope, $ionicLoading, webq, $timeout) {
+    $scope.$root.tabsHidden = 'hide-tabs';
     var timer,
         mapId = 'HelloWorldCafe';
 
