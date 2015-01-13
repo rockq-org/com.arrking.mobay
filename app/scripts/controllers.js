@@ -1045,6 +1045,7 @@ angular.module('mobay.controllers', [])
                             var qs = URI(toUrl).query(true);
                             // qs = {"out_trade_no":"897c3b1e4c554342de27445ff74da316","request_token":"requestToken","result":"success","trade_no":"2014122938606562","sign":"940ab4771eb811b94d8ecc361ade27a1","sign_type":"MD5"}
                             $log.debug('get paid: ' + JSON.stringify(qs));
+                            $state.go('tab.dash-history');
                         }, 1000);
 
                     }, function (err) {
