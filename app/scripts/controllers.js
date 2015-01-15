@@ -1031,7 +1031,7 @@ angular.module('mobay.controllers', [])
             // [Debug] placeOrder successfully: {"rc":3,"msg":{"ok":true,"id":"75b844884628dbd08fa670b79d501bd3","rev":"1-d9916782e326591566d47febf2c46160"}}
             $log.debug('placeOrder successfully: ' + JSON.stringify(data));
             // hard code the cost for testing, the actual value is $scope.cost
-            var ref = window.open('http://{0}/?cost={1}&&orderId={2}&&alipayOrderId={3}'.f(cfg.payment_gateway_host ,'0.01', data.msg.id, data.alipayOrderId),
+            var ref = window.open('http://{0}/?cost={1}&&orderId={2}&&alipayOrderId={3}'.f(cfg.payment_gateway_host , $scope.cost, data.msg.id, data.alipayOrderId),
                 '_blank', 'toolbar=no');
             ref.addEventListener('loadstart', function(inAppBrowserEvent){
                 $log.debug('inAppBrowserEvent: ' + JSON.stringify(inAppBrowserEvent));
