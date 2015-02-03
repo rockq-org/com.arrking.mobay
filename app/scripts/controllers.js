@@ -568,7 +568,7 @@ angular.module('mobay.controllers', [])
         });
     };
 
-    $scope.changeToDashOrder = function () {
+    $scope.changeToDashOrder = function() {
         $state.go('tab.dash-order');
     }
 })
@@ -922,32 +922,32 @@ angular.module('mobay.controllers', [])
 
     function reCost() {
 
-        var cost = 0;
+            var cost = 0;
 
-        $scope.ordered = [];
+            $scope.ordered = [];
 
-        for (var category in $scope.menu) {
+            for (var category in $scope.menu) {
 
-            if ($scope.menu[category].length > 0) {
-                $scope.menu[category].forEach(function(item) {
+                if ($scope.menu[category].length > 0) {
+                    $scope.menu[category].forEach(function(item) {
 
-                    if (item.count && item.count > 0) {
-                        $scope.ordered.push(item);
-                    }
+                        if (item.count && item.count > 0) {
+                            $scope.ordered.push(item);
+                        }
 
-                });
+                    });
+                }
+
             }
 
+            $scope.ordered.forEach(function(item) {
+                item.price = item.price || 0;
+                cost += item.price * item.count;
+            });
+
+            $scope.cost = cost;
         }
-
-        $scope.ordered.forEach(function(item) {
-            item.price = item.price || 0;
-            cost += item.price * item.count;
-        });
-
-        $scope.cost = cost;
-    }
-    // TODO add serviceProvider param in this request
+        // TODO add serviceProvider param in this request
     webq.getOfoMenuByServiceProvider().then(function(data) {
         $scope.menu = data.menu;
 
@@ -1012,10 +1012,10 @@ angular.module('mobay.controllers', [])
     });
 
     // place order
-    $scope.placeOrder = function(){
+    $scope.placeOrder = function() {
         var mapId = 'HelloWorldCafe';
 
-        if($scope.ordered.length === 0) {
+        if ($scope.ordered.length === 0) {
             $ionicLoading.show({
                 template: '请点餐后进行下单！',
                 duration: 1000
@@ -1026,21 +1026,21 @@ angular.module('mobay.controllers', [])
 
         $log.debug('ordered: ' + JSON.stringify($scope.ordered));
         $log.debug('cost: ' + $scope.cost);
-        webq.placeOrder($scope.ordered, $scope.cost).then(function(data){
+        webq.placeOrder($scope.ordered, $scope.cost).then(function(data) {
             // get the orderId
             // [Debug] placeOrder successfully: {"rc":3,"msg":{"ok":true,"id":"75b844884628dbd08fa670b79d501bd3","rev":"1-d9916782e326591566d47febf2c46160"}}
             $log.debug('placeOrder successfully: ' + JSON.stringify(data));
             // hard code the cost for testing, the actual value is $scope.cost
-            var ref = window.open('http://{0}/?cost={1}&&orderId={2}&&alipayOrderId={3}'.f(cfg.payment_gateway_host , $scope.cost, data.msg.id, data.alipayOrderId),
+            var ref = window.open('http://{0}/?cost={1}&&orderId={2}&&alipayOrderId={3}'.f(cfg.payment_gateway_host, /*$scope.cost*/ '0.01', data.msg.id, data.alipayOrderId),
                 '_blank', 'toolbar=no');
-            ref.addEventListener('loadstart', function(inAppBrowserEvent){
+            ref.addEventListener('loadstart', function(inAppBrowserEvent) {
                 $log.debug('inAppBrowserEvent: ' + JSON.stringify(inAppBrowserEvent));
                 var toUrl = inAppBrowserEvent.url;
-                if(toUrl.startsWith('http://{0}/back_to_app_with_succ.jsp'.f(cfg.payment_gateway_host))){
+                if (toUrl.startsWith('http://{0}/back_to_app_with_succ.jsp'.f(cfg.payment_gateway_host))) {
 
-                    webq.changeOrderStatus(mapId, data.msg.id).then(function (data) {
+                    webq.changeOrderStatus(mapId, data.msg.id).then(function(data) {
                         // pay is done
-                        $timeout(function(){
+                        $timeout(function() {
                             ref.close();
                             var qs = URI(toUrl).query(true);
                             // qs = {"out_trade_no":"897c3b1e4c554342de27445ff74da316","request_token":"requestToken","result":"success","trade_no":"2014122938606562","sign":"940ab4771eb811b94d8ecc361ade27a1","sign_type":"MD5"}
@@ -1048,9 +1048,9 @@ angular.module('mobay.controllers', [])
                             $state.go('tab.dash-history');
                         }, 1000);
 
-                    }, function (err) {
+                    }, function(err) {
                         // pay is done
-                        $timeout(function(){
+                        $timeout(function() {
                             ref.close();
 
                             $ionicLoading.show({
@@ -1063,10 +1063,10 @@ angular.module('mobay.controllers', [])
                             $log.debug('get paid: ' + JSON.stringify(qs));
                         }, 1000);
                     });
-                    
-                }else if(toUrl.startsWith('http://{0}/back_to_app_with_error.jsp'.f(cfg.payment_gateway_host))){
+
+                } else if (toUrl.startsWith('http://{0}/back_to_app_with_error.jsp'.f(cfg.payment_gateway_host))) {
                     // get error or user cancel the order
-                    $timeout(function(){
+                    $timeout(function() {
                         ref.close();
                         var qs = URI(toUrl).query(true);
                         $log.debug('not paid: ' + JSON.stringify(qs));
@@ -1075,7 +1075,7 @@ angular.module('mobay.controllers', [])
             });
 
             // TODO handle loaderror event
-        }, function(err){
+        }, function(err) {
             // get an error
             $log.error(err);
             // popup a notification and go back to dash home
@@ -1110,21 +1110,21 @@ angular.module('mobay.controllers', [])
     $scope.notificationKeys = _.keys($scope.notifications).sort().reverse();
 })
 
-.controller('HistoryCtrl', function ($scope, $ionicLoading, webq, $timeout) {
+.controller('HistoryCtrl', function($scope, $ionicLoading, webq, $timeout) {
     $scope.$root.tabsHidden = 'hide-tabs';
     var timer,
         mapId = 'HelloWorldCafe';
 
     $scope.orders = null;
 
-    webq.getOfoOrders().then(function (data) {
-        $scope.orders = _.sortBy(data.data.docs, function (doc) {
+    webq.getOfoOrders().then(function(data) {
+        $scope.orders = _.sortBy(data.data.docs, function(doc) {
             return doc.alipayOrderId;
         }).reverse();
-        $scope.orders.forEach(function (item) {
+        $scope.orders.forEach(function(item) {
             item.orderDate = new Date(item.orderDate);
         });
-    }, function (err) {
+    }, function(err) {
         // fail to get orders
         $ionicLoading.show({
             template: '获取订单失败，请检查网络连接',
@@ -1134,7 +1134,7 @@ angular.module('mobay.controllers', [])
 
 })
 
-.controller('NotificationDetailCtrl', function ($scope, $stateParams, $log, webq) {
+.controller('NotificationDetailCtrl', function($scope, $stateParams, $log, webq) {
     $scope.$root.tabsHidden = 'hide-tabs';
     // $log.debug('>> open message id ' + $stateParams.msgId);
     $scope.title = $stateParams.title;
