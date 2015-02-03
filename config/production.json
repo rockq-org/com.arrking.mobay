@@ -1,8 +1,8 @@
 {
-    "version": "0.0.2",
-    "host": "mobay.mybluemix.net",
+    "version": "0.0.3",
+    "host": "cafe.arrking.com",
     "debug": false,
-    "ssehost": "mobaysse.mybluemix.net",
+    "ssehost": "cafe-sse.mybluemix.net",
     "linkedinOauth": "/mobile/auth/linkedin",
     "pushAppId": "cd4d801a-923b-4e47-beca-174a0b1dbd26",
     "pushAppRoute": "mobay.mybluemix.net",
